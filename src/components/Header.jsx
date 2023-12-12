@@ -1,6 +1,17 @@
-const  Header = () => {
+import { Link } from "react-router-dom";
 
-    return <header className="black-bg white-text">endless</header>
-}
+const Header = () => {
+    return (
+        <header className="black-bg white-text">
+            <Link className="logo" to={""}>Endless</Link>
+            <nav>
+                <Link to={""}>EXPLORER</Link>
+                <Link to={"/archive"}>ARCHIVE</Link>
+                <Link to={"/about"}>ABOUT US</Link>
+                <Link to={"/suggest"}>SUGGEST A SONG</Link>
+            </nav>
+        </header>
+    );
+};
 
-export default Header
+export default Header;
