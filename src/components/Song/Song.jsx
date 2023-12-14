@@ -28,7 +28,8 @@ function Song() {
     if (songInfo) {
         return (
             <>
-                <span>{songInfo.title}</span>
+                <h1>{songInfo.title}</h1>
+                <img height={200} src={songInfo.metadata.cover_image.imgix_url} alt={songInfo.title + " cover art"} />
             </>
         );
     } else return <></>;
