@@ -15,8 +15,8 @@
         transparent 30%,
         white 80%
     );
-    /* mask: radial-gradient(circle at center, transparent 30%, white 70%);
-    -webkit-mask: radial-gradient(circle at center, transparent 30%, white 70%); */
+    mask: radial-gradient(circle at center, transparent 30%, white 70%);
+    /* -webkit-mask: radial-gradient(circle at center, transparent 30%, white 70%); */
     backdrop-filter: blur(4px);
 }
 

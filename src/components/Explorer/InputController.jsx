@@ -4,10 +4,10 @@ import { Vector3 } from "three";
 import { lerp } from "three/src/math/MathUtils";
 import { useGesture, usePinch } from '@use-gesture/react'
 
-const minZoom = 0.4;
-const maxZoom = 2.5;
+const minZoom = 1;
+const maxZoom = 2;
 const zoomSpeed = 0.0005;
-const panSpeed = 0.8;
+const panSpeed = 0.9;
 
 function InputController({ canvasRef, children }) {
     const { size } = useThree();
@@ -17,9 +17,9 @@ function InputController({ canvasRef, children }) {
     const [nextCameraPosition, setNextCameraPosition] = useState({
         x: 0,
         y: 0,
-        z: 10,
+        z: 1000,
     });
-    const [zoom, setZoom] = useState(1);
+    const [zoom, setZoom] = useState(2);
 
     const updateZoom = (e) => {
         let newZoom = zoom - e.deltaY * zoomSpeed;
@@ -67,7 +67,7 @@ function InputController({ canvasRef, children }) {
             0.06
         );
 
-        camera.zoom = lerp(camera.zoom, zoom, 0.05);
+        camera.zoom = lerp(camera.zoom, zoom, 0.1);
         camera.updateProjectionMatrix();
     });
 
