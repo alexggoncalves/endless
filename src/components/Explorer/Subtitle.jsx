@@ -2,15 +2,8 @@ import { Text } from "@react-three/drei";
 
 import titleFont from "../../assets/fonts/Mulish-ExtraBold.ttf";
 import artistFont from "../../assets/fonts/Mulish-Light.ttf";
-import { useEffect, useRef } from "react";
 
 function Subtitle({ position, title, artist }) {
-    const textRef = useRef();
-
-    useEffect(() => {
-        console.log(textRef.current.text = `by ${artist}`);
-    }, []);
-
     return (
         <group position={position}>
             <Text
@@ -23,7 +16,6 @@ function Subtitle({ position, title, artist }) {
                 {title}
             </Text>
             <Text
-                ref={textRef}
                 color="black"
                 anchorX="left"
                 anchorY="top"

@@ -1,8 +1,7 @@
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrthographicCamera, PerspectiveCamera } from "@react-three/drei";
-import { useRef, useState } from "react";
+import { Canvas } from "@react-three/fiber";
+import { PerspectiveCamera } from "@react-three/drei";
+
 import "./explorer.css"
-import { NoToneMapping } from "three";
 
 
 import Content from "./Content";

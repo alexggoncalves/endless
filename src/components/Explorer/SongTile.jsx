@@ -1,39 +1,24 @@
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
-import { createBucketClient } from "@cosmicjs/sdk";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getArtistByID } from "../apiService.js";
 
 import Subtitle from "./Subtitle";
 
-const cosmic = createBucketClient({
-    bucketSlug: "endless-production",
-    readKey: "UifAf7d5l53oSwQ11U6Qv4u8DLBgYZgJFsiBiSfWXZtJdZ75Vw",
-});
-
-async function getArtistByID(id) {
-    const promise = await cosmic.objects.find({
-        type: "artists",
-        id: id,
-    });
-    return promise;
-}
-
 function SongTile({ position, size, song }) {
-    const navigate = useNavigate();
-
     const [artist, setArtist] = useState("");
-
+    const navigate = useNavigate();
+    
     const img = useLoader(TextureLoader, song.metadata.thumbnail.imgix_url);
 
     useEffect(() => {
         let output = "";
         for (let i = 0; i < song.metadata.artist.length; i++) {
-            getArtistByID(song.metadata.artist[i]).then((response) => {
-                const artists = response.objects;
+            getArtistByID(song.metadata.artist[i]).then((artist) => {
                 if (i == song.metadata.artist.length - 1) {
-                    output += artists[0].title;
-                } else output += artists[0].title + ", ";
+                    output += artist.title;
+                } else output += artist.title + ", ";
 
                 setArtist(output);
             });

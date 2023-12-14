@@ -1,43 +1,41 @@
+import { useEffect, useState } from "react";
 import SongTile from "./SongTile";
-import { createBucketClient } from "@cosmicjs/sdk";
+import { getAllSongs } from "../apiService.js";
 
 const maxSize = 250,
     minSize = 180;
 
 const boundSize = 1000;
 
-const cosmic = createBucketClient({
-    bucketSlug: "endless-production",
-    readKey: "UifAf7d5l53oSwQ11U6Qv4u8DLBgYZgJFsiBiSfWXZtJdZ75Vw",
-});
-
-const songs = await cosmic.objects.find({
-    type: "songs",
-})
-
 function Content(props) {
+    const [songs, setSongs] = useState();
+    useEffect(() => {
+        getAllSongs().then((songs) => {
+            setSongs(songs);
+        });
+    }, []);
 
-    return (
-        <group>
-            {songs.objects.map((song, index) => {
-                const size = Math.random() * (maxSize - minSize) + minSize;
-
-                return (
-                    <SongTile
-                    
-                        key={index}
-                        position={{
-                            x: (Math.random() - 0.5) * boundSize,
-                            y: (Math.random() - 0.5) * boundSize,
-                        }}
-                        size={size}
-                        song={song}
-                        
-                    />
-                );
-            })}
-        </group>
-    );
+    if (songs) {
+        return (
+            <group>
+                {songs.map((song, index) => {
+                    const size = Math.random() * (maxSize - minSize) + minSize;
+                    const position = {
+                        x: (Math.random() - 0.5) * boundSize,
+                        y: (Math.random() - 0.5) * boundSize
+                    }
+                    return (
+                        <SongTile
+                            key={index}
+                            position={position}
+                            size={size}
+                            song={song}
+                        />
+                    );
+                })}
+            </group>
+        );
+    }
 }
 
 export default Content;
