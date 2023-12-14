@@ -19,7 +19,7 @@ function InputController({ canvasRef, children }) {
         y: 0,
         z: 1000,
     });
-    const [zoom, setZoom] = useState(2);
+    const [zoom, setZoom] = useState(1.5);
 
     const updateZoom = (e) => {
         let newZoom = zoom - e.deltaY * zoomSpeed;
@@ -67,7 +67,7 @@ function InputController({ canvasRef, children }) {
             0.06
         );
 
-        camera.zoom = lerp(camera.zoom, zoom, 0.1);
+        camera.zoom = lerp(camera.zoom, zoom, 0.05);
         camera.updateProjectionMatrix();
     });
 
