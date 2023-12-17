@@ -38,6 +38,10 @@ const router = createBrowserRouter([
             path: "archive",
             element: <Archive />,
           },
+          {
+            path: "archive/search/:search",
+            element: <Archive />,
+          },
         ]
     },
 ]);
