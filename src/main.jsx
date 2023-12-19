@@ -21,6 +21,12 @@ const router = createBrowserRouter([
           {
             path: "/",
             element: <Explorer />,
+            children:[
+              {
+                path:"explorer/:songID",
+                element:<Song/>
+              }
+            ]
           },
           {
             path: "song/:songID",

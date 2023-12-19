@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getSongByID } from "../apiService.js";
+
+import "./song.css"
 
 function Song() {
     const [songInfo, setInfo] = useState(null);
@@ -14,14 +16,15 @@ function Song() {
 
     if (songInfo) {
         return (
-            <>
+            <div className="song-details-container">
+                <Link to={"/"}>bacc</Link>
                 <h1>{songInfo.title}</h1>
                 <img
-                    height={200}
+                    height={1200}
                     src={songInfo.metadata.cover_image.imgix_url}
                     alt={songInfo.title + " cover art"}
                 />
-            </>
+            </div>
         );
     } else return <></>;
 }

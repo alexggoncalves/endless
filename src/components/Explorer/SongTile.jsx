@@ -26,7 +26,7 @@ function SongTile({ position, size, song }) {
     }, []);
 
     const navigateToSong = () => {
-        navigate(`/song/${song.id}`);
+        navigate(`/explorer/${song.id}`);
     };
 
     return (

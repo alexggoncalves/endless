@@ -1,7 +1,7 @@
-import Filters from "./Filters";
-import ListElement from "./ListElement";
-import SearchBar from "./SearchBar";
-import { useState, useEffect } from "react";
+import Filters from "./Filters.jsx";
+import ListElement from "./ListElement.jsx";
+import SearchBar from "./SearchBar.jsx";
+import { useState, useEffect, Suspense } from "react";
 import "./archive.css";
 import { v4 as uuidv4 } from "uuid";
 
@@ -15,12 +15,15 @@ const Archive = () => {
         setSearchInput(event.target.value);
     };
 
-    useEffect(() => {
+    const getAll = () => {
         getAllSongs()
             .then((songs) => {
                 if (songs) setList(songs);
             })
             .catch((error) => console.log(error));
+    };
+    useEffect(() => {
+        getAll();
     }, []);
 
     useEffect(() => {
@@ -32,24 +35,38 @@ const Archive = () => {
                 .catch((error) => {
                     console.log(error);
                 });
+        } else {
+            getAll();
         }
     }, [searchInput]);
 
-    if (list) {
-        return (
-            <>
-                {/* Search bar */}
-                <input id="search-bar" onChange={updateInput} type="text" />
-                <Filters></Filters>
+    return (
+        <>
+            {/* Search bar */}
+            <input id="search-bar" onChange={updateInput} type="text" />
+            <Filters></Filters>
 
-                {/* List */}
-                <hr></hr>
-                {list.map((song) => (
-                    <ListElement key={uuidv4()} song={song} />
-                ))}
-            </>
-        );
-    }
+            {/* List */}
+            <Suspense fallback={<span>Loading...</span>}>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <th>Title/Artist</th>
+                            <th>Album</th>
+                            <th>Genre</th>
+                            <th>Year</th>
+                            <th>Duration</th>
+                        </tr>
+                        {/* <hr></hr> */}
+                        {list?.map((song) => (
+                            <ListElement key={uuidv4()} song={song} />
+                        ))}
+                    </tbody>
+                </table>
+            </Suspense>
+        </>
+    );
 };
 
 export default Archive;

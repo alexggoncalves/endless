@@ -17,7 +17,7 @@ html {
     padding-top: 5vh;
     min-height: 95vh;
     width: 100%;
-    /* overflow-x: none; */
+    overflow-x: none;
 }
 
 /* COLORS */

@@ -6,6 +6,7 @@ import "./explorer.css"
 
 import Content from "./Content";
 import InputController from "./InputController";
+import { Outlet } from "react-router-dom";
 
 function Explorer() {
     return (
@@ -20,6 +21,7 @@ function Explorer() {
                 </Canvas>
             </div>
             <div id="radial-blur-mask" />
+            <Outlet/>
         </>
     );
 }

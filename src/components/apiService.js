@@ -44,13 +44,20 @@ export const getAlbumByID = async (id) => {
 };
 
 export const searchSongsByName = async (name) => {
-    const response = await cosmic.objects.find({
-        type: "songs",
-        title: {
-            $regex: name,
-            $options: "i", // case insensitive
-        },
-    });
-    return response.objects;
-    // return response.objects;
+    try {
+        const response = await cosmic.objects.find({
+            type: "songs",
+            title: {
+                $regex: name,
+                $options: "i", // case insensitive
+            },
+        });
+        return response.objects;
+        // return response.objects;
+    } catch(error) {
+        console.log(error);
+        return []
+    }
+
+    
 };

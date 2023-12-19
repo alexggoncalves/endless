@@ -1,0 +1,7 @@
+.song-details-container {
+    background-color: white;
+    position: absolute;
+    top: 5vh;
+    overflow-x: hidden;
+    width: 100%;
+}

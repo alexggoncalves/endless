@@ -1,9 +1,25 @@
-.list-element {
+/* .list-element {
     box-sizing: border-box;
     width: 96vw;
     margin: 0 2vw 0 2vw;
-}
+} */
 
 .list-element img {
     width: 100px;
+}
+
+table {
+    width: 100%;
+}
+
+th {
+    text-align: start;
+}
+
+th:last-child {
+    text-align: end;
+}
+
+td:last-child {
+    text-align: end;
 }
