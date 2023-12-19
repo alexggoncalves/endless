@@ -1,6 +1,5 @@
 import Filters from "./Filters.jsx";
 import ListElement from "./ListElement.jsx";
-import SearchBar from "./SearchBar.jsx";
 import { useState, useEffect, Suspense } from "react";
 import "./archive.css";
 import { v4 as uuidv4 } from "uuid";
@@ -43,7 +42,7 @@ const Archive = () => {
     return (
         <>
             {/* Search bar */}
-            <input id="search-bar" onChange={updateInput} type="text" />
+            <input id="search-bar" onChange={updateInput} type="text" placeholder="Search..."/>
             <Filters></Filters>
 
             {/* List */}
@@ -52,16 +51,16 @@ const Archive = () => {
                     <tbody>
                         <tr>
                             <th></th>
-                            <th>Title/Artist</th>
-                            <th>Album</th>
-                            <th>Genre</th>
-                            <th>Year</th>
-                            <th>Duration</th>
+                            <th>TITLE/ARTIST</th>
+                            <th>ALBUM</th>
+                            <th>GENRE</th>
+                            <th>YEAR</th>
+                            <th>DURATION</th>
                         </tr>
-                        {/* <hr></hr> */}
                         {list?.map((song) => (
                             <ListElement key={uuidv4()} song={song} />
                         ))}
+                        
                     </tbody>
                 </table>
             </Suspense>

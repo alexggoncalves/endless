@@ -55,8 +55,7 @@ export const searchSongsByName = async (name) => {
         return response.objects;
         // return response.objects;
     } catch(error) {
-        console.log(error);
-        return []
+        return 
     }
 
     

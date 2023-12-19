@@ -29,15 +29,14 @@ const ListElement = ({ song }) => {
 
     return (
         <tr>
-            <td width={100}>
+            <td width={80}>
                 <img
                     src={song.metadata.thumbnail.imgix_url}
                     alt={song.title + " cover art"}
-                    width={100}
                 />
             </td>
             <td>
-                <div>{song.title}</div>
+                <div className="song-title">{song.title}</div>
                 <div>{artistName}</div>
             </td>
             <td>{albumName}</td>

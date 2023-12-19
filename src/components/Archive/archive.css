@@ -1,25 +1,165 @@
-/* .list-element {
+#search-bar {
     box-sizing: border-box;
-    width: 96vw;
-    margin: 0 2vw 0 2vw;
-} */
+    margin: 2vh 5vw 1vh 5vw;
+    width: 90vw;
+    height: 4vh;
+    display: block;
+    border: 0;
+    border-bottom: 1px solid black;
+    padding: 0.5vw;
+    padding-bottom: 6px;
+    font-size: 1.3rem;
+    font-family: "Mulish";
+    font-weight: 100;
+}
 
-.list-element img {
-    width: 100px;
+#search-bar:focus-visible {
+    outline: none;
+}
+
+.filters-button {
+    margin-left: 5vw;
+    border: 1px solid black;
+    width: fit-content;
+    padding: 6px 6px;
+    line-height: 12px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.outside-filters{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    
+    height: 100vh;
+    width: 100vw;
+}
+
+.filters-indicator {
+    border-radius: 50%;
+    border: 1px solid black;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-left: 10px;
+}
+
+.filters-container {
+    z-index: 1;
+    position: fixed;
+    left: 5vw;
+    display: flex;
+    flex-direction: row;
+    transform: translateY(-1px);
+}
+
+.filter-tab {
+    background-color: white;
+    display: inline-block;
+    height: 200px;
+    width: 190px;
+    border: 1px solid black;
+    padding: 1.5% 1% 2% 2%;
+    overflow-y: hidden;
+}
+.filter-tab:nth-child(2) {
+    transform: translateX(-1px);
+}
+
+.filter-tab:nth-child(3) {
+    transform: translateX(-2px);
+}
+
+.filter-category {
+    font-weight: 800;
+    line-height: 100%;
+    font-size: 100%;
+    height: 10%;
+}
+
+.filter-list {
+    box-sizing: border-box;
+    /* border: 1px solid black; */
+    height: 88%;
+    overflow-y: scroll;
+    margin-top: 2%;
+}
+
+.checkbox-filter {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 5%;
+    margin-bottom: 6px;
+}
+.checkbox-filter > .checkbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 14px;
+    height: 14px;
+    right: 0;
+    border: 1px solid black;
+    
+}
+.checkbox-fill {
+    display: inline-block;
+    background-color: black;
+    width: 10px;
+    height: 10px;
 }
 
 table {
+    box-sizing: border-box;
     width: 100%;
+    font-family: "Hind Madurai";
+    border-spacing: 0 12px;
+    font-size: 0.9rem;
+    line-height: 1rem;
+    margin-top: 2vh;
 }
 
 th {
     text-align: start;
+    font-family: "Mulish";
+    font-weight: normal;
+    padding-bottom: 15px;
+    width: 18%;
 }
 
-th:last-child {
-    text-align: end;
-}
-
+th:last-child,
 td:last-child {
     text-align: end;
+    padding-right: 5vw;
+    width: 10%;
+}
+
+th:first-child,
+td:first-child {
+    padding-left: 5vw;
+    width: fit-content;
+    padding-right: 10px;
+    min-width: 7vh;
+}
+
+th:nth-child(2) {
+    width: 30%;
+}
+
+th {
+    border-bottom: 1px solid black;
+}
+
+table img {
+    height: 7vh;
+    vertical-align: middle;
+}
+
+.song-title {
+    font-weight: bold;
 }
