@@ -33,8 +33,9 @@ const ListElement = ({ song }) => {
 
     return (
         <tr onClick={navigateToSong}>
-            <td width={80}>
+            <td>
                 <img
+                    className="archive-image"
                     src={song.metadata.thumbnail.imgix_url}
                     alt={song.title + " cover art"}
                 />

@@ -30,7 +30,7 @@
     z-index: 200;
 }
 
-.outside-filters{
+.outside-filters {
     position: absolute;
     top: 0;
     left: 0;
@@ -106,7 +106,6 @@
     height: 14px;
     right: 0;
     border: 1px solid black;
-    
 }
 .checkbox-fill {
     display: inline-block;
@@ -124,6 +123,22 @@ table {
     line-height: 1rem;
     margin-top: 2vh;
 }
+tr {
+    cursor: pointer;
+    padding: 20px 0;
+}
+
+tr:first-child {
+    cursor: default;
+}
+
+tr:hover {
+    background-color: rgb(242, 242, 242);
+}
+
+tr:first-child:hover {
+    background-color: white;
+}
 
 th {
     text-align: start;
@@ -131,16 +146,15 @@ th {
     font-weight: normal;
     padding-bottom: 15px;
     width: 18%;
+    border-bottom: 1px solid black;
 }
 
-tr {
+th>span {
     cursor: pointer;
-    padding: 20px 0;
-    
 }
 
-tr:hover{
-    background-color: rgb(242, 242, 242);
+td {
+    height: 7vh;
 }
 
 th:last-child,
@@ -162,14 +176,7 @@ th:nth-child(2) {
     width: 30%;
 }
 
-th {
-    border-bottom: 1px solid black;
-}
-td {
-    height: 7vh;
-}
-
-table img {
+.archive-image {
     height: 95%;
     vertical-align: middle;
 }

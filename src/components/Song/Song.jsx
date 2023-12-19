@@ -23,7 +23,7 @@ function Song() {
                 <Link to={`${location.pathname?.includes('archive') ? '/archive' : '/'}`}>bacc</Link>
                 <h1>{songInfo.title}</h1>
                 <img
-                    height={1200}
+                    height={400}
                     src={songInfo.metadata.cover_image.imgix_url}
                     alt={songInfo.title + " cover art"}
                 />

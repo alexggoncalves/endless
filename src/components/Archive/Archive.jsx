@@ -52,11 +52,11 @@ const Archive = () => {
                     <tbody>
                         <tr>
                             <th></th>
-                            <th>TITLE/ARTIST</th>
-                            <th>ALBUM</th>
-                            <th>GENRE</th>
-                            <th>YEAR</th>
-                            <th>DURATION</th>
+                            <th><span>TITLE/ARTIST</span></th>
+                            <th><span>ALBUM</span></th>
+                            <th><span>GENRE</span></th>
+                            <th><span>YEAR</span></th>
+                            <th><span>DURATION</span></th>
                         </tr>
                         {list?.map((song) => (
                             <ListElement key={uuidv4()} song={song} />
