@@ -3,6 +3,7 @@ import ListElement from "./ListElement.jsx";
 import { useState, useEffect, Suspense } from "react";
 import "./archive.css";
 import { v4 as uuidv4 } from "uuid";
+import { Outlet } from "react-router-dom";
 
 import { getAllSongs, searchSongsByName } from "../apiService.js";
 
@@ -64,6 +65,7 @@ const Archive = () => {
                     </tbody>
                 </table>
             </Suspense>
+            <Outlet/>
         </>
     );
 };

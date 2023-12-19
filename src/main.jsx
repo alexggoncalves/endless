@@ -5,50 +5,51 @@ import Root from "./Root.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
 import About from "./components/About/About.jsx";
 import Song from "./components/Song/Song.jsx";
-import SuggestSong from "./components/SuggestSong/SuggestSong.jsx"
+import SuggestSong from "./components/SuggestSong/SuggestSong.jsx";
 import Archive from "./components/Archive/Archive.jsx";
 
 import "./general.css";
 import Explorer from "./components/Explorer/Explorer.jsx";
 
-
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Root/>,
+        element: <Root />,
         errorElement: <ErrorPage />,
         children: [
-          {
-            path: "/",
-            element: <Explorer />,
-            children:[
-              {
-                path:"explorer/:songID",
-                element:<Song/>
-              }
-            ]
-          },
-          {
-            path: "song/:songID",
-            element: <Song />,
-          },
-          {
-            path: "about",
-            element: <About />,
-          },
-          {
-            path: "suggest",
-            element: <SuggestSong />,
-          },
-          {
-            path: "archive",
-            element: <Archive />,
-          },
-          {
-            path: "archive/search/:search",
-            element: <Archive />,
-          },
-        ]
+            {
+                path: "/",
+                element: <Explorer />,
+                children: [
+                    {
+                        path: "/explorer/:songID",
+                        element: <Song />,
+                    },
+                ],
+            },
+            {
+                path: "about",
+                element: <About />,
+            },
+            {
+                path: "suggest",
+                element: <SuggestSong />,
+            },
+            {
+                path: "archive",
+                element: <Archive />,
+                children: [
+                    {
+                        path: "/archive/:songID",
+                        element: <Song />,
+                    },
+                ],
+            },
+            {
+                path: "archive/search/:search",
+                element: <Archive />,
+            },
+        ],
     },
 ]);
 

@@ -1,12 +1,16 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 import { getAlbumByID, getArtistByID } from "../apiService.js";
-import { lazy } from "react";
 
 const ListElement = ({ song }) => {
     const [artistName, setArtistName] = useState("");
     const [albumName, setAlbumName] = useState("");
+    const navigate = useNavigate();
+
+    const navigateToSong = () => {
+        navigate(`/archive/${song.id}`);
+    };
 
     useEffect(() => {
         let artistName = "";
@@ -28,7 +32,7 @@ const ListElement = ({ song }) => {
     }, []);
 
     return (
-        <tr>
+        <tr onClick={navigateToSong}>
             <td width={80}>
                 <img
                     src={song.metadata.thumbnail.imgix_url}

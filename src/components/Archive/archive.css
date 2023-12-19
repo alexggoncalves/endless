@@ -27,6 +27,7 @@
     align-items: center;
     font-size: 12px;
     cursor: pointer;
+    z-index: 200;
 }
 
 .outside-filters{
@@ -34,7 +35,6 @@
     top: 0;
     left: 0;
     z-index: 0;
-    
     height: 100vh;
     width: 100vw;
 }
@@ -96,6 +96,7 @@
     align-items: center;
     margin-right: 5%;
     margin-bottom: 6px;
+    cursor: pointer;
 }
 .checkbox-filter > .checkbox {
     display: flex;
@@ -132,6 +133,16 @@ th {
     width: 18%;
 }
 
+tr {
+    cursor: pointer;
+    padding: 20px 0;
+    
+}
+
+tr:hover{
+    background-color: rgb(242, 242, 242);
+}
+
 th:last-child,
 td:last-child {
     text-align: end;
@@ -154,9 +165,12 @@ th:nth-child(2) {
 th {
     border-bottom: 1px solid black;
 }
+td {
+    height: 7vh;
+}
 
 table img {
-    height: 7vh;
+    height: 95%;
     vertical-align: middle;
 }
 
