@@ -72,6 +72,7 @@
 
 .filter-tab:nth-child(3) {
     transform: translateX(-2px);
+    height: 120 px;
 }
 
 .filter-category {
@@ -112,6 +113,14 @@
     background-color: black;
     width: 10px;
     height: 10px;
+}
+
+.filter-apply {
+    position: absolute;
+    width: 90%;
+    left: 0;
+    bottom: 0;
+    padding: 5%;
 }
 
 table {

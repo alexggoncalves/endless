@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const Header = () => {
     return (
         <header className="black-bg white-text">
-            <Link className="logo" to={""}>Endless</Link>
+            <Link className="logo" to={""}>endless</Link>
             <nav>
                 <Link to={""}>EXPLORER</Link>
                 <Link to={"/archive"}>ARCHIVE</Link>

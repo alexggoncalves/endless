@@ -1,29 +1,14 @@
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getArtistByID } from "../apiService.js";
 
+import { artistsToString } from "../../utils";
 import Subtitle from "./Subtitle";
 
 function SongTile({ position, size, song }) {
-    const [artist, setArtist] = useState("");
     const navigate = useNavigate();
-    
+
     const img = useLoader(TextureLoader, song.metadata.thumbnail.imgix_url);
-
-    useEffect(() => {
-        let output = "";
-        for (let i = 0; i < song.metadata.artist.length; i++) {
-            getArtistByID(song.metadata.artist[i]).then((artist) => {
-                if (i == song.metadata.artist.length - 1) {
-                    output += artist.title;
-                } else output += artist.title + ", ";
-
-                setArtist(output);
-            });
-        }
-    }, []);
 
     const navigateToSong = () => {
         navigate(`/explorer/${song.id}`);
@@ -42,7 +27,7 @@ function SongTile({ position, size, song }) {
             <Subtitle
                 position={[position.x - size / 2, position.y - size / 2, 1.1]}
                 title={song.title}
-                artist={artist}
+                artist={artistsToString(song.metadata.artist)}
             />
         </>
     );

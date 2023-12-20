@@ -9,7 +9,17 @@ export const getAllSongs = async () => {
     try {
         const response = await cosmic.objects.find({
             type: "songs",
-        });
+        }).props([
+            'id',
+            'title',
+            'metadata.artist',
+            'metadata.album',
+            'metadata.cover_image',
+            'metadata.thumbnail',
+            'metadata.year',
+            'metadata.genre',
+            'metadata.duration'
+        ]);
 
         return response.objects;
     } catch {
@@ -21,7 +31,17 @@ export const getSongByID = async (id) => {
     const response = await cosmic.objects.find({
         type: "songs",
         id: id,
-    });
+    }).props([
+        'id',
+        'title',
+        'metadata.artist',
+        'metadata.album',
+        'metadata.cover_image',
+        'metadata.thumbnail',
+        'metadata.year',
+        'metadata.genre',
+        'metadata.duration'
+    ]);;
 
     return response.objects[0];
 };
@@ -51,7 +71,17 @@ export const searchSongsByName = async (name) => {
                 $regex: name,
                 $options: "i", // case insensitive
             },
-        });
+        }).props([
+            'id',
+            'title',
+            'metadata.artist',
+            'metadata.album',
+            'metadata.cover_image',
+            'metadata.thumbnail',
+            'metadata.year',
+            'metadata.genre',
+            'metadata.duration'
+        ]);;
         return response.objects;
         // return response.objects;
     } catch(error) {

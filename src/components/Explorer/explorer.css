@@ -13,11 +13,10 @@
     -webkit-mask: -webkit-radial-gradient(
         center,
         closest-side,
-        transparent 30%,
-        white 80%
+        transparent 60%,
+        white 90%
     );
-    mask: radial-gradient(circle at center, transparent 30%, white 70%);
-    /* -webkit-mask: radial-gradient(circle at center, transparent 30%, white 70%); */
+    mask: radial-gradient(circle at center, transparent 60%, white 90%);
     backdrop-filter: blur(4px);
 }
 
