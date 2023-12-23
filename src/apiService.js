@@ -22,8 +22,9 @@ export const getAllSongs = async () => {
         ]);
 
         return response.objects;
-    } catch {
-        console.log("a");
+    } catch (error) {
+        console.log(error);
+        throw error
     }
 };
 

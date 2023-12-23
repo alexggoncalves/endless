@@ -6,21 +6,16 @@ const useFilters = create((set) => ({
         language: [],
         year: [],
     },
-
-    applyFilters: false,
-    setApply: (value) =>
-        set((state) => {
-            applyFilters: value;
-        }),
-
-    addFilter: (type, value) =>
+    addFilter: (type, value) => {
         set((state) => ({
             filters: {
                 ...state.filters,
                 [type]: [...state.filters[type], value],
             },
-        })),
-    removeFilter: (type, value) =>
+        }));
+    },
+
+    removeFilter: (type, value) => {
         set((state) => ({
             filters: {
                 ...state.filters,
@@ -28,7 +23,28 @@ const useFilters = create((set) => ({
                     return filter != value;
                 }),
             },
-        })),
+        }));
+    },
+
+    clearFilter: (type) => {
+        set((state) => ({
+            filters: {
+                ...state.filters,
+                [type]: [],
+            },
+        }));
+    },
+
+    clearAllFilters: () => {
+        set((state) => ({
+            filters: {
+                genre: [],
+                language: [],
+                year: [],
+            },
+        }));
+    },
+
 }));
 
 export default useFilters;

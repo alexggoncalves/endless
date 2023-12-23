@@ -40,12 +40,21 @@
 }
 
 .filters-indicator {
+    justify-content: center;
+    align-items: center;
     border-radius: 50%;
     border: 1px solid black;
-    display: inline-block;
+    display: flex;
     width: 10px;
     height: 10px;
     margin-left: 10px;
+}
+
+.filters-indicator-fill {
+    border-radius: 50%;
+    background-color: black;
+    width: 8px;
+    height: 8px;
 }
 
 .filters-container {
@@ -116,11 +125,18 @@
 }
 
 .filter-apply {
+    box-sizing: border-box;
     position: absolute;
-    width: 90%;
-    left: 0;
+    width: 192px;
+    right: 2px;
     bottom: 0;
-    padding: 5%;
+    padding: 3%;
+    /* transform: translateY(100%); */
+    cursor: pointer;
+}
+
+.filter-apply:hover {
+    background-color: grey;
 }
 
 table {
@@ -158,7 +174,7 @@ th {
     border-bottom: 1px solid black;
 }
 
-th>span {
+th > span {
     cursor: pointer;
 }
 

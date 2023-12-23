@@ -1,51 +1,50 @@
-import { useState} from "react";
-import CheckboxFilter from "./CheckboxFilter";
+import { useEffect, useState } from "react";
 
+import GenreFilter from "./GenreFilter";
+import LanguageFilter from "./LanguageFilter";
+import YearFilter from "./YearFilter";
 
-const Filters = () => {
+import useFilters from "./useFilters";
+
+const Filters = ({ toggleFilters, applied }) => {
     const [visible, setVisible] = useState(false);
-    
+    const clearFilters = useFilters((state) => state.clearAllFilters);
 
     const toggleVisibility = () => {
         setVisible(!visible);
     };
 
+    const handleToggleFilters = () => {
+        toggleFilters();
+        setVisible(false);
+        if(applied) clearFilters()
+    };
+
     return (
         <>
-            <div className={`outside-filters${!visible ? " hidden" : ""}`} onClick={toggleVisibility}></div>
+            <div
+                className={`outside-filters${!visible ? " hidden" : ""}`}
+                onClick={toggleVisibility}
+            ></div>
             <div className="filters-button" onClick={toggleVisibility}>
                 FILTERS
-                <span className="filters-indicator"></span>
+                <span className="filters-indicator">
+                    <span
+                        className={`filters-indicator-fill${
+                            !applied ? " hidden" : ""
+                        }`}
+                    ></span>
+                </span>
             </div>
             <div className={`filters-container${!visible ? " hidden" : ""}`}>
-                <div className="filter-tab">
-                    <div className="filter-category">GENRE</div>
-                    <div className="filter-list">
-                        <CheckboxFilter type='genre' value="Pop" />
-                        <CheckboxFilter type='genre' value="Rock" />
-                        <CheckboxFilter type='genre' value="Hip-hop/Rap" />
-                        <CheckboxFilter type='genre' value="Electronic/Dance" />
-                        <CheckboxFilter type='genre' value="Pop" />
-                        <CheckboxFilter type='genre' value="Rock" />
-                        <CheckboxFilter type='genre' value="Hip-hop/Rap" />
-                        <CheckboxFilter type='genre' value="Electronic/Dance" />
-                        <CheckboxFilter type='genre' value="Pop" />
-                        <CheckboxFilter type='genre' value="Rock" />
-                        <CheckboxFilter type='genre' value="Hip-hop/Rap" />
-                        <CheckboxFilter type='genre' value="Electronic/Dance" />
-                    </div>
-                </div>
-
-                <div className="filter-tab">
-                    <span className="filter-category">LANGUAGE</span>
-                    <div className="filter-list">
-                    <CheckboxFilter type='language' value="Portuguese" />
-                    <CheckboxFilter type='language' value="English" />
-                    </div>
-                </div>
-                <div className="filter-tab">
-                    <span className="filter-category">RELEASE YEAR</span>
-                    <div className="filter-apply black-bg white-text">APPLY FILTERS</div>
+                <GenreFilter></GenreFilter>
+                <LanguageFilter></LanguageFilter>
+                <YearFilter></YearFilter>
+                <div
+                    className="filter-apply black-bg white-text"
+                    onClick={handleToggleFilters}
+                >
+                    {!applied ? "APPLY FILTERS" : "REMOVE FILTERS"}
                 </div>
             </div>
         </>

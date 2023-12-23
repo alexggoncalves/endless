@@ -8,14 +8,21 @@ import { Outlet } from "react-router-dom";
 import useFilters from "./useFilters";
 
 import { getAllSongs, searchSongsByName } from "../../apiService.js";
+import ListHeader from "./ListHeader.jsx";
 
 const Archive = () => {
     const [list, setList] = useState();
     const [searchInput, setSearchInput] = useState();
-    const [orderBy, setOrderBy] = useState("title");
-    const [orderDirection, setOrderDirection] = useState("asc");
-    const genreFilters = useFilters((state) => state.genreFilters);
+    const [filtersApplied, setFiltersApplied] = useState(false);
 
+    const [order, setOrder] = useState({ by: "artist", direction: true });  // direction: true -> asc  //  false -> desc
+   
+
+    const filters = useFilters((state) => state.filters);
+
+    const toggleFilters = () => {
+        setFiltersApplied(!filtersApplied);
+    };
 
     const updateInput = (event) => {
         if (event.target.value != "") {
@@ -24,11 +31,9 @@ const Archive = () => {
     };
 
     const getAll = () => {
-        getAllSongs()
-            .then((songs) => {
-                if (songs) setList(songs);
-            })
-            .catch((error) => console.log(error));
+        getAllSongs().then((songs) => {
+            if (songs) setList(songs);
+        });
     };
 
     useEffect(() => {
@@ -58,34 +63,19 @@ const Archive = () => {
                 type="text"
                 placeholder="Search..."
             />
-            <Filters></Filters>
+            <Filters toggleFilters={toggleFilters} applied={filtersApplied} />
 
-            {/* List */}
+            {/* Songs table */}
             <table>
                 <tbody>
-                    <tr>
-                        <th></th>
-                        <th>
-                            <span>TITLE/ARTIST</span>
-                        </th>
-                        <th>
-                            <span>ALBUM</span>
-                        </th>
-                        <th>
-                            <span>GENRE</span>
-                        </th>
-                        <th>
-                            <span>YEAR</span>
-                        </th>
-                        <th>
-                            <span>DURATION</span>
-                        </th>
-                    </tr>
+                    <ListHeader />
                     {list?.map((song) => (
                         <ListElement key={uuidv4()} song={song} />
                     ))}
                 </tbody>
             </table>
+
+            {/* Song details page (opens when url changes to .../archive/:songID) */}
             <Outlet />
         </>
     );

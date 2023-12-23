@@ -1,32 +1,27 @@
-import { useState} from "react";
+import { useState } from "react";
 import useFilters from "./useFilters";
 
 const CheckboxFilter = ({ type, value }) => {
     const [active, setActive] = useState(false);
+    const filters = useFilters((state) => state.filters);
 
-    const filters = useFilters((state)=>state.filters)
-    const addFilter = useFilters((state)=>state.addFilter)
-    const removeFilter = useFilters((state)=>state.removeFilter)
+    const addFilter = useFilters((state) => state.addFilter);
+    const removeFilter = useFilters((state) => state.removeFilter);
 
     const toggleFilter = () => {
-        if (active) {
-            setActive(false);
-            removeFilter(type,value)
-            console.log(filters)
+        if (filters[type].includes(value)) {
+            removeFilter(type, value);
         } else {
-            setActive(true);
-            addFilter(type, value)
-            console.log(filters)
+            addFilter(type, value);
         }
     };
 
     return (
         <div className="checkbox-filter" onClick={toggleFilter}>
             {value}
-
             <span className="checkbox">
                 <span
-                    className={`checkbox-fill${!active ? " hidden" : ""}`}
+                    className={`checkbox-fill${!filters[type].includes(value) ? " hidden" : ""}`}
                 ></span>
             </span>
         </div>
