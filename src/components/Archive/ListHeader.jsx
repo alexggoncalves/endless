@@ -1,32 +1,52 @@
 import { useState } from "react";
 import useOrder from "./useOrder";
 
-const ListHeader = () => {
-    const set = useOrder((state) => state.setOrder);
-    const currentOrder = useOrder((state) => state.order);
+import triangle from "../../assets/triangle.png";
+
+const ListHeader = ({ sortList }) => {
+    const [orderBy, setOrderBy] = useState("title");
+    const [orderDirection, setOrderDirection] = useState(true);
 
     const setOrder = (value) => {
-        let orderBy = currentOrder.by;
-        let direction = currentOrder.direction; // direction: true -> asc  //  false -> desc
-
         if (value == "title/artist") {
             if (orderBy != "title" && orderBy != "artist") {
-                orderBy = "title";
-                direction = true;
-            } else if (direction == false) {
-                if (orderBy == "title") orderBy = "artist";
-                else orderBy = "title";
-                direction = true;
+                sortList("title", true);
+                setOrderBy("title");
+                setOrderDirection(true);
+            } else if (orderDirection == false) {
+                if (orderBy == "title") {
+                    sortList("artist", true);
+                    setOrderBy("artist");
+                } else {
+                    sortList("title", true);
+                    setOrderBy("title");
+                }
+                setOrderDirection(true);
             } else {
-                direction = false;
+                setOrderDirection(false);
+                sortList(orderBy, false);
             }
-        } else if (value == orderBy) direction = !direction;
-        else {
-            orderBy = value;
-            direction = true;
+        } else if (value == orderBy) {
+            sortList(value, !orderDirection);
+            setOrderBy(value);
+            setOrderDirection(!orderDirection);
+            return;
+        } else {
+            sortList(value, true);
+            setOrderBy(value);
+            setOrderDirection(true);
+            return;
         }
-        console.log(`by:${orderBy}\ndirection:${direction}`);
-        set(orderBy, direction);
+    };
+
+    const DirectionTriangle = () => {
+        return (
+            <img
+                src={triangle}
+                alt="triangle"
+                className={`orderTriangle ${orderDirection ? "invert" : ""}`}
+            />
+        );
     };
 
     return (
@@ -34,20 +54,53 @@ const ListHeader = () => {
             <th></th>
             <th>
                 <span onClick={() => setOrder("title/artist")}>
-                    <span>TITLE</span>/<span>ARTIST</span>
+                    <span className={orderBy == "title" ? "bold" : undefined}>
+                        TITLE
+                    </span>
+                    {" / "}
+                    <span className={orderBy == "artist" ? "bold" : undefined}>
+                        ARTIST
+                    </span>
+                    {orderBy == "title" || orderBy == "artist" ? (
+                        <DirectionTriangle />
+                    ) : undefined}
                 </span>
             </th>
             <th>
-                <span onClick={() => setOrder("album")}>ALBUM</span>
+                <span
+                    className={orderBy == "album" ? "bold" : undefined}
+                    onClick={() => setOrder("album")}
+                >
+                    ALBUM
+                    {orderBy == "album" ? <DirectionTriangle /> : undefined}
+                </span>
             </th>
             <th>
-                <span onClick={() => setOrder("genre")}>GENRE</span>
+                <span
+                    className={orderBy == "genre" ? "bold" : undefined}
+                    onClick={() => setOrder("genre")}
+                >
+                    GENRE
+                    {orderBy == "genre" ? <DirectionTriangle /> : undefined}
+                </span>
             </th>
             <th>
-                <span onClick={() => setOrder("year")}>YEAR</span>
+                <span
+                    className={orderBy == "year" ? "bold" : undefined}
+                    onClick={() => setOrder("year")}
+                >
+                    YEAR
+                    {orderBy == "year" ? <DirectionTriangle /> : undefined}
+                </span>
             </th>
             <th>
-                <span onClick={() => setOrder("duration")}>DURATION</span>
+                <span
+                    className={orderBy == "duration" ? "bold" : undefined}
+                    onClick={() => setOrder("duration")}
+                >
+                    DURATION
+                    {orderBy == "duration" ? <DirectionTriangle /> : undefined}
+                </span>
             </th>
         </tr>
     );

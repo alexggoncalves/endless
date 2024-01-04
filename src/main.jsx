@@ -10,6 +10,7 @@ import Archive from "./components/Archive/Archive.jsx";
 
 import "./general.css";
 import Explorer from "./components/Explorer/Explorer.jsx";
+import { MusicProvider } from "./contexts/MusicContext.jsx";
 
 const router = createBrowserRouter([
     {
@@ -55,6 +56,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+        <MusicProvider>
+            <RouterProvider router={router} />
+        </MusicProvider>
     </React.StrictMode>
 );

@@ -28,6 +28,7 @@
     font-size: 12px;
     cursor: pointer;
     z-index: 200;
+    user-select: none;
 }
 
 .outside-filters {
@@ -170,12 +171,15 @@ th {
     font-family: "Mulish";
     font-weight: normal;
     padding-bottom: 15px;
-    width: 18%;
+    width: 18vw;
     border-bottom: 1px solid black;
+    
 }
 
 th > span {
     cursor: pointer;
+    position: relative;
+    user-select: none;
 }
 
 td {
@@ -207,5 +211,19 @@ th:nth-child(2) {
 }
 
 .song-title {
+    font-weight: bold;
+}
+
+.orderTriangle {
+    height: 50%;
+    position: absolute;
+    transform: translate(5px,0.25rem);
+}
+
+.invert {
+    transform: translate(5px,0.2rem) rotate(180deg) ;
+}
+
+.bold {
     font-weight: bold;
 }

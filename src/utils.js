@@ -8,3 +8,18 @@ export const artistsToString = (array) => {
     }
     return output;
 };
+
+export const orderByName = (a, b) => {
+    const nameA = a.toUpperCase();
+    const nameB = b.toUpperCase();
+
+    if (nameA < nameB) {
+        return -1;
+    }
+    if (nameA > nameB) {
+        return 1;
+    }
+
+    // names must be equal
+    return 0;
+};

@@ -1,21 +1,23 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
 import { getSongByID } from "../../apiService.js";
 
 import "./song.css";
+import { MusicContext } from "../../contexts/MusicContext.jsx";
 
 function Song() {
-    const [songInfo, setInfo] = useState(null);
     const { songID } = useParams();
     const location = useLocation();
 
+    const [song, setSong] = useState();
+
+    const { getSongByID } = useContext(MusicContext);
+
     useEffect(() => {
-        getSongByID(songID).then((response) => {
-            setInfo(response);
-        });
+        getSongByID(songID).then((song) => setSong(song));
     }, []);
 
-    if (songInfo) {
+    if (song) {
         return (
             <div className="song-details-container">
                 <Link
@@ -27,11 +29,11 @@ function Song() {
                 >
                     bacc
                 </Link>
-                <h1>{songInfo.title}</h1>
+                <h1>{song.title}</h1>
                 <img
                     height={400}
-                    src={songInfo.metadata.cover_image.imgix_url}
-                    alt={songInfo.title + " cover art"}
+                    src={song.metadata.cover_image.imgix_url}
+                    alt={song.title + " cover art"}
                 />
             </div>
         );

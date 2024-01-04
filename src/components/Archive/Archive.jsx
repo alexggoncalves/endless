@@ -5,20 +5,17 @@ import ListElement from "./ListElement.jsx";
 import { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Outlet } from "react-router-dom";
-import useFilters from "./useFilters";
 
-import { getAllSongs, searchSongsByName } from "../../apiService.js";
+
 import ListHeader from "./ListHeader.jsx";
+import { MusicContext } from "../../contexts/MusicContext.jsx";
 
 const Archive = () => {
-    const [list, setList] = useState();
-    const [searchInput, setSearchInput] = useState();
     const [filtersApplied, setFiltersApplied] = useState(false);
 
-    const [order, setOrder] = useState({ by: "artist", direction: true });  // direction: true -> asc  //  false -> desc
-   
-
-    const filters = useFilters((state) => state.filters);
+    const { fetchSongs, songs, setSearchInput, setOrderDirection, setOrderBy } =
+        useContext(MusicContext);
+    fetchSongs();
 
     const toggleFilters = () => {
         setFiltersApplied(!filtersApplied);
@@ -27,32 +24,13 @@ const Archive = () => {
     const updateInput = (event) => {
         if (event.target.value != "") {
             setSearchInput(event.target.value);
-        } else setSearchInput(null);
+        } else setSearchInput("");
     };
 
-    const getAll = () => {
-        getAllSongs().then((songs) => {
-            if (songs) setList(songs);
-        });
+    const sortList = (by, direction) => {
+        setOrderBy(by);
+        setOrderDirection(direction);
     };
-
-    useEffect(() => {
-        getAll();
-    }, []);
-
-    useEffect(() => {
-        if (searchInput) {
-            searchSongsByName(searchInput)
-                .then((songs) => {
-                    setList(songs);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        } else {
-            getAll();
-        }
-    }, [searchInput]);
 
     return (
         <>
@@ -68,8 +46,8 @@ const Archive = () => {
             {/* Songs table */}
             <table>
                 <tbody>
-                    <ListHeader />
-                    {list?.map((song) => (
+                    <ListHeader sortList={sortList} />
+                    {songs?.map((song) => (
                         <ListElement key={uuidv4()} song={song} />
                     ))}
                 </tbody>
