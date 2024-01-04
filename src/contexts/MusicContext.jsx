@@ -43,7 +43,7 @@ export function MusicProvider({ children }) {
                 "metadata.thumbnail",
             ])
             .then((response) => {
-                setSongs(response);
+                setSongs(response.objects);
             });
     };
 
