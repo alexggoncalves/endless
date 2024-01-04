@@ -96,7 +96,7 @@ export function MusicProvider({ children }) {
                     "metadata.duration",
                 ])
                 .then((response) => {
-                    setSongs(sortList([...response.objects], "title", 1));
+                    setSongs(sortList([...response.objects], sortBy, sortDirection));
                 })
                 .catch((e) => {
                     setSongs([]);
