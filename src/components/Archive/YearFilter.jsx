@@ -1,5 +1,3 @@
-import useFilters from "./useFilters";
-
 const YearFilter = () => {
 
     return (

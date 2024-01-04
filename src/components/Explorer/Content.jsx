@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import SongTile from "./SongTile";
-import { getAllSongs } from "../../apiService.js";
 
 const maxSize = 250,
     minSize = 180;

@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { createBucketClient } from "@cosmicjs/sdk";
+import { sortList } from "../utils";
 
 const initialValue = null;
 
@@ -17,11 +18,14 @@ const filtersInit = { genre: [], language: [], year: [] };
 export function MusicProvider({ children }) {
     const [songs, setSongs] = useState([]);
     const [loading, setLoading] = useState([]);
-    // const [song, setSong] = useState();
-    const [orderBy, setOrderBy] = useState("title"); //title,artist,
-    const [orderDirection, setOrderDirection] = useState(true); // asc = true , desc = false
+    const [sortBy, setSortBy] = useState("title"); //title,artist,
+    const [sortDirection, setSortDirection] = useState(1); // asc = 1 , desc = -1
     const [searchInput, setSearchInput] = useState("");
     const [filters, setFilters] = useState(filtersInit);
+
+    useEffect(() => {
+        setSongs(sortList([...songs], sortBy, sortDirection));
+    }, [sortBy, sortDirection]);
 
     const getAllSongs = () => {
         cosmic.objects
@@ -37,11 +41,11 @@ export function MusicProvider({ children }) {
                 "metadata.thumbnail",
             ])
             .then((response) => {
-                setSongs(response.objects);
+                setSongs(response);
             });
     };
 
-    const fetchSongs = () => {
+    const getArchiveSongs = () => {
         useEffect(() => {
             cosmic.objects
                 .find({
@@ -50,6 +54,16 @@ export function MusicProvider({ children }) {
                         $regex: searchInput,
                         $options: "i",
                     },
+                    // {
+                    //     "metadata.artist": {
+                    //         $elemMatch: {
+                    //             title: {
+                    //                 $regex: input,
+                    //                 $options: "i",
+                    //             },
+                    //         },
+                    //     },
+                    // },
                 })
                 .props([
                     "id",
@@ -63,7 +77,10 @@ export function MusicProvider({ children }) {
                     "metadata.duration",
                 ])
                 .then((response) => {
-                    setSongs(response.objects);
+                    setSongs(sortList([...response.objects], "title", 1));
+                })
+                .catch((e) => {
+                    console.log(e);
                 });
         }, [searchInput]);
     };
@@ -114,22 +131,26 @@ export function MusicProvider({ children }) {
     };
 
     const clearAllFilters = () => {
-        setFilters(filtersInit)
-    }
+        setFilters(filtersInit);
+    };
 
     return (
         <MusicContext.Provider
             value={{
                 songs,
                 getSongByID,
-                fetchSongs,
-                setOrderBy,
-                setOrderDirection,
+                getArchiveSongs,
+                sortBy,
+                setSortBy,
+                sortDirection,
+                setSortDirection,
                 setSearchInput,
                 getAllSongs,
                 addFilter,
                 removeFilter,
                 filters,
+                clearFilter,
+                clearAllFilters,
             }}
         >
             {children}

@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 import GenreFilter from "./GenreFilter";
 import LanguageFilter from "./LanguageFilter";
 import YearFilter from "./YearFilter";
 
-import useFilters from "./useFilters";
+import { MusicContext } from "../../contexts/MusicContext";
 
 const Filters = ({ toggleFilters, applied }) => {
     const [visible, setVisible] = useState(false);
-    const clearFilters = useFilters((state) => state.clearAllFilters);
+
+    const {clearAllFilters} = useContext(MusicContext)
 
     const toggleVisibility = () => {
         setVisible(!visible);
@@ -17,7 +18,7 @@ const Filters = ({ toggleFilters, applied }) => {
     const handleToggleFilters = () => {
         toggleFilters();
         setVisible(false);
-        if(applied) clearFilters()
+        if(applied) clearAllFilters()
     };
 
     return (

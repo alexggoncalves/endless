@@ -214,7 +214,7 @@ th:nth-child(2) {
     font-weight: bold;
 }
 
-.orderTriangle {
+.sortTriangle {
     height: 50%;
     position: absolute;
     transform: translate(5px,0.25rem);

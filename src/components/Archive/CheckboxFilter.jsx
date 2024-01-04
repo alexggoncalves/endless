@@ -1,10 +1,7 @@
-import { useContext, useState } from "react";
-import useFilters from "./useFilters";
+import { useContext} from "react";
 import { MusicContext } from "../../contexts/MusicContext";
 
 const CheckboxFilter = ({ type, value }) => {
-    const [active, setActive] = useState(false);
-
     let {addFilter,removeFilter,filters} = useContext(MusicContext)
 
     const toggleFilter = () => {

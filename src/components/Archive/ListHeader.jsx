@@ -1,41 +1,34 @@
-import { useState } from "react";
-import useOrder from "./useOrder";
+import { useContext } from "react";
 
 import triangle from "../../assets/triangle.png";
+import { MusicContext } from "../../contexts/MusicContext";
 
-const ListHeader = ({ sortList }) => {
-    const [orderBy, setOrderBy] = useState("title");
-    const [orderDirection, setOrderDirection] = useState(true);
+const ListHeader = () => {
+    const { sortBy, setSortBy, sortDirection, setSortDirection } =
+        useContext(MusicContext);
 
-    const setOrder = (value) => {
+    const setSort = (value) => {
         if (value == "title/artist") {
-            if (orderBy != "title" && orderBy != "artist") {
-                sortList("title", true);
-                setOrderBy("title");
-                setOrderDirection(true);
-            } else if (orderDirection == false) {
-                if (orderBy == "title") {
-                    sortList("artist", true);
-                    setOrderBy("artist");
+            if (sortBy != "title" && sortBy != "artist") {
+                setSortBy("title");
+                setSortDirection(1);
+            } else if (sortDirection == -1) {
+                if (sortBy == "title") {
+                    setSortBy("artist");
                 } else {
-                    sortList("title", true);
-                    setOrderBy("title");
+                    setSortBy("title");
                 }
-                setOrderDirection(true);
+                setSortDirection(1);
             } else {
-                setOrderDirection(false);
-                sortList(orderBy, false);
+                setSortDirection(-1);
             }
-        } else if (value == orderBy) {
-            sortList(value, !orderDirection);
-            setOrderBy(value);
-            setOrderDirection(!orderDirection);
-            return;
+        } else if (value == sortBy) {
+            setSortBy(value);
+            if(sortDirection == 1) setSortDirection(-1)
+            else setSortDirection(1);
         } else {
-            sortList(value, true);
-            setOrderBy(value);
-            setOrderDirection(true);
-            return;
+            setSortBy(value);
+            setSortDirection(1);
         }
     };
 
@@ -44,7 +37,7 @@ const ListHeader = ({ sortList }) => {
             <img
                 src={triangle}
                 alt="triangle"
-                className={`orderTriangle ${orderDirection ? "invert" : ""}`}
+                className={`sortTriangle ${sortDirection == 1 ? "invert" : ""}`}
             />
         );
     };
@@ -53,53 +46,53 @@ const ListHeader = ({ sortList }) => {
         <tr>
             <th></th>
             <th>
-                <span onClick={() => setOrder("title/artist")}>
-                    <span className={orderBy == "title" ? "bold" : undefined}>
+                <span onClick={() => setSort("title/artist")}>
+                    <span className={sortBy == "title" ? "bold" : undefined}>
                         TITLE
                     </span>
                     {" / "}
-                    <span className={orderBy == "artist" ? "bold" : undefined}>
+                    <span className={sortBy == "artist" ? "bold" : undefined}>
                         ARTIST
                     </span>
-                    {orderBy == "title" || orderBy == "artist" ? (
+                    {sortBy == "title" || sortBy == "artist" ? (
                         <DirectionTriangle />
                     ) : undefined}
                 </span>
             </th>
             <th>
                 <span
-                    className={orderBy == "album" ? "bold" : undefined}
-                    onClick={() => setOrder("album")}
+                    className={sortBy == "album" ? "bold" : undefined}
+                    onClick={() => setSort("album")}
                 >
                     ALBUM
-                    {orderBy == "album" ? <DirectionTriangle /> : undefined}
+                    {sortBy == "album" ? <DirectionTriangle /> : undefined}
                 </span>
             </th>
             <th>
                 <span
-                    className={orderBy == "genre" ? "bold" : undefined}
-                    onClick={() => setOrder("genre")}
+                    className={sortBy == "genre" ? "bold" : undefined}
+                    onClick={() => setSort("genre")}
                 >
                     GENRE
-                    {orderBy == "genre" ? <DirectionTriangle /> : undefined}
+                    {sortBy == "genre" ? <DirectionTriangle /> : undefined}
                 </span>
             </th>
             <th>
                 <span
-                    className={orderBy == "year" ? "bold" : undefined}
-                    onClick={() => setOrder("year")}
+                    className={sortBy == "year" ? "bold" : undefined}
+                    onClick={() => setSort("year")}
                 >
                     YEAR
-                    {orderBy == "year" ? <DirectionTriangle /> : undefined}
+                    {sortBy == "year" ? <DirectionTriangle /> : undefined}
                 </span>
             </th>
             <th>
                 <span
-                    className={orderBy == "duration" ? "bold" : undefined}
-                    onClick={() => setOrder("duration")}
+                    className={sortBy == "duration" ? "bold" : undefined}
+                    onClick={() => setSort("duration")}
                 >
                     DURATION
-                    {orderBy == "duration" ? <DirectionTriangle /> : undefined}
+                    {sortBy == "duration" ? <DirectionTriangle /> : undefined}
                 </span>
             </th>
         </tr>
