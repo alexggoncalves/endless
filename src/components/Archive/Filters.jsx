@@ -6,19 +6,21 @@ import YearFilter from "./YearFilter";
 
 import { MusicContext } from "../../contexts/MusicContext";
 
-const Filters = ({ toggleFilters, applied }) => {
+const Filters = () => {
     const [visible, setVisible] = useState(false);
 
-    const {clearAllFilters} = useContext(MusicContext)
+    const { clearAllFilters, areFiltersActive, applyFilters, didFiltersChange } =
+        useContext(MusicContext);
 
     const toggleVisibility = () => {
         setVisible(!visible);
     };
 
-    const handleToggleFilters = () => {
-        toggleFilters();
-        setVisible(false);
-        if(applied) clearAllFilters()
+    const applyFiltersToArchive = () => {
+        if(didFiltersChange()){
+            applyFilters();
+            setVisible(false);
+        }
     };
 
     return (
@@ -32,7 +34,7 @@ const Filters = ({ toggleFilters, applied }) => {
                 <span className="filters-indicator">
                     <span
                         className={`filters-indicator-fill${
-                            !applied ? " hidden" : ""
+                            !areFiltersActive() ? " hidden" : ""
                         }`}
                     ></span>
                 </span>
@@ -42,10 +44,12 @@ const Filters = ({ toggleFilters, applied }) => {
                 <LanguageFilter></LanguageFilter>
                 <YearFilter></YearFilter>
                 <div
-                    className="filter-apply black-bg white-text"
-                    onClick={handleToggleFilters}
+                    className={`filter-apply black-bg white-text${
+                        !didFiltersChange() ? " disabled" : ""
+                    }`}
+                    onClick={applyFiltersToArchive}
                 >
-                    {!applied ? "APPLY FILTERS" : "REMOVE FILTERS"}
+                    APPLY
                 </div>
             </div>
         </>

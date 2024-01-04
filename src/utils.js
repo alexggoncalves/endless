@@ -44,13 +44,11 @@ const sortByInt = (a, b, direction) => {
     return (a - b) * direction;
 };
 const sortByTitle = (array, direction) => {
-    console.log(array);
     const temp = array;
     temp.sort((a, b) => sortByString(a.title, b.title, direction));
     return temp;
 };
 const sortByArtist = (array, direction) => {
-    console.log("artist", direction);
     const temp = array;
     temp.sort((a, b) =>
         sortByString(
@@ -63,7 +61,6 @@ const sortByArtist = (array, direction) => {
 };
 
 const sortByAlbum = (array, direction) => {
-    console.log("album", direction);
     const temp = array;
     temp.sort((a, b) =>
         sortByString(a.metadata.album.title, b.metadata.album.title, direction)
@@ -72,7 +69,6 @@ const sortByAlbum = (array, direction) => {
 };
 
 const sortByGenre = (array, direction) => {
-    console.log("genre", direction);
     const temp = array;
     temp.sort((a, b) =>
         sortByString(a.metadata.genre, b.metadata.genre, direction)
@@ -81,14 +77,12 @@ const sortByGenre = (array, direction) => {
 };
 
 const sortByYear = (array, direction) => {
-    console.log("year", direction);
     const temp = array;
     temp.sort((a, b) => sortByInt(a.metadata.year, b.metadata.year, direction));
     return temp;
 };
 
 const sortByDuration = (array, direction) => {
-    console.log("duration", direction);
     const temp = array;
     temp.sort((a, b) =>
         sortByString(a.metadata.duration, b.metadata.duration, direction)

@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { createBucketClient } from "@cosmicjs/sdk";
 import { sortList } from "../utils";
+import _, { filter } from 'lodash';
 
 const initialValue = null;
 
@@ -21,7 +22,8 @@ export function MusicProvider({ children }) {
     const [sortBy, setSortBy] = useState("title"); //title,artist,
     const [sortDirection, setSortDirection] = useState(1); // asc = 1 , desc = -1
     const [searchInput, setSearchInput] = useState("");
-    const [filters, setFilters] = useState(filtersInit);
+    const [selectedFilters, setSelectedFilters] = useState(filtersInit);
+    const [appliedFilters, setAppliedFilters] = useState(filtersInit);
 
     useEffect(() => {
         setSongs(sortList([...songs], sortBy, sortDirection));
@@ -47,24 +49,41 @@ export function MusicProvider({ children }) {
 
     const getArchiveSongs = () => {
         useEffect(() => {
+            const query = {
+                type: "songs",
+                title: {
+                    $regex: searchInput,
+                    $options: "i",
+                },
+                // {
+                //     "metadata.artist": {
+                //         $elemMatch: {
+                //             title: {
+                //                 $regex: input,
+                //                 $options: "i",
+                //             },
+                //         },
+                //     },
+                // },
+            };
+
+            if (appliedFilters.genre.length > 0)
+                query["metadata.genre"] = {
+                    $in: appliedFilters.genre,
+                };
+
+            if (appliedFilters.language.length > 0)
+                query["metadata.language"] = {
+                    $in: appliedFilters.language,
+                };
+
+            if (appliedFilters.year.length > 0)
+                query["metadata.year"] = {
+                    $in: appliedFilters.year,
+                };
+
             cosmic.objects
-                .find({
-                    type: "songs",
-                    title: {
-                        $regex: searchInput,
-                        $options: "i",
-                    },
-                    // {
-                    //     "metadata.artist": {
-                    //         $elemMatch: {
-                    //             title: {
-                    //                 $regex: input,
-                    //                 $options: "i",
-                    //             },
-                    //         },
-                    //     },
-                    // },
-                })
+                .find(query)
                 .props([
                     "id",
                     "title",
@@ -80,10 +99,11 @@ export function MusicProvider({ children }) {
                     setSongs(sortList([...response.objects], "title", 1));
                 })
                 .catch((e) => {
-                    console.log(e);
+                    setSongs([]);
                 });
-        }, [searchInput]);
+        }, [searchInput, appliedFilters]);
     };
+
 
     const getSongByID = async (id) => {
         const response = await cosmic.objects
@@ -106,26 +126,37 @@ export function MusicProvider({ children }) {
         return response.objects[0];
     };
 
+    const applyFilters = ()=>{
+        setAppliedFilters(selectedFilters)
+    }
+
+    const didFiltersChange = ()=>{
+        return !_.isEqual(appliedFilters,selectedFilters)
+    }
+
+    const areFiltersActive = ()=>{
+        return !_.isEqual(appliedFilters,filtersInit)
+    }
+
     const addFilter = (type, value) => {
-        setFilters({
-            ...filters,
-            [type]: [...filters[type], value],
+        setSelectedFilters({
+            ...selectedFilters,
+            [type]: [...selectedFilters[type], value],
         });
-        console.log(filters);
     };
 
     const removeFilter = (type, value) => {
-        setFilters({
-            ...filters,
-            [type]: filters[type].filter((filter) => {
+        setSelectedFilters({
+            ...selectedFilters,
+            [type]: selectedFilters[type].filter((filter) => {
                 return filter != value;
             }),
         });
     };
 
     const clearFilter = (type) => {
-        setFilters({
-            ...filters,
+        setSelectedFilters({
+            ...selectedFilters,
             [type]: [],
         });
     };
@@ -148,9 +179,14 @@ export function MusicProvider({ children }) {
                 getAllSongs,
                 addFilter,
                 removeFilter,
-                filters,
                 clearFilter,
                 clearAllFilters,
+                appliedFilters,
+                applyFilters,
+                selectedFilters,
+                setSelectedFilters,
+                didFiltersChange,
+                areFiltersActive
             }}
         >
             {children}

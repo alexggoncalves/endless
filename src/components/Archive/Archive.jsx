@@ -10,8 +10,6 @@ import ListHeader from "./ListHeader.jsx";
 import { MusicContext } from "../../contexts/MusicContext.jsx";
 
 const Archive = () => {
-    const [filtersApplied, setFiltersApplied] = useState(false);
-
     const {
         getArchiveSongs,
         songs,
@@ -19,10 +17,6 @@ const Archive = () => {
     } = useContext(MusicContext);
 
     getArchiveSongs();
-
-    const toggleFilters = () => {
-        setFiltersApplied(!filtersApplied);
-    };
 
     const updateInput = (event) => {
         if (event.target.value != "") {
@@ -39,7 +33,7 @@ const Archive = () => {
                 type="text"
                 placeholder="Search..."
             />
-            <Filters toggleFilters={toggleFilters} applied={filtersApplied} />
+            <Filters/>
 
             {/* Songs table */}
             <table>

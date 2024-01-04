@@ -134,7 +134,17 @@
     padding: 3%;
     /* transform: translateY(100%); */
     cursor: pointer;
+    border: 1px solid black;
+    border-top: 0;
+    user-select: none;
 }
+
+.filter-apply.disabled {
+    cursor: default;
+    background-color: lightgrey !important; 
+}
+
+
 
 .filter-apply:hover {
     background-color: grey;
