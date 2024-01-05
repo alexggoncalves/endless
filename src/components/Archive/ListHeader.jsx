@@ -59,7 +59,7 @@ const ListHeader = () => {
                     ) : undefined}
                 </span>
             </th>
-            <th>
+            <th className="hide-in-mobile">
                 <span
                     className={sortBy == "album" ? "bold" : undefined}
                     onClick={() => setSort("album")}
@@ -86,7 +86,7 @@ const ListHeader = () => {
                     {sortBy == "year" ? <DirectionTriangle /> : undefined}
                 </span>
             </th>
-            <th>
+            <th  className="hide-in-mobile">
                 <span
                     className={sortBy == "duration" ? "bold" : undefined}
                     onClick={() => setSort("duration")}

@@ -1,19 +1,22 @@
+import { useContext } from "react";
 import CheckboxFilter from "./CheckboxFilter";
-// import useFilters from "./useFilters";
+import { MusicContext } from "../../contexts/MusicContext";
+import { v4 as uuidv4 } from "uuid";
 
 const GenreFilter = () => {
-    // const clearFilter = useFilters((state)=>state.clearFilter)
+    const { genres,clearFilter } = useContext(MusicContext);
 
     return (
         <div className="filter-tab">
-            <span className="filter-category">GENRE</span>
-            {/* <span className="filter-clear" onClick={clearFilter('genre')}>clear</span> */}
+            <div className="filter-tab-header">
+                <span className="filter-category">GENRE</span>
+                <span className="filter-clear" onClick={()=>clearFilter("genre")}>clear</span>
+            </div>
+
             <div className="filter-list">
-                <CheckboxFilter type="genre" value="Pop" />
-                <CheckboxFilter type="genre" value="Rock" />
-                <CheckboxFilter type="genre" value="Hip-hop/Rap" />
-                <CheckboxFilter type="genre" value="Electronic/Dance" />
- 
+                {genres.map((genre) => (
+                    <CheckboxFilter key={uuidv4()} type="genre" value={genre} />
+                ))}
             </div>
         </div>
     );

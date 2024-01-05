@@ -6,9 +6,15 @@ import "./explorer.css"
 
 import Content from "./Content";
 import InputController from "./InputController";
+import { useContext } from "react";
+import { MusicContext } from "../../contexts/MusicContext";
+import Loading from "../Loading";
 
+import loadingGif from "./../../assets/icons8-loading.gif"
 
 function Explorer() {
+    const {loading} = useContext(MusicContext)
+
     return (
         <>
             <div id="explorer">
@@ -22,6 +28,7 @@ function Explorer() {
             </div>
             <div id="radial-blur-mask" />
             <Outlet/>
+            {loading ? <Loading loadingGif={loadingGif}/> : undefined}
         </>
     );
 }

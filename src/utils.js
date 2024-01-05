@@ -40,7 +40,7 @@ const sortByString = (a, b, direction) => {
     return 0;
 };
 
-const sortByInt = (a, b, direction) => {
+export const sortByInt = (a, b, direction) => {
     return (a - b) * direction;
 };
 const sortByTitle = (array, direction) => {

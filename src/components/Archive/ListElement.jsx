@@ -20,10 +20,10 @@ const ListElement = ({ song }) => {
                 <div className="song-title">{song.title}</div>
                 <div>{song.metadata.artist[0].title}</div>
             </td>
-            <td>{song.metadata.album.title}</td>
+            <td  className="hide-in-mobile">{song.metadata.album.title}</td>
             <td>{song.metadata.genre}</td>
             <td>{song.metadata.year}</td>
-            <td>{song.metadata.duration}</td>
+            <td className="hide-in-mobile">{song.metadata.duration}</td>
         </tr>
     );
 };

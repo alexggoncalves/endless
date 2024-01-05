@@ -44,7 +44,7 @@ const Filters = () => {
                 <LanguageFilter></LanguageFilter>
                 <YearFilter></YearFilter>
                 <div
-                    className={`filter-apply black-bg white-text${
+                    className={`filters-apply black-bg white-text${
                         !didFiltersChange() ? " disabled" : ""
                     }`}
                     onClick={applyFiltersToArchive}

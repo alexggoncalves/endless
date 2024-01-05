@@ -1,11 +1,12 @@
 #canvas {
     touch-action: none;
-    height: 100%
+    height: 100vh;
+    width: 100%;
 }
 
 #radial-blur-mask {
     position: absolute;
-    top: 5vh;
+    top: 0;
     width: 100%;
     height: 95vh;
     pointer-events: none;
@@ -21,6 +22,10 @@
 }
 
 #explorer {
-    height: 95vh;
+    left: 0;
+    position: absolute;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
 }
 

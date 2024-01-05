@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { createBucketClient } from "@cosmicjs/sdk";
-import { sortList } from "../utils";
-import _, { filter } from 'lodash';
+import { sortByInt, sortList } from "../utils";
+import _, { set } from "lodash";
 
 const initialValue = null;
 
@@ -19,17 +19,22 @@ const filtersInit = { genre: [], language: [], year: [] };
 export function MusicProvider({ children }) {
     const [songs, setSongs] = useState([]);
     const [loading, setLoading] = useState([]);
-    const [sortBy, setSortBy] = useState("title"); //title,artist,
+    const [sortBy, setSortBy] = useState("title"); //title,artist,genre,album,release year,duration
     const [sortDirection, setSortDirection] = useState(1); // asc = 1 , desc = -1
     const [searchInput, setSearchInput] = useState("");
     const [selectedFilters, setSelectedFilters] = useState(filtersInit);
     const [appliedFilters, setAppliedFilters] = useState(filtersInit);
+    const [releaseYears, setReleaseYears] = useState([]);
+    const [genres, setGenres] = useState([]);
+    const [languages, setLanguages] = useState([]);
 
     useEffect(() => {
         setSongs(sortList([...songs], sortBy, sortDirection));
     }, [sortBy, sortDirection]);
 
     const getAllSongs = () => {
+        setSongs([]);
+        setLoading(true);
         cosmic.objects
             .find({
                 type: "songs",
@@ -44,11 +49,47 @@ export function MusicProvider({ children }) {
             ])
             .then((response) => {
                 setSongs(response.objects);
+                setLoading(false);
+            })
+            .catch((e) => {
+                setSongs([]);
+                setLoading(false);
             });
+    };
+
+    const setExistingYears = (songs) => {
+        let years = [];
+        songs.map((song) => {
+            if (!years.includes(song.metadata.year)) {
+                years.push(song.metadata.year);
+            }
+        });
+        setReleaseYears(years.sort((a, b) => sortByInt(a, b, -1)));
+    };
+    const setExistingGenres = (songs) => {
+        let genres = [];
+        songs.map((song) => {
+            if (!genres.includes(song.metadata.genre)) {
+                genres.push(song.metadata.genre);
+            }
+        });
+
+        setGenres(genres);
+    };
+
+    const setExistingLanguages = (songs) => {
+        let languages = [];
+        songs.map((song) => {
+            if (!languages.includes(song.metadata.language)) {
+                languages.push(song.metadata.language);
+            }
+        });
+        setLanguages(languages);
     };
 
     const getArchiveSongs = () => {
         useEffect(() => {
+            setLoading(true);
             const query = {
                 type: "songs",
                 title: {
@@ -94,16 +135,29 @@ export function MusicProvider({ children }) {
                     "metadata.year",
                     "metadata.genre",
                     "metadata.duration",
+                    "metadata.language",
                 ])
                 .then((response) => {
-                    setSongs(sortList([...response.objects], sortBy, sortDirection));
+                    setLoading(false);
+                    setSongs(
+                        sortList([...response.objects], sortBy, sortDirection)
+                    );
+                    if (
+                        releaseYears.length == 0 ||
+                        genres.length == 0 ||
+                        languages.length == 0
+                    ) {
+                        setExistingYears(response.objects);
+                        setExistingGenres(response.objects);
+                        setExistingLanguages(response.objects);
+                    }
                 })
                 .catch((e) => {
+                    setLoading(false);
                     setSongs([]);
                 });
         }, [searchInput, appliedFilters]);
     };
-
 
     const getSongByID = async (id) => {
         const response = await cosmic.objects
@@ -126,17 +180,17 @@ export function MusicProvider({ children }) {
         return response.objects[0];
     };
 
-    const applyFilters = ()=>{
-        setAppliedFilters(selectedFilters)
-    }
+    const applyFilters = () => {
+        setAppliedFilters(selectedFilters);
+    };
 
-    const didFiltersChange = ()=>{
-        return !_.isEqual(appliedFilters,selectedFilters)
-    }
+    const didFiltersChange = () => {
+        return !_.isEqual(appliedFilters, selectedFilters);
+    };
 
-    const areFiltersActive = ()=>{
-        return !_.isEqual(appliedFilters,filtersInit)
-    }
+    const areFiltersActive = () => {
+        return !_.isEqual(appliedFilters, filtersInit);
+    };
 
     const addFilter = (type, value) => {
         setSelectedFilters({
@@ -162,7 +216,7 @@ export function MusicProvider({ children }) {
     };
 
     const clearAllFilters = () => {
-        setFilters(filtersInit);
+        setSelectedFilters(filtersInit);
     };
 
     return (
@@ -186,7 +240,11 @@ export function MusicProvider({ children }) {
                 selectedFilters,
                 setSelectedFilters,
                 didFiltersChange,
-                areFiltersActive
+                areFiltersActive,
+                loading,
+                releaseYears,
+                genres,
+                languages,
             }}
         >
             {children}

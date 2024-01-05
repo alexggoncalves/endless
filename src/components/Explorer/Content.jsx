@@ -10,7 +10,7 @@ import { useContext } from "react";
 import { MusicContext } from "../../contexts/MusicContext.jsx";
 
 function Content(props) {
-    const { getAllSongs, songs } = useContext(MusicContext);
+    const { getAllSongs, songs} = useContext(MusicContext);
 
     useEffect(() => {
         getAllSongs();
