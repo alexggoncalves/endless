@@ -22,8 +22,8 @@ function Song() {
                 <Link
                     to={`${
                         location.pathname?.includes("archive")
-                            ? "/archive"
-                            : "/"
+                            ? "/endless/archive"
+                            : "/endless/"
                     }`}
                 >
                     bacc

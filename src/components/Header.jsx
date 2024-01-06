@@ -14,7 +14,7 @@ const Header = () => {
 
     return (
         <header className="black-bg white-text">
-            <Link className="logo" to={""}>
+            <Link className="logo" to={"/endless/"}>
                 endless
             </Link>
             {burgerOpened ? (
@@ -24,10 +24,10 @@ const Header = () => {
             )}
 
             <nav className={`${!burgerOpened ? "navClosed" : ""}`}>
-                <Link to={""} onClick={toggleBurgerMenu}>EXPLORER</Link>
-                <Link to={"/archive"} onClick={toggleBurgerMenu}>ARCHIVE</Link>
-                <Link to={"/about"}  onClick={toggleBurgerMenu}>ABOUT US</Link>
-                <Link to={"/suggest"}  onClick={toggleBurgerMenu}>SUGGEST A SONG</Link>
+                <Link to={"/endless"} onClick={toggleBurgerMenu}>EXPLORER</Link>
+                <Link to={"/endless/archive"} onClick={toggleBurgerMenu}>ARCHIVE</Link>
+                <Link to={"/endless/about"}  onClick={toggleBurgerMenu}>ABOUT US</Link>
+                <Link to={"/endless/suggest"}  onClick={toggleBurgerMenu}>SUGGEST A SONG</Link>
             </nav>
         </header>
     );
