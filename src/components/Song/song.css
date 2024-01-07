@@ -2,7 +2,7 @@
     top: 0;
     background-color: white;
     position: absolute;
-    min-height: 100vh;
+    min-height: 100%;
     overflow-x: hidden;
     width: 100%;
 }
@@ -12,9 +12,47 @@
 }
 
 .song-details-info {
+    display: flex;
+    width: 100vw;
+}
+
+.song-details-info > div:first-child {
+    width: 50vw;
+}
+
+.song-details-info > div:first-child img {
+    width: 50vw;
+    object-fit: cover;
+}
+  
+.song-details-info > div:not(:first-child) {
+    margin-left: 10px; 
+    width: 33vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.song-details-info > div:last-child {
+    width: 17vw;
+    text-align: right;
+    margin-right: 30px; 
+}
+  
+.song-details-extra-info-container {
     display:flex;
 }
 
-.song-details-extra-info-container {
-    display:flex;
+.song-details-extra-info-container > div:first-child {
+    width: 50vw;
+}
+
+.song-details-extra-info-container ol {
+    padding-left: 30px;
+    padding-right: 5px;
+}
+
+.song-details-extra-info-container > div:last-child {
+    width: 50vw;
+    margin-left: 10px;
 }

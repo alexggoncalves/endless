@@ -31,17 +31,18 @@ function Song() {
                     </Link>
                 </div>
                 <div className="song-details-info-container">
-                    <div>
-                        <img
-                            height={400}
-                            src={song.metadata.cover_image.imgix_url}
-                            alt={song.title + " cover art"}
-                        />
-                    </div>
                     <div className="song-details-info">
+                        <div>
+                            <img
+                                height={700}
+                                src={song.metadata.cover_image.imgix_url}
+                                alt={song.title + " cover art"}
+                            />
+                        </div>
                         <div>
                             <h1>{song.title}</h1>
                             <h2>by {song.metadata.artist[0].title}</h2>
+                            <br></br>
                             <Link
                                 to={`${
                                     location.pathname?.includes("archive")
@@ -55,12 +56,20 @@ function Song() {
                         <div>
                             <h3>GENRE</h3>
                             <h4>{song.metadata.genre}</h4>
+                            <br></br>
+                            <br></br>
                             <h3>RELEASE YEAR</h3>
                             <h4>{song.metadata.year}</h4>
+                            <br></br>
+                            <br></br>
                             <h3>ALBUM</h3>
                             <h4>{song.metadata.album.title}</h4>
+                            <br></br>
+                            <br></br>
                             <h3>DURATION</h3>
                             <h4>{song.metadata.duration}</h4>
+                            <br></br>
+                            <br></br>
                         </div>
                     </div>
                 </div>
