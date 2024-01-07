@@ -6,3 +6,15 @@
     overflow-x: hidden;
     width: 100%;
 }
+
+.song-details-info-container {
+    display:flex;
+}
+
+.song-details-info {
+    display:flex;
+}
+
+.song-details-extra-info-container {
+    display:flex;
+}
