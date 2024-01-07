@@ -3,6 +3,7 @@ import { Link, useParams, useLocation } from "react-router-dom";
 
 import "./song.css";
 import lines from "../../assets/lines.svg"
+import spotify from "../../assets/spotify.png"
 import { MusicContext } from "../../contexts/MusicContext.jsx";
 
 function Song() {
@@ -44,38 +45,43 @@ function Song() {
                             <h1>{song.title}</h1>
                             <h2>by {song.metadata.artist[0].title}</h2>
                             <br></br>
+                            <br></br>
                             <div className="song-link">
-                                <Link
-                                    to={`${
-                                        location.pathname?.includes("archive")
-                                            ? "/endless/archive"
-                                            : "/endless/"
-                                    }`}
-                                >
-                                    Listen on spotify
-                                </Link>
-                                <img
-                                    height={10}
-                                    src={song.metadata.cover_image.imgix_url}
-                                    alt={"spotify logo"}
-                                />
+                                <h2>
+                                    <Link
+                                        to={`${
+                                            location.pathname?.includes("archive")
+                                                ? "/endless/archive"
+                                                : "/endless/"
+                                        }`}
+                                    >
+                                        Listen on spotify
+                                    </Link>
+                                    <img
+                                        src={spotify}
+                                        alt={"spotify logo"}
+                                    />
+                                </h2>
                             </div>
                         </div>
                         <div>
-                            <h3>GENRE</h3>
-                            <h4>{song.metadata.genre}</h4>
+                            <h4>GENRE</h4>
+                            <h3>{song.metadata.genre}</h3>
                             <br></br>
                             <br></br>
-                            <h3>RELEASE YEAR</h3>
-                            <h4>{song.metadata.year}</h4>
+                            <h4>RELEASE YEAR</h4>
+                            <h3>{song.metadata.year}</h3>
                             <br></br>
                             <br></br>
-                            <h3>ALBUM</h3>
-                            <h4>{song.metadata.album.title}</h4>
+                            <h4>ALBUM</h4>
+                            <h3>{song.metadata.album.title}</h3>
                             <br></br>
                             <br></br>
-                            <h3>DURATION</h3>
-                            <h4>{song.metadata.duration}</h4>
+                            <h4>DURATION</h4>
+                            <h3>{song.metadata.duration}</h3>
+                            <br></br>
+                            <br></br>
+                            <br></br>
                             <br></br>
                             <br></br>
                         </div>
@@ -91,16 +97,20 @@ function Song() {
                     <div>
                         <h2>THE ALBUM</h2>
                         <h1>{song.metadata.album.title}</h1>
-                        <ol>
-                            {song.metadata.album.metadata.track_list.split('\n').map((track, index) => (
-                                <li key={index}>{track}</li>
-                            ))}
-                        </ol>
+                        <h3>
+                            <ol>
+                                {song.metadata.album.metadata.track_list.split('\n').map((track, index) => (
+                                    <li key={index}>{track}</li>
+                                ))}
+                            </ol>
+                        </h3>
                     </div>   
                     <div>
                         <h2>THE ARTIST</h2>
                         <h1>{song.metadata.artist[0].title}</h1>
-                        <p>{song.metadata.artist[0].metadata.biography}</p>
+                        <div className="bio-container">
+                            <h3>{song.metadata.artist[0].metadata.biography}</h3>
+                        </div>
                         <img
                             height={400}
                             src={song.metadata.artist[0].metadata.photo.url}

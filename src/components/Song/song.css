@@ -1,7 +1,31 @@
+:root {
+    -black-text: #303030;
+}
+
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+}
+
+.song-link img{
+    height: 0.9vw;
+    padding-left: 15px;
+}
+
+.song-link a{
+    size: 100px;
+}
+.song-link a:visited{
+    color: #303030;
+}
+
+.song-link a:visited{
+    color: #303030;
+}
+
+.song-link a:active{
+    color: #303030;
 }
 
 .song-details-container {
@@ -27,10 +51,11 @@ html, body {
 
 .song-details-info > div:first-child {
     width: 50vw;
+    padding-right: 5vw;
 }
 
 .song-details-info > div:first-child img {
-    width: 50vw;
+    width: 45vw;
     height: auto;
     object-fit: cover;
 }
@@ -57,11 +82,11 @@ html, body {
 
 .song-details-extra-info-container > div:first-child {
     width: 50vw;
-    padding-left: 30vw;
+    padding-left: 25vw;
 }
 
 .song-details-extra-info-container ol {
-    padding-left: 30px;
+    padding-left: 20px;
     padding-right: 5px;
     line-height: 2;
 }
@@ -77,9 +102,34 @@ html, body {
     height: auto;
 }
 
+.bio-container{
+    padding-top: 15px;
+    padding-bottom: 20px;
+}
+
 .divider-lines img{
-    height: 220px;
+    height: 25vh;
     overflow: hidden;
     align-items: center;
     justify-content: center;
+}
+
+h1{
+    font-size: 4vw;
+    color: #303030;
+}
+
+h2{
+    font-size: 1vw;
+    color: #303030;
+}
+
+h3{
+    font-size: 1vw;
+    color: #303030;
+}
+
+h4{
+    font-size: 0.75vw;
+    color: #303030;
 }
