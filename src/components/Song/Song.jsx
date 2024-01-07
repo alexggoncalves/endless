@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
 
 import "./song.css";
+import lines from "../../assets/lines.svg"
 import { MusicContext } from "../../contexts/MusicContext.jsx";
 
 function Song() {
@@ -43,15 +44,22 @@ function Song() {
                             <h1>{song.title}</h1>
                             <h2>by {song.metadata.artist[0].title}</h2>
                             <br></br>
-                            <Link
-                                to={`${
-                                    location.pathname?.includes("archive")
-                                        ? "/endless/archive"
-                                        : "/endless/"
-                                }`}
-                            >
-                                Listen on spotify
-                            </Link>
+                            <div className="song-link">
+                                <Link
+                                    to={`${
+                                        location.pathname?.includes("archive")
+                                            ? "/endless/archive"
+                                            : "/endless/"
+                                    }`}
+                                >
+                                    Listen on spotify
+                                </Link>
+                                <img
+                                    height={10}
+                                    src={song.metadata.cover_image.imgix_url}
+                                    alt={"spotify logo"}
+                                />
+                            </div>
                         </div>
                         <div>
                             <h3>GENRE</h3>
@@ -73,6 +81,12 @@ function Song() {
                         </div>
                     </div>
                 </div>
+                <div className="divider-lines">
+                    <img
+                        src={lines}
+                        alt={"divider lines"}
+                    />
+                </div>
                 <div className="song-details-extra-info-container">
                     <div>
                         <h2>THE ALBUM</h2>
@@ -93,6 +107,12 @@ function Song() {
                             alt={song.metadata.artist[0].title + " artist photo"}
                         />                     
                     </div>                      
+                </div>
+                <div className="divider-lines">
+                    <img
+                        src={lines}
+                        alt={"divider lines"}
+                    />
                 </div>
             </div>
         );

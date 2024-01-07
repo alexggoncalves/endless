@@ -22,6 +22,7 @@ html, body {
 .song-details-info {
     display: flex;
     width: 100vw;
+    margin-bottom: 30px;
 }
 
 .song-details-info > div:first-child {
@@ -50,6 +51,8 @@ html, body {
   
 .song-details-extra-info-container {
     display:flex;
+    margin-top: 30px;
+    margin-bottom: 50px;
 }
 
 .song-details-extra-info-container > div:first-child {
@@ -72,4 +75,11 @@ html, body {
 .song-details-extra-info-container > div:last-child img {
     width: 30vw;
     height: auto;
+}
+
+.divider-lines img{
+    height: 220px;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
 }
