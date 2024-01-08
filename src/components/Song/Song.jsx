@@ -4,6 +4,7 @@ import { Link, useParams, useLocation } from "react-router-dom";
 import "./song.css";
 import lines from "../../assets/lines.svg"
 import spotify from "../../assets/spotify.png"
+import back from "../../assets/back-button.svg"
 import { MusicContext } from "../../contexts/MusicContext.jsx";
 
 function Song() {
@@ -21,22 +22,27 @@ function Song() {
     if (song) {
         return (
             <div className="song-details-container">          
-                <div>
-                    <Link
-                        to={`${
-                            location.pathname?.includes("archive")
-                                ? "/endless/archive"
-                                : "/endless/"
-                        }`}
-                    >
-                        back
-                    </Link>
+                <div className="go-back">
+                    <h2>
+                        <img
+                            src={back}
+                            alt={"back button"}
+                        />
+                        <Link
+                            to={`${
+                                location.pathname?.includes("archive")
+                                    ? "/endless/archive"
+                                    : "/endless/"
+                            }`}
+                        >
+                            go back
+                        </Link>
+                    </h2>
                 </div>
                 <div className="song-details-info-container">
                     <div className="song-details-info">
                         <div>
                             <img
-                                height={700}
                                 src={song.metadata.cover_image.imgix_url}
                                 alt={song.title + " cover art"}
                             />

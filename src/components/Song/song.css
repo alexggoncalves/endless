@@ -8,6 +8,35 @@ html, body {
     padding: 0;
 }
 
+.go-back{
+    padding-top: 1vw;
+    padding-bottom: 1vw;
+    padding-left: 3vw;
+}
+
+.go-back a{
+    text-align: center;
+}
+
+.go-back a:visited{
+    color: #303030;
+}
+
+.go-back a:hover{
+    color: #303030;
+}
+
+.go-back a:active{
+    color: #303030;
+}
+
+
+
+.go-back img{
+    height: 0.9vw;
+    padding-right: 0.5vw;
+}
+
 .song-link img{
     height: 0.9vw;
     padding-left: 15px;
@@ -16,7 +45,8 @@ html, body {
 .song-link a{
     size: 100px;
 }
-.song-link a:visited{
+
+.song-link a:hover{
     color: #303030;
 }
 
