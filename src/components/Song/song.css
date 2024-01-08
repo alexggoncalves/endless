@@ -1,8 +1,165 @@
+:root {
+    -black-text: #303030;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.go-back{
+    padding-top: 1vw;
+    padding-bottom: 1vw;
+    padding-left: 3vw;
+}
+
+.go-back a{
+    text-align: center;
+}
+
+.go-back a:visited{
+    color: #303030;
+}
+
+.go-back a:hover{
+    color: #303030;
+}
+
+.go-back a:active{
+    color: #303030;
+}
+
+
+
+.go-back img{
+    height: 0.9vw;
+    padding-right: 0.5vw;
+}
+
+.song-link img{
+    height: 0.9vw;
+    padding-left: 15px;
+}
+
+.song-link a{
+    size: 100px;
+}
+
+.song-link a:hover{
+    color: #303030;
+}
+
+.song-link a:visited{
+    color: #303030;
+}
+
+.song-link a:active{
+    color: #303030;
+}
+
 .song-details-container {
     top: 0;
     background-color: white;
     position: absolute;
-    min-height: 100vh;
+    min-height: 100%;
+    height: 100%;
     overflow-x: hidden;
     width: 100%;
+    overflow-y: auto;
+}
+
+.song-details-info-container {
+    display:flex;
+}
+
+.song-details-info {
+    display: flex;
+    width: 100vw;
+    margin-bottom: 30px;
+}
+
+.song-details-info > div:first-child {
+    width: 50vw;
+    padding-right: 5vw;
+}
+
+.song-details-info > div:first-child img {
+    width: 45vw;
+    height: auto;
+    object-fit: cover;
+}
+  
+.song-details-info > div:not(:first-child) {
+    margin-left: 10px; 
+    width: 33vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.song-details-info > div:last-child {
+    width: 17vw;
+    text-align: right;
+    margin-right: 30px; 
+}
+  
+.song-details-extra-info-container {
+    display:flex;
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+
+.song-details-extra-info-container > div:first-child {
+    width: 50vw;
+    padding-left: 25vw;
+}
+
+.song-details-extra-info-container ol {
+    padding-left: 20px;
+    padding-right: 5px;
+    line-height: 2;
+}
+
+.song-details-extra-info-container > div:last-child {
+    width: 50vw;
+    margin-left: 10px;
+    padding-right: 30vw;
+}
+
+.song-details-extra-info-container > div:last-child img {
+    width: 30vw;
+    height: auto;
+}
+
+.bio-container{
+    padding-top: 15px;
+    padding-bottom: 20px;
+}
+
+.divider-lines img{
+    height: 25vh;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+}
+
+h1{
+    font-size: 4vw;
+    color: #303030;
+}
+
+h2{
+    font-size: 1vw;
+    color: #303030;
+}
+
+h3{
+    font-size: 1vw;
+    color: #303030;
+}
+
+h4{
+    font-size: 0.75vw;
+    color: #303030;
 }
