@@ -24,17 +24,17 @@ function Song() {
             <div className="song-details-container">          
                 <div className="go-back">
                     <h2>
-                        <img
-                            src={back}
-                            alt={"back button"}
-                        />
                         <Link
                             to={`${
                                 location.pathname?.includes("archive")
                                     ? "/endless/archive"
                                     : "/endless/"
                             }`}
-                        >
+                        >   
+                            <img
+                            src={back}
+                            alt={"back button"}
+                            />
                             go back
                         </Link>
                     </h2>
