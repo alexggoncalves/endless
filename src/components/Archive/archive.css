@@ -25,7 +25,7 @@
     line-height: 12px;
     display: flex;
     align-items: center;
-    font-size: 12px;
+    font-size: 1rem;
     cursor: pointer;
     z-index: -2;
     user-select: none;
@@ -87,7 +87,7 @@
 .filter-category {
     font-weight: 800;
     line-height: 100%;
-    font-size: 100%;
+    font-size: 1rem;
     height: 10%;
 }
 
@@ -134,10 +134,9 @@
     border: 1px solid black;
     user-select: none;
     transform: translateY(-1px);
-    
 }
 
-.filter-tab-header{
+.filter-tab-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -152,19 +151,19 @@
     background-color: grey;
 }
 
-.filter-clear{
+.filter-clear {
     color: palevioletred;
     margin: 0 5px 8px 0;
     padding: 0 3px 3px 3px;
     font-size: 0.8rem;
 }
 
-.filter-clear:hover{
+.filter-clear:hover {
     text-decoration: underline;
     user-select: none;
     cursor: pointer;
 }
-.filter-clear:active{
+.filter-clear:active {
     color: white;
     background-color: palevioletred;
 }
@@ -174,8 +173,8 @@ table {
     width: 100%;
     font-family: "Hind Madurai";
     border-spacing: 0 12px;
-    font-size: 0.9rem;
-    line-height: 1rem;
+    font-size: 1rem;
+    line-height: 1.1rem;
     margin-top: 2vh;
 }
 tr {
@@ -257,24 +256,54 @@ th:nth-child(2) {
 }
 
 @media only screen and (max-width: 700px) {
-
-    .hide-in-mobile{
-    display: none;
+    #search-bar {
+        font-size: 4rem;
     }
-    td,th{
+
+    .filters-button {
+        font-size: 3rem;
+    }
+
+    .filter-category {
+        font-size: 4rem;
+    }
+
+    .filter-clear {
+
+        font-size: 3rem;
+    }
+
+    .checkbox-filter {
+        font-size: 3.5rem;
+    }
+
+    table {
+
+        font-size: 3.5rem;
+        line-height: 120%;
+    }
+
+    .hide-in-mobile {
+        display: none;
+    }
+    td,
+    th {
         width: fit-content;
     }
 
-    td:first-child, th:first-child {
+    td:first-child,
+    th:first-child {
         width: 5vw;
     }
 
-    td:nth-child(5), th:nth-child(5){
+    td:nth-child(5),
+    th:nth-child(5) {
         text-align: end;
         padding-right: 5vw;
         width: 10%;
     }
-    td:nth-child(2), th:nth-child(2){
+    td:nth-child(2),
+    th:nth-child(2) {
         width: 35vw;
         padding-right: 5vw;
     }
@@ -300,10 +329,9 @@ th:nth-child(2) {
     .filter-tab:nth-child(2) {
         transform: translateY(-1px);
     }
-    
+
     .filter-tab:nth-child(3) {
         transform: translateY(-2px);
-        
     }
 
     .filters-apply {
@@ -314,9 +342,33 @@ th:nth-child(2) {
         height: fit-content;
         transform: translateY(-3px);
     }
-    
 }
 
 @media only screen and (min-width: 701px) and (max-width: 1024px) {
+    #search-bar {
+        font-size: 2rem;
+    }
 
+    .filters-button {
+        font-size: 2.2rem;
+    }
+
+    .filter-category {
+        font-size: 1.5rem;
+    }
+
+    .filter-clear {
+
+        font-size: 1.5rem;
+    }
+
+    .checkbox-filter {
+        font-size: 2rem;
+    }
+
+    table {
+
+        font-size: 1.8rem;
+        line-height: 120%;
+    }
 }

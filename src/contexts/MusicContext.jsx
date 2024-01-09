@@ -175,6 +175,7 @@ export function MusicProvider({ children }) {
                 "metadata.year",
                 "metadata.genre",
                 "metadata.duration",
+                "metadata.spotify_id"
             ]);
 
         return response.objects[0];

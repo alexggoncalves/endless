@@ -17,6 +17,8 @@ html {
     min-height: 95vh;
     width: 100%;
     font-family: "Mulish";
+    color: #303030;
+    font-size: 1vw;
 
 }
 
@@ -46,6 +48,8 @@ html {
 .white-text {
     color: #fffcf9;
 }
+
+
 
 /* HEADER */
 
@@ -106,12 +110,12 @@ header a {
     font-family: 'Prompt', sans-serif;
     font-weight: 400;
     transform: rotate(90deg);
-    font-size: 3rem;
+    font-size: 4rem;
 }
 
 .loading>span, .no-results>span {
     font-family: 'Prompt', sans-serif;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 100;
 }
 
@@ -182,7 +186,7 @@ header a {
         justify-content: center;
         align-items: flex-end;
         border-top: 1px solid white;
-        font-size: 1rem;
+        font-size: 2.5rem;
         width: 100vw;
         padding:0 5vw;
         
@@ -192,9 +196,34 @@ header a {
         top:-280px
     }
 
+    .no-results>span:last-child {
+        font-size: 12rem;
+        
+        width: fit-content;
+    }
+    
+    .loading>span, .no-results>span {
+        font-size: 8rem;
+        width: 80vw;
+        
+    }
+
 }
 
 @media only screen and (min-width: 701px) and (max-width: 1024px) {
+    nav>a{
+        font-size: 1.5rem;
+    }
 
+    .no-results>span:last-child {
+        font-size: 8rem;
+    }
+    
+    .loading>span, .no-results>span {
+        font-size: 3rem;
+        width: 60vw;
+        width: fit-content;
+        
+    }
 
 }

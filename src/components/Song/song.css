@@ -1,17 +1,9 @@
-:root {
-    -black-text: #303030;
-}
-
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
 .go-back{
-    padding-top: 1vw;
-    padding-bottom: 1vw;
-    padding-left: 3vw;
+    display: flex;
+    align-items: center;
+    height: 6vh;
+    padding-left: 1vw;
+    text-decoration: none;
 }
 
 .go-back a{
@@ -30,8 +22,6 @@ html, body {
     color: #303030;
 }
 
-
-
 .go-back img{
     height: 0.9vw;
     padding-right: 0.5vw;
@@ -44,6 +34,7 @@ html, body {
 
 .song-link a{
     size: 100px;
+    color: #303030;
 }
 
 .song-link a:hover{
@@ -69,6 +60,14 @@ html, body {
     overflow-y: auto;
 }
 
+.detail-label {
+    font-weight: 700;
+}
+
+.detail {
+    margin-bottom: 40px;
+}
+
 .song-details-info-container {
     display:flex;
 }
@@ -80,19 +79,17 @@ html, body {
 }
 
 .song-details-info > div:first-child {
-    width: 50vw;
-    padding-right: 5vw;
+    padding-right: 2vw;
 }
 
 .song-details-info > div:first-child img {
-    width: 45vw;
-    height: auto;
+    height: 75vh;
     object-fit: cover;
 }
   
 .song-details-info > div:not(:first-child) {
     margin-left: 10px; 
-    width: 33vw;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -101,7 +98,7 @@ html, body {
 .song-details-info > div:last-child {
     width: 17vw;
     text-align: right;
-    margin-right: 30px; 
+    margin-right: 5vw; 
 }
   
 .song-details-extra-info-container {
@@ -134,7 +131,8 @@ html, body {
 
 .bio-container{
     padding-top: 15px;
-    padding-bottom: 20px;
+    margin-bottom: 40px;
+    width: 30vw;
 }
 
 .divider-lines img{

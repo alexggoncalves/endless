@@ -50,15 +50,12 @@ function Song() {
                         <div>
                             <h1>{song.title}</h1>
                             <h2>by {song.metadata.artist[0].title}</h2>
-                            <br></br>
-                            <br></br>
+
                             <div className="song-link">
                                 <h2>
                                     <Link
-                                        to={`${
-                                            location.pathname?.includes("archive")
-                                                ? "/endless/archive"
-                                                : "/endless/"
+                                        to={`https://open.spotify.com/track/${
+                                            song.metadata.spotify_id
                                         }`}
                                     >
                                         Listen on spotify
@@ -71,25 +68,19 @@ function Song() {
                             </div>
                         </div>
                         <div>
-                            <h4>GENRE</h4>
-                            <h3>{song.metadata.genre}</h3>
-                            <br></br>
-                            <br></br>
-                            <h4>RELEASE YEAR</h4>
-                            <h3>{song.metadata.year}</h3>
-                            <br></br>
-                            <br></br>
-                            <h4>ALBUM</h4>
-                            <h3>{song.metadata.album.title}</h3>
-                            <br></br>
-                            <br></br>
-                            <h4>DURATION</h4>
-                            <h3>{song.metadata.duration}</h3>
-                            <br></br>
-                            <br></br>
-                            <br></br>
-                            <br></br>
-                            <br></br>
+
+                            <span className="detail-label">GENRE</span>
+                            <span className="detail">{song.metadata.genre}</span>
+
+                            <span className="detail-label">RELEASE YEAR</span>
+                            <span className="detail">{song.metadata.year}</span>
+
+                            <span className="detail-label">ALBUM</span>
+                            <span className="detail">{song.metadata.album.title}</span>
+
+                            <span className="detail-label">DURATION</span>
+                            <span className="detail">{song.metadata.duration}</span>
+
                         </div>
                     </div>
                 </div>
