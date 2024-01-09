@@ -1,12 +1,13 @@
 import instagram from "./../../assets/insta.png";
 import facebook from "./../../assets/fb.png";
 import spotify from "./../../assets/spotify.png";
+import lines from "../../assets/lines.svg";
 
 import "./about.css";
 
 const About = () => {
     return (
-        <>
+        <div className="no-scroll">
             <div className="about-wrapper">
                 <div className="about-us">
                     <h2 className="black-text about-title">About us</h2>
@@ -50,7 +51,10 @@ const About = () => {
                     </div>
                 </div>
             </div>
-        </>
+            <div className="divider-lines">
+                <img src={lines} alt={"divider lines"} />
+            </div>
+        </div>
     );
 };
 
