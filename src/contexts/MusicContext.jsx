@@ -27,7 +27,6 @@ export function MusicProvider({ children }) {
     const [releaseYears, setReleaseYears] = useState([]);
     const [genres, setGenres] = useState([]);
     const [languages, setLanguages] = useState([]);
-    const [songOpened, setSongOpened] = useState(false);
 
     useEffect(() => {
         setSongs(sortList([...songs], sortBy, sortDirection));
@@ -177,8 +176,8 @@ export function MusicProvider({ children }) {
                 "metadata.genre",
                 "metadata.duration",
                 "metadata.spotify_id",
+                "metadata.language",
             ]);
-        setSongOpened(true);
         return response.objects[0];
     };
 
@@ -247,8 +246,6 @@ export function MusicProvider({ children }) {
                 releaseYears,
                 genres,
                 languages,
-                songOpened,
-                setSongOpened,
             }}
         >
             {children}

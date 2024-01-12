@@ -1,24 +1,18 @@
-.suggest-title {
-    color: #000;
-    font-size: 64px;
+.suggestion-title {
+    color: #303030;
+    font-size: 4.5rem;
     font-style: normal;
     font-weight: 800;
     line-height: 1;
     margin-bottom: 70px;
 }
 
-.song-suggest-wrapper {
+.song-suggestion-wrapper {
     display: flex;
     flex-direction: column;
     padding: 10vw;
-    
 }
 
-.suggestion-title {
-    font-size: 36px;
-    font-style: normal;
-    font-weight: 400;
-}
 
 .suggestion-input  {
     box-sizing: border-box;
@@ -26,9 +20,9 @@
     height: 4vh;
     display: block;
     border: 0;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #303030;
     padding: 0.5vw;
-    padding-bottom: 6px;
+    padding-bottom: 1vw;
     font-size: 1.3rem;
     font-family: "Mulish";
     font-weight: 100;
@@ -47,6 +41,7 @@
     align-items: center;
     align-self: flex-end;
     cursor: pointer;
+    font-size: 20px;
 }
 
 .send-button:hover{
@@ -58,4 +53,45 @@
 .send-button img{
     height: 15px;
     padding-left: 10px;
+}
+
+.align-bottom{
+    position: absolute;
+    bottom: 0;
+    transform: translateY(30%);
+}
+
+@media only screen and (max-width: 700px) {
+    .suggestion-title {
+        font-size: 8rem;
+        margin-bottom: 5vh;
+    }
+    
+    .suggestion-input  {
+
+        font-size:4.5rem;
+    }
+
+    .send-button {
+        position: absolute;
+        bottom: 20vh;
+    }
+    
+}
+
+@media only screen and (min-width: 701px) and (max-width: 1024px) {
+    .suggestion-title {
+        font-size: 6rem;
+        margin-bottom: 5vh;
+    }
+    
+    .suggestion-input  {
+
+        font-size:2.5rem;
+    }
+
+    .send-button {
+        position: absolute;
+        bottom: 20vh;
+    }
 }

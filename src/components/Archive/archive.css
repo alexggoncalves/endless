@@ -1,3 +1,7 @@
+.archive-wrapper{
+    padding-bottom: 50px;
+}
+
 #search-bar {
     box-sizing: border-box;
     margin: 2vh 5vw 1vh 5vw;
@@ -5,7 +9,7 @@
     height: 4vh;
     display: block;
     border: 0;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #303030;
     padding: 0.5vw;
     padding-bottom: 6px;
     font-size: 1.3rem;
@@ -19,7 +23,7 @@
 
 .filters-button {
     margin-left: 5vw;
-    border: 1px solid black;
+    border: 1px solid #303030;
     width: fit-content;
     padding: 6px 6px;
     line-height: 12px;
@@ -44,7 +48,7 @@
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    border: 1px solid black;
+    border: 1px solid #303030;
     display: flex;
     width: 10px;
     height: 10px;
@@ -53,7 +57,7 @@
 
 .filters-indicator-fill {
     border-radius: 50%;
-    background-color: black;
+    background-color: #303030;
     width: 6px;
     height: 6px;
 }
@@ -72,7 +76,7 @@
     display: inline-block;
     height: 200px;
     width: 190px;
-    border: 1px solid black;
+    border: 1px solid #303030;
     padding: 1.5% 1% 2% 2%;
     overflow-y: hidden;
 }
@@ -120,11 +124,11 @@
     width: 14px;
     height: 14px;
     right: 0;
-    border: 1px solid black;
+    border: 1px solid #303030;
 }
 .checkbox-fill {
     display: inline-block;
-    background-color: black;
+    background-color: #303030;
     width: 10px;
     height: 10px;
 }
@@ -140,7 +144,7 @@
     top: 100%;
     padding: 10px;
     cursor: pointer;
-    border: 1px solid black;
+    border: 1px solid #303030;
     user-select: none;
     transform: translateY(-1px);
 }
@@ -209,7 +213,7 @@ th {
     font-weight: normal;
     padding-bottom: 15px;
     width: 18vw;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #303030;
 }
 
 th > span {
@@ -330,7 +334,7 @@ th:nth-child(2) {
         display: inline-block;
         height: 25vh;
         width: 250px;
-        border: 1px solid black;
+        border: 1px solid #303030;
         padding: 3% 2% 6% 3%;
         overflow-y: hidden;
     }

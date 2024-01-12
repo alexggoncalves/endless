@@ -1,55 +1,29 @@
-.go-back{
+.go-back {
     display: flex;
     align-items: center;
     height: 6vh;
     padding-left: 1vw;
+}
+
+.go-back a {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #303030;
     text-decoration: none;
 }
 
-.go-back a{
-    text-align: center;
+.go-back a:hover {
+    text-decoration: underline;
 }
 
-.go-back a:visited{
-    color: #303030;
-}
-
-.go-back a:hover{
-    color: #303030;
-}
-
-.go-back a:active{
-    color: #303030;
-}
-
-.go-back img{
+.go-back img {
     height: 0.9vw;
     padding-right: 0.5vw;
 }
 
-.song-link img{
-    height: 0.9vw;
-    padding-left: 15px;
-}
 
-.song-link a{
-    size: 100px;
-    color: #303030;
-}
 
-.song-link a:hover{
-    color: #303030;
-}
-
-.song-link a:visited{
-    color: #303030;
-}
-
-.song-link a:active{
-    color: #303030;
-}
-
-.song-details-container {
+.song-page {
     top: 0;
     background-color: white;
     position: absolute;
@@ -60,6 +34,59 @@
     overflow-y: auto;
 }
 
+.song-details-container {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 50px;
+    width: 100vw;
+}
+
+.song-details-container > img {
+    width: 36vw;
+    object-fit: cover;
+}
+
+.song-info {
+    width: 50vw;
+    padding-left: 30px;
+}
+
+.song-info > h1 {
+    font-family: "Prompt";
+    font-size: 3.5rem;
+    line-height: 90%;
+    margin-bottom: 10px;
+}
+
+.song-info > h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 40px;
+}
+
+.song-link a {
+    font-size: 1.1rem;
+    color: #303030;
+    text-decoration: none;
+}
+
+.song-link a:hover {
+    text-decoration: underline;
+}
+
+.song-link img {
+    height: 1.1rem;
+    padding-left: 15px;
+}
+
+.song-details {
+    display: flex;
+    flex-direction: column;
+    width: 14vw;
+    align-items: flex-end;
+    margin-right: 5vw;
+}
+
 .detail-label {
     font-weight: 700;
 }
@@ -68,96 +95,230 @@
     margin-bottom: 40px;
 }
 
-.song-details-info-container {
-    display:flex;
-}
-
-.song-details-info {
+.song-extra-info-container {
     display: flex;
-    width: 100vw;
-    margin-bottom: 30px;
-}
-
-.song-details-info > div:first-child {
-    padding-right: 2vw;
-}
-
-.song-details-info > div:first-child img {
-    height: 75vh;
-    object-fit: cover;
-}
-  
-.song-details-info > div:not(:first-child) {
-    margin-left: 10px; 
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-}
-
-.song-details-info > div:last-child {
-    width: 17vw;
-    text-align: right;
-    margin-right: 5vw; 
-}
-  
-.song-details-extra-info-container {
-    display:flex;
-    margin-top: 30px;
+    justify-content: center;
+    margin-top: 20px;
     margin-bottom: 50px;
 }
-
-.song-details-extra-info-container > div:first-child {
-    width: 50vw;
-    padding-left: 25vw;
+.song-extra-info-container > div {
+    width: 25vw;
 }
 
-.song-details-extra-info-container ol {
-    padding-left: 20px;
-    padding-right: 5px;
-    line-height: 2;
+.song-extra-info-container h2 {
+    font-weight: 300;
+    margin-bottom: 5px;
 }
 
-.song-details-extra-info-container > div:last-child {
-    width: 50vw;
-    margin-left: 10px;
-    padding-right: 30vw;
+.song-extra-info-container h1 {
+    line-height: 100%;
+    font-family: "Prompt";
+    font-size: 3.6rem;
 }
 
-.song-details-extra-info-container > div:last-child img {
+.song-extra-info-container ol {
+    word-break: break-all;
+    margin: 0;
+    padding: 0;
+    margin-top: 30px;
+}
+
+.song-extra-info-container li {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    list-style-position: inside;
+}
+.song-extra-info-container li::before {
+    content: "";
+    width: 20px;
+    display: inline-block;
+    text-align: right;
+}
+
+.bio {
+    margin-top: 30px;
+    margin-bottom: 40px;
     width: 30vw;
+    font-weight: 400;
+    font-size: 1.1rem;
+}
+
+.artist-image {
+    width: 25vw;
     height: auto;
 }
 
-.bio-container{
-    padding-top: 15px;
-    margin-bottom: 40px;
-    width: 30vw;
+.mobile-only{
+    display: none;
+}
+ 
+footer{
+    position: relative;
 }
 
-.divider-lines img{
-    height: 25vh;
-    overflow: hidden;
-    align-items: center;
-    justify-content: center;
+@media only screen and (max-width: 700px) {
+    .go-back a {
+        font-size: 5rem;
+    }
+
+    .go-back img {
+        height: 3rem;
+        padding-right: 10px;
+        margin-left: 10px;
+    }
+
+    .song-details-container {
+        display: flex;
+        flex-direction: column;
+        /* align-items: flex-end; */
+        margin-bottom: 20px;
+        width: 100vw;
+    }
+    .song-details-container > img {
+        width: 100vw;
+        object-fit: cover;
+    }
+
+    .song-info {
+        width: 100vw;
+        padding: 5vw;
+    }
+
+    .song-info > h1 {
+        font-size: 9rem;
+    }
+
+    .song-info > h2 {
+        font-size: 6rem;
+    }
+
+    .song-link {
+        text-align: end;
+    }
+
+    .song-link a {
+        font-size: 4rem;
+        text-decoration: underline;
+    }
+
+    .song-link img {
+        height: 4rem;
+    }
+
+    .song-details {
+        width: 100%;
+        align-items: flex-start;
+        margin: 20px 0 0 0;
+        font-size: 4rem;
+        padding-left: 5vw;
+    }
+
+    .song-extra-info-container {
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .song-extra-info-container > div {
+        width: 100%;
+        padding: 5vw;
+    }
+
+    .song-extra-info-container h2 {
+        font-size: 4rem;
+    }
+
+    .song-extra-info-container h1 {
+        font-size: 8rem;
+    }
+
+    .song-extra-info-container li {
+        font-weight: 400;
+        font-size: 4rem;
+    }
+
+    .bio {
+        width: 100%;
+        font-size: 4rem;
+    }
+
+    .artist-image {
+        width: 100%;
+        height: auto;
+    }
+
+    .mobile-only {
+        display: block;
+        transform: translateX(-5vw);
+    }
 }
 
-h1{
-    font-size: 4vw;
-    color: #303030;
-}
+@media only screen and (min-width: 701px) and (max-width: 1024px) {
+    .go-back a {
+        font-size: 3rem;
+    }
 
-h2{
-    font-size: 1vw;
-    color: #303030;
-}
+    .go-back img {
+        height: 2rem;
+        padding-right: 10px;
+        margin-left: 10px;
+    }
 
-h3{
-    font-size: 1vw;
-    color: #303030;
-}
+    .song-info > h1 {
+        font-size: 3rem;
+    }
 
-h4{
-    font-size: 0.75vw;
-    color: #303030;
+    .song-info > h2 {
+        font-size: 2rem;
+    }
+
+    .song-link a {
+        font-size: 2rem;
+
+    }
+
+    .song-link img {
+        height: 2rem;
+    }
+
+    .song-details {
+        font-size: 1.5rem;
+    }
+
+    .song-extra-info-container {
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .song-extra-info-container > div {
+        width: 100%;
+        padding: 5vw;
+    }
+
+    .song-extra-info-container h2 {
+        font-size: 3rem;
+    }
+
+    .song-extra-info-container h1 {
+        font-size: 6rem;
+    }
+
+    .song-extra-info-container li {
+        font-weight: 400;
+        font-size: 3rem;
+    }
+
+    .bio {
+        width: 100%;
+        font-size: 2rem;
+    }
+
+    .artist-image {
+        width: 50%;
+        height: auto;
+    }
+
+    .mobile-only {
+        display: block;
+        transform: translateX(-5vw);
+    }
 }

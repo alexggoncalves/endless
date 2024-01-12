@@ -7,7 +7,7 @@ function Subtitle({ position, title, artist }) {
     return (
         <group position={position}>
             <Text
-                color="black"
+                color="#303030"
                 anchorX="left"
                 anchorY="top"
                 fontSize={"12"}
@@ -16,7 +16,7 @@ function Subtitle({ position, title, artist }) {
                 {title}
             </Text>
             <Text
-                color="black"
+                color="#303030"
                 anchorX="left"
                 anchorY="top"
                 fontSize={"12"}

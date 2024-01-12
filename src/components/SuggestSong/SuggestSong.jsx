@@ -1,12 +1,14 @@
 import "./suggestSong.css";
-import arrowRight from "./../../assets/arrow-right.svg"
-import lines from "../../assets/lines.svg"
+import arrowRight from "./../../assets/arrow-right.svg";
+import lines from "../../assets/lines.svg";
+
+import Footer from "../Footer";
 
 const SuggestSong = () => {
     return (
         <div className="no-scroll">
-            <div className="song-suggest-wrapper">
-                <h2 className="black-text suggest-title">
+            <div className="song-suggestion-wrapper">
+                <h2 className="black-text suggestion-title">
                     Would you like to <br /> suggest us a song?
                 </h2>
                 <input
@@ -21,12 +23,11 @@ const SuggestSong = () => {
                 </div>
             </div>
 
-            <div className="divider-lines">
-                    <img
-                        src={lines}
-                        alt={"divider lines"}
-                    />
-                </div>
+            <div className="divider-lines align-bottom">
+                <img src={lines} alt={"divider lines"} />
+            </div>
+
+            <Footer absolute={true}></Footer>
         </div>
     );
 };

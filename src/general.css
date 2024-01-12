@@ -1,12 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Kanit:wght@100;300;400;500;600&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Mulish:wght@200;600;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@400;600&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@100;400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@100;400;600&display=swap");
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
     box-sizing: border-box;
     margin: 0;
-  }
+}
 
 body,
 #root,
@@ -18,20 +20,22 @@ html {
     width: 100%;
     font-family: "Mulish";
     color: #303030;
+    background-color: white;
     font-size: 1vw;
-
+    overflow-x: hidden;
 }
 
 .body {
+    margin-top: 5vh;
     position: relative;
-    top: 5vh;
+    top: 0;
     min-height: 95vh;
     width: 100%;
     overflow: hidden;
     /* z-index: -2; */
 }
 
-.no-scroll{
+.no-scroll {
     height: 95vh;
     overflow: hidden;
 }
@@ -50,11 +54,12 @@ html {
     color: #303030;
 }
 
-.white-text {
-    color: #fffcf9;
+.divider-lines img {
+    height: 25vh;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
 }
-
-
 
 /* HEADER */
 
@@ -81,7 +86,7 @@ header {
     z-index: 10;
 }
 
-header nav {
+nav {
     right: 0;
     margin-right: 5vw;
     font-family: "Kanit", sans-serif;
@@ -93,8 +98,8 @@ header nav {
     text-align: left;
 }
 
-nav>div{
-   width: 15vw; 
+nav > div {
+    width: 15vw;
 }
 
 header a {
@@ -103,11 +108,25 @@ header a {
     position: relative;
 }
 
-header a:hover{
-    font-weight: 600;
+header a:hover {
+    text-decoration: underline;
 }
 
-.page-indicator{
+footer {
+    position: absolute;
+    bottom: 0;
+    height: 2.5vh;
+    background-color: #303030;
+    width: 100vw;
+    color: white;
+    text-align: center;
+    font-size: 10pt;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-indicator {
     width: 6px;
     height: 6px;
     position: absolute;
@@ -117,11 +136,14 @@ header a:hover{
     vertical-align: middle;
     top: 50%;
     transform: translateY(-50%);
-
 }
 
 .hidden {
-    display: none;
+    display: none !important;
+}
+
+.absolute-position {
+    position: absolute;
 }
 
 .center {
@@ -131,25 +153,42 @@ header a:hover{
     justify-content: center;
     top: 50vh;
     left: 50vw;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     align-items: center;
     width: 25vw;
 }
 
-.no-results>span:last-child {
-    font-family: 'Prompt', sans-serif;
+.pointer {
+    cursor: pointer;
+}
+
+.cursor {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: #DFDFDF;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    /* z-index: 9999; */
+    mix-blend-mode: difference;
+}
+
+.no-results > span:last-child {
+    font-family: "Prompt", sans-serif;
     font-weight: 400;
     transform: rotate(90deg);
     font-size: 4rem;
 }
 
-.loading>span, .no-results>span {
-    font-family: 'Prompt', sans-serif;
+.loading > span,
+.no-results > span {
+    font-family: "Prompt", sans-serif;
     font-size: 2rem;
     font-weight: 100;
 }
 
-.loading>img{
+.loading > img {
     margin-top: 20px;
     width: 30px;
 }
@@ -183,6 +222,9 @@ header a:hover{
 }
 
 @media only screen and (max-width: 700px) {
+    .cursor{
+        display: none;
+    }
 
     .burger {
         display: block;
@@ -196,7 +238,7 @@ header a:hover{
         position: absolute;
         display: flex;
         justify-content: space-between;
-        left:  0;
+        right: 0;
         flex-direction: column;
         background-color: #303030;
         width: 100vw;
@@ -204,10 +246,18 @@ header a:hover{
         z-index: -1;
         top: 5vh;
         transition: top 0.5s ease;
+        right: 0;
+        margin: 0;      
+    }
+    nav > div {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
-    nav>a {
-        
+    nav a {
         height: 100%;
         margin-left: 0;
         right: 0;
@@ -218,42 +268,39 @@ header a:hover{
         border-top: 1px solid white;
         font-size: 2.5rem;
         width: 100vw;
-        padding:0 5vw;
-        
+        padding: 0 5vw;
     }
 
     .navClosed {
-        top:-280px
+        top: -280px;
     }
 
-    .no-results>span:last-child {
+    .no-results > span:last-child {
         font-size: 12rem;
-        
+
         width: fit-content;
     }
-    
-    .loading>span, .no-results>span {
+
+    .loading > span,
+    .no-results > span {
         font-size: 8rem;
         width: 80vw;
-        
     }
-
 }
 
 @media only screen and (min-width: 701px) and (max-width: 1024px) {
-    nav>a{
+    nav > a {
         font-size: 1.5rem;
     }
 
-    .no-results>span:last-child {
+    .no-results > span:last-child {
         font-size: 8rem;
     }
-    
-    .loading>span, .no-results>span {
+
+    .loading > span,
+    .no-results > span {
         font-size: 3rem;
         width: 60vw;
         width: fit-content;
-        
     }
-
 }

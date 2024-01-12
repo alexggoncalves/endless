@@ -1,3 +1,5 @@
+import "./general.css";
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -7,8 +9,6 @@ import About from "./components/About/About.jsx";
 import Song from "./components/Song/Song.jsx";
 import SuggestSong from "./components/SuggestSong/SuggestSong.jsx";
 import Archive from "./components/Archive/Archive.jsx";
-
-import "./general.css";
 import Explorer from "./components/Explorer/Explorer.jsx";
 import { MusicProvider } from "./contexts/MusicContext.jsx";
 

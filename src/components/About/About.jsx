@@ -4,6 +4,7 @@ import spotify from "./../../assets/spotify.png";
 import lines from "../../assets/lines.svg";
 
 import "./about.css";
+import Footer from "../Footer";
 
 const About = () => {
     return (
@@ -21,7 +22,7 @@ const About = () => {
                         deep-rooted love for music, we've embarked on a journey
                         to curate an extensive archive that celebrates the
                         artistry, culture, and stories behind each note and
-                        lyric. '
+                        lyric.
                     </p>
                     <p className="about-us">
                         Our team of dedicated music aficionados tirelessly sifts
@@ -51,9 +52,10 @@ const About = () => {
                     </div>
                 </div>
             </div>
-            <div className="divider-lines">
+            <div className="divider-lines align-bottom">
                 <img src={lines} alt={"divider lines"} />
             </div>
+            <Footer absolute={true}></Footer>
         </div>
     );
 };
