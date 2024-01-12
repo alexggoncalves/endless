@@ -28,7 +28,7 @@ function Song() {
                         <Link
                             to={`${
                                 location.pathname?.includes("archive")
-                                    ? "/archive"
+                                    ? "/archive/"
                                     : "/"
                             }`}
                             onClick={() => setSongOpened(false)}

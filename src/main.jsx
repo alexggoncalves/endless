@@ -45,11 +45,7 @@ const router = createBrowserRouter([
                         element: <Song />,
                     },
                 ],
-            },
-            {
-                path: "/archive/search/:search",
-                element: <Archive />,
-            },
+            }
         ],
     },
 ]);
