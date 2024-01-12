@@ -108,6 +108,11 @@
     margin-bottom: 6px;
     cursor: pointer;
 }
+
+.checkbox-filter:hover {
+    text-decoration: dotted;
+}
+
 .checkbox-filter > .checkbox {
     display: flex;
     justify-content: center;
@@ -122,6 +127,10 @@
     background-color: black;
     width: 10px;
     height: 10px;
+}
+
+.underline{
+    text-decoration: underline;
 }
 
 .filters-apply {
@@ -153,8 +162,8 @@
 
 .filter-clear {
     color: palevioletred;
-    margin: 0 5px 8px 0;
-    padding: 0 3px 3px 3px;
+    margin: 0 5px 5px 0;
+    padding: 0 3px 0px 3px;
     font-size: 0.8rem;
 }
 

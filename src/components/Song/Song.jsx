@@ -11,7 +11,7 @@ function Song() {
     const { songID } = useParams();
     const location = useLocation();
 
-    const [song, setSong] = useState();
+    const [song, setSong, setSongOpened] = useState();
 
     const { getSongByID } = useContext(MusicContext);
 
@@ -27,9 +27,10 @@ function Song() {
                         <Link
                             to={`${
                                 location.pathname?.includes("archive")
-                                    ? "/endless/archive"
-                                    : "/endless/"
+                                    ? "/archive"
+                                    : "/"
                             }`}
+                            onClick={()=>setSongOpened(false)}
                         >   
                             <img
                             src={back}

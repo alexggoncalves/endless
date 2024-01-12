@@ -87,12 +87,37 @@ header nav {
     font-family: "Kanit", sans-serif;
     font-weight: 300;
     font-size: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    width: 35vw;
+    text-align: left;
+}
+
+nav>div{
+   width: 15vw; 
 }
 
 header a {
     text-decoration: none;
     color: white;
-    margin-left: 4vw;
+    position: relative;
+}
+
+header a:hover{
+    font-weight: 600;
+}
+
+.page-indicator{
+    width: 6px;
+    height: 6px;
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    left: -15px;
+    vertical-align: middle;
+    top: 50%;
+    transform: translateY(-50%);
+
 }
 
 .hidden {

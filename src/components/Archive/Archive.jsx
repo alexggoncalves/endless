@@ -2,7 +2,7 @@ import "./archive.css";
 
 import Filters from "./Filters.jsx";
 import ListElement from "./ListElement.jsx";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Outlet } from "react-router-dom";
 
@@ -18,7 +18,8 @@ const Archive = () => {
         getArchiveSongs,
         songs,
         setSearchInput,
-        loading
+        loading,
+        songOpened
     } = useContext(MusicContext);
 
     getArchiveSongs();
@@ -30,7 +31,7 @@ const Archive = () => {
     };
 
     return (
-        <>
+        <div className={`${songOpened ? `no-scroll`:undefined}`} >
             {/* Search bar */}
             <input
                 id="search-bar"
@@ -53,8 +54,8 @@ const Archive = () => {
             {songs.length == 0 && !loading ? <NotFound/> : undefined}
 
             {/* Song details page (opens when url changes to .../archive/:songID) */}
-            <Outlet />
-        </>
+            <Outlet /> 
+        </div>
     );
 };
 

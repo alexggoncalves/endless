@@ -1,4 +1,4 @@
-import "./SuggestSong.css";
+import "./suggestSong.css";
 import arrowRight from "./../../assets/arrow-right.svg"
 import lines from "../../assets/lines.svg"
 

@@ -4,7 +4,7 @@ const ListElement = ({ song }) => {
     const navigate = useNavigate();
 
     const navigateToSong = () => {
-        navigate(`/endless/archive/${song.id}`);
+        navigate(`/archive/${song.id}`);
     };
 
     return (

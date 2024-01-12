@@ -11,7 +11,7 @@ function SongTile({ position, size, song }) {
     const img = useLoader(TextureLoader, song.metadata.thumbnail.imgix_url);
 
     const navigateToSong = () => {
-        navigate(`/endless/explorer/${song.id}`);
+        navigate(`/explorer/${song.id}`);
     };
 
     return (

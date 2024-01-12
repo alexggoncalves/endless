@@ -14,40 +14,40 @@ import { MusicProvider } from "./contexts/MusicContext.jsx";
 
 const router = createBrowserRouter([
     {
-        path: "/endless",
+        path: "/",
         element: <Root />,
         errorElement: <ErrorPage />,
         children: [
             {
-                path: "/endless/",
+                path: "/",
                 element: <Explorer />,
                 children: [
                     {
-                        path: "/endless/explorer/:songID",
+                        path: "/explorer/:songID",
                         element: <Song />,
                     },
                 ],
             },
             {
-                path: "/endless/about",
+                path: "/about",
                 element: <About />,
             },
             {
-                path: "/endless/suggest",
+                path: "/suggest",
                 element: <SuggestSong />,
             },
             {
-                path: "/endless/archive",
+                path: "/archive",
                 element: <Archive />,
                 children: [
                     {
-                        path: "/endless/archive/:songID",
+                        path: "/archive/:songID",
                         element: <Song />,
                     },
                 ],
             },
             {
-                path: "/endless/archive/search/:search",
+                path: "/archive/search/:search",
                 element: <Archive />,
             },
         ],
