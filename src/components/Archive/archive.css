@@ -75,7 +75,7 @@
     background-color: white;
     display: inline-block;
     height: 200px;
-    width: 190px;
+    width: 15vw;
     border: 1px solid #303030;
     padding: 1.5% 1% 2% 2%;
     overflow-y: hidden;
@@ -138,6 +138,7 @@
 }
 
 .filters-apply {
+    color: white;
     position: absolute;
     width: 190px;
     right: 2px;
@@ -368,6 +369,10 @@ th:nth-child(2) {
 
     .filter-category {
         font-size: 1.5rem;
+    }
+
+    .filter-tab{
+        width: 25vw;
     }
 
     .filter-clear {
