@@ -55,7 +55,6 @@ const About = () => {
             <div className="divider-lines align-bottom">
                 <img src={lines} alt={"divider lines"} />
             </div>
-            <Footer absolute={true}></Footer>
         </div>
     );
 };

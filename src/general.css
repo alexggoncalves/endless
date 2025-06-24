@@ -26,13 +26,13 @@ html {
 }
 
 .body {
-    margin-top: 5vh;
     position: relative;
     top: 0;
-    min-height: 95vh;
+    min-height: 100vh;
     width: 100%;
     overflow: hidden;
-    /* z-index: -2; */
+    color: white;
+    cursor: none;
 }
 
 .no-scroll {
@@ -43,7 +43,7 @@ html {
 /* COLORS */
 
 .black-bg {
-    background-color: #303030;
+    background-color: #202020;
 }
 
 .white-bg {
@@ -51,7 +51,7 @@ html {
 }
 
 .black-text {
-    color: #303030;
+    color: #202020;
 }
 
 .divider-lines img {
@@ -61,56 +61,6 @@ html {
     justify-content: center;
 }
 
-/* HEADER */
-
-header {
-    top: 0;
-    width: 100vw;
-    left: 0;
-    height: 5vh;
-    z-index: 10;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    user-select: none;
-    position: fixed;
-}
-
-.logo {
-    margin-left: 5vw;
-    font-family: "Mulish", sans-serif;
-    font-style: italic;
-    font-weight: 600;
-    font-size: 3vh;
-    z-index: 10;
-}
-
-nav {
-    right: 0;
-    margin-right: 5vw;
-    font-family: "Kanit", sans-serif;
-    font-weight: 300;
-    font-size: 0.8rem;
-    display: flex;
-    justify-content: space-between;
-    width: 35vw;
-    text-align: left;
-}
-
-nav > div {
-    width: 15vw;
-}
-
-header a {
-    text-decoration: none;
-    color: white;
-    position: relative;
-}
-
-header a:hover {
-    text-decoration: underline;
-}
 
 footer {
     position: absolute;
@@ -159,18 +109,18 @@ footer {
 }
 
 .pointer {
-    cursor: pointer;
+    cursor: none;
 }
 
 .cursor {
     position: absolute;
     width: 50px;
     height: 50px;
-    background-color: #DFDFDF;
+    background-color: #dfdfdf;
     border-radius: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
-    /* z-index: 9999; */
+    z-index: 9999;
     mix-blend-mode: difference;
 }
 
@@ -191,10 +141,6 @@ footer {
 .loading > img {
     margin-top: 20px;
     width: 30px;
-}
-
-.burger {
-    display: none;
 }
 
 /* Scroll bar */
@@ -222,7 +168,7 @@ footer {
 }
 
 @media only screen and (max-width: 700px) {
-    .cursor{
+    .cursor {
         display: none;
     }
 
@@ -247,7 +193,7 @@ footer {
         top: 5vh;
         transition: top 0.5s ease;
         right: 0;
-        margin: 0;      
+        margin: 0;
     }
     nav > div {
         height: 100%;

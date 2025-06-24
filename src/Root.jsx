@@ -26,7 +26,7 @@ const Root = () => {
     return (
         <>
             <Header />
-            <div className="body">
+            <div className="body black-text">
                 <Outlet />
             </div>
             <div ref={cursor} className="cursor"></div>

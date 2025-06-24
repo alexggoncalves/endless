@@ -1,0 +1,75 @@
+header {
+    top: 0;
+    width: 100vw;
+    left: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    position: fixed;
+    background-color: transparent;
+}
+
+.logo {
+    top: 0;
+    left: 0;
+    margin: 18px 20px;
+    padding: 5px 20px 7px 20px;
+    font-family: "Mulish", sans-serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 3vh;
+    backdrop-filter: blur(1px);
+    background-color: rgba(255, 255, 255, 0.3);
+
+    border-radius: 25px;
+    overflow: hidden;
+    color: black;
+    text-decoration: none;
+}
+
+
+
+nav {
+    position: relative;
+    background-color: #202020;
+    font-family: "Kanit", sans-serif;
+    font-weight: 300;
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: flex-end;
+    
+    text-align: left;
+    align-items: center;
+    border-radius: 25px;
+    height: 40px;
+    margin-right: 15px;
+}
+
+.links {
+    left: 0;
+    margin-left: 3vw;
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.links > a {
+    text-decoration: none;
+    color: white;
+    position: relative;
+    width: 7vw;
+}
+
+.burger {
+    z-index: 10;
+    padding: 10px;
+    border-radius: 50%;
+    height: 3rem;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+}

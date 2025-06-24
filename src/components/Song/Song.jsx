@@ -23,22 +23,22 @@ function Song() {
     if (song) {
         return (
             <div className="song-page">
-                <div className="go-back">
-                    <h2>
-                        <Link
-                            to={`${
-                                location.pathname?.includes("archive")
-                                    ? "/archive/"
-                                    : "/"
-                            }`}
-                            onClick={() => setSongOpened(false)}
-                        >
-                            <img src={back} alt={"back button"} />
-                            go back
-                        </Link>
-                    </h2>
-                </div>
                 <div className="song-details-container">
+                    <div className="go-back">
+                            <h2>
+                                <Link
+                                    to={`${
+                                        location.pathname?.includes("archive")
+                                            ? "/archive/"
+                                            : "/"
+                                    }`}
+                                    onClick={() => setSongOpened(false)}
+                                >
+                                    <img src={back} alt={"back button"} />
+                                    go back
+                                </Link>
+                            </h2>
+                        </div>
                     <img
                         src={song.metadata.cover_image.imgix_url}
                         alt={song.title + " cover art"}
@@ -49,13 +49,16 @@ function Song() {
                         <div className="song-link">
                             <Link
                                 to={`https://open.spotify.com/track/${song.metadata.spotify_id}`}
+                                target="_blank"
                             >
                                 Listen on spotify
                             </Link>
                             <img src={spotify} alt={"spotify logo"} />
                         </div>
                     </div>
+
                     <div className="song-details">
+                        
                         <span className="detail-label">GENRE</span>
                         <span className="detail">{song.metadata.genre}</span>
 
@@ -114,8 +117,6 @@ function Song() {
                 <div className="divider-lines">
                     <img src={lines} alt={"divider lines"} />
                 </div>
-
-                <Footer></Footer>
             </div>
         );
     } else return <></>;

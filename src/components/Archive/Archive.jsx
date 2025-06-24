@@ -35,13 +35,16 @@ const Archive = () => {
     return (
         <div className={`${location.pathname.length> archivePath.length ? `no-scroll`:undefined} archive-wrapper` } >
             {/* Search bar */}
-            <input
-                id="search-bar"
-                onChange={updateInput}
-                type="text"
-                placeholder="Search..."
-            />
-            <Filters/>
+            <div className="search-header">
+                <input
+                    id="search-bar"
+                    onChange={updateInput}
+                    type="text"
+                    placeholder="Search..."
+                />
+                <Filters/>
+            </div>
+            
 
             {/* Songs table */}
             <table>
@@ -57,7 +60,6 @@ const Archive = () => {
 
             {/* Song details page (opens when url changes to .../archive/:songID) */}
             <Outlet /> 
-            <Footer absolute={true}></Footer>
         </div>
     );
 };

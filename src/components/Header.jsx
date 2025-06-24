@@ -1,8 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-
+import gsap from "gsap";
 import burgeropen from "./../assets/menu-open.gif";
 import burgerclose from "./../assets/menu-close.gif";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useGSAP } from "@gsap/react";
 
 const PageIndicator = () => {
     return <div className="page-indicator"></div>;
@@ -10,58 +11,76 @@ const PageIndicator = () => {
 
 const Header = () => {
     const [burgerOpened, setBurgerOpened] = useState(false);
+    const navRef = useRef();
+    let openMenuAnimation = useRef();
 
-    const location = useLocation();
+    useGSAP(() => {
+        openMenuAnimation.current = gsap
+            .timeline({ paused: true })
+            .to(navRef.current, {
+                width: "35vw",
+                duration: 0.3,
+                ease: "power2",
+            })
+            .fromTo(
+                ".links a",
+                {
+                    opacity: 0,
+                },
+                { opacity: 1, duration: 0.3, stagger:{each:0.05,from: "end"}},
+                "<"
+            );
+    });
 
-    const toggleBurgerMenu = () => {
-        setBurgerOpened(!burgerOpened);
+    const openMenu = () => {
+        setBurgerOpened(true);
+        openMenuAnimation.current?.play();
+    };
+
+    const closeMenu = () => {
+        setBurgerOpened(false);
+
+        openMenuAnimation.current?.reverse();
     };
 
     return (
-        <header className="black-bg white-text">
+        <header>
             <Link className="logo" to={"/"}>
                 endless
             </Link>
-            {burgerOpened ? (
-                <img
-                    src={burgeropen}
-                    className="burger open"
-                    onClick={toggleBurgerMenu}
-                />
-            ) : (
-                <img
-                    src={burgerclose}
-                    className="burger close"
-                    onClick={toggleBurgerMenu}
-                />
-            )}
 
-            <nav className={`${!burgerOpened ? "navClosed" : ""}`}>
-                <div>
-                    <Link to={"/"} onClick={toggleBurgerMenu}>
+            <nav ref={navRef}>
+                <div className={`links ${!burgerOpened ? "navClosed" : ""}`}>
+                    <Link to={"/"} onClick={closeMenu}>
                         EXPLORER
-                        {!location.pathname?.includes("archive") && !location.pathname?.includes("about") && !location.pathname?.includes("suggest") ? <PageIndicator/>:undefined}
                     </Link>
-                    
-                </div>
-                <div>
-                    <Link to={"/archive"} onClick={toggleBurgerMenu}>
+
+                    <Link to={"/archive"} onClick={closeMenu}>
                         ARCHIVE
-                        {location.pathname?.includes("archive") ? <PageIndicator/>:undefined}
                     </Link>
-                </div>
-                <div>
-                    <Link to={"/about"} onClick={toggleBurgerMenu}>
+
+                    <Link to={"/about"} onClick={closeMenu}>
                         ABOUT US
-                        {location.pathname?.includes("about") ? <PageIndicator/>:undefined}
                     </Link>
-                </div>
-                <div>
-                    <Link to={"/suggest"} onClick={toggleBurgerMenu}>
+
+                    <Link to={"/suggest"} onClick={closeMenu}>
                         SUGGEST A SONG
-                        {location.pathname?.includes("suggest") ? <PageIndicator/>:undefined}
                     </Link>
                 </div>
+
+                {burgerOpened ? (
+                    <img
+                        src={burgeropen}
+                        className="burger"
+                        onClick={closeMenu}
+                    />
+                ) : (
+                    <img
+                        src={burgerclose}
+                        className="burger"
+                        onClick={openMenu}
+                    />
+                )}
             </nav>
         </header>
     );

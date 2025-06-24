@@ -8,7 +8,7 @@
     position: absolute;
     top: 0;
     width: 100%;
-    height: 95vh;
+    height: 100vh;
     pointer-events: none;
 
     -webkit-mask: -webkit-radial-gradient(
