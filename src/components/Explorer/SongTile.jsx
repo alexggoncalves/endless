@@ -2,7 +2,7 @@ import { useLoader } from "@react-three/fiber";
 import { TextureLoader, Vector2 } from "three";
 import { useNavigate } from "react-router-dom";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 gsap.registerPlugin(useGSAP);
@@ -12,6 +12,7 @@ import Subtitle from "./Subtitle";
 
 function SongTile({ position, size, song }) {
     const tile = useRef();
+
     const navigate = useNavigate();
     const [pointerDownPos, setPointerDownPos] = useState(new Vector2(0, 0));
 
@@ -33,6 +34,7 @@ function SongTile({ position, size, song }) {
         });
     });
 
+
     const handleMouseLeave = contextSafe(() => {
         explorer.classList.remove("pointer");
 
@@ -51,7 +53,7 @@ function SongTile({ position, size, song }) {
     const handlePointerUp = (e) => {
         const currentPosition = new Vector2(e.clientX, e.clientY);
         if (currentPosition.distanceTo(pointerDownPos) <= 5) {
-            navigate(`/explorer/${song.id}`);
+            navigate(`/explorer/${song.id}`, { state: { fromMain: true } });
         }
     };
 
@@ -59,7 +61,7 @@ function SongTile({ position, size, song }) {
         <group
             ref={tile}
             scale={[size, size, 1]}
-            position={[position.x, position.y, 1]}
+            position={[position.x, position.y, position.z]}
         >
             <mesh
                 onPointerDown={handlePointerDown}
@@ -68,7 +70,9 @@ function SongTile({ position, size, song }) {
                 onPointerLeave={handleMouseLeave}
             >
                 <planeGeometry></planeGeometry>
-                <meshBasicMaterial map={img}></meshBasicMaterial>
+                <meshBasicMaterial
+                    map={img}
+                ></meshBasicMaterial>
             </mesh>
             <Subtitle
                 tileSize={size}

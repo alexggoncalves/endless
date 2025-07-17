@@ -11,18 +11,14 @@ import { MusicContext } from "../../contexts/MusicContext.jsx";
 import Loading from "../Loading.jsx";
 import NotFound from "../No Results.jsx";
 
-import loadingGif from "./../../assets/icons8-loading.gif"
+import loadingGif from "./../../assets/icons8-loading.gif";
 import Footer from "../Footer.jsx";
 
 const Archive = () => {
     const location = useLocation();
-    const archivePath = '/archive/'
-    const {
-        getArchiveSongs,
-        songs,
-        setSearchInput,
-        loading
-    } = useContext(MusicContext);
+    const archivePath = "/archive/";
+    const { getArchiveSongs, songs, setSearchInput, loading } =
+        useContext(MusicContext);
 
     getArchiveSongs();
 
@@ -33,7 +29,13 @@ const Archive = () => {
     };
 
     return (
-        <div className={`${location.pathname.length> archivePath.length ? `no-scroll`:undefined} archive-wrapper` } >
+        <div
+            className={`${
+                location.pathname.length > archivePath.length
+                    ? `no-scroll`
+                    : undefined
+            } archive-wrapper`}
+        >
             {/* Search bar */}
             <div className="search-header">
                 <input
@@ -42,24 +44,28 @@ const Archive = () => {
                     type="text"
                     placeholder="Search..."
                 />
-                <Filters/>
+                <Filters />
             </div>
-            
 
             {/* Songs table */}
-            <table>
-                <tbody>
-                    <ListHeader/>
-                    {songs?.map((song) => (
-                        <ListElement key={uuidv4()} song={song} />
-                    ))}
-                </tbody>
-            </table>
-            {loading ? <Loading loadingGif={loadingGif}/> : undefined}
-            {songs.length == 0 && !loading ? <NotFound/> : undefined}
+            <div className="table-container">
+                <table>
+                    <thead>
+                        <ListHeader />
+                    </thead>
+                    <tbody>
+                        {songs?.map((song) => (
+                            <ListElement key={uuidv4()} song={song} />
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {loading ? <Loading loadingGif={loadingGif} /> : undefined}
+            {songs.length == 0 && !loading ? <NotFound /> : undefined}
 
             {/* Song details page (opens when url changes to .../archive/:songID) */}
-            <Outlet /> 
+            <Outlet />
         </div>
     );
 };

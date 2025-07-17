@@ -24,7 +24,7 @@ const ListHeader = () => {
             }
         } else if (value == sortBy) {
             setSortBy(value);
-            if(sortDirection == 1) setSortDirection(-1)
+            if (sortDirection == 1) setSortDirection(-1);
             else setSortDirection(1);
         } else {
             setSortBy(value);
@@ -43,7 +43,7 @@ const ListHeader = () => {
     };
 
     return (
-        <tr>
+        <>
             <th></th>
             <th>
                 <span onClick={() => setSort("title/artist")}>
@@ -86,7 +86,7 @@ const ListHeader = () => {
                     {sortBy == "year" ? <DirectionTriangle /> : undefined}
                 </span>
             </th>
-            <th  className="hide-in-mobile">
+            <th className="hide-in-mobile">
                 <span
                     className={sortBy == "duration" ? "bold" : undefined}
                     onClick={() => setSort("duration")}
@@ -95,7 +95,7 @@ const ListHeader = () => {
                     {sortBy == "duration" ? <DirectionTriangle /> : undefined}
                 </span>
             </th>
-        </tr>
+        </>
     );
 };
 

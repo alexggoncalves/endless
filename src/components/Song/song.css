@@ -25,10 +25,9 @@
     padding-right: 0.5vw;
 }
 
-
-
 .song-page {
     top: 0;
+    transform: translate(0,100%);
     padding-top: 82px;
     background-color: white;
     position: absolute;
@@ -37,6 +36,7 @@
     overflow-x: hidden;
     width: 100%;
     overflow-y: auto;
+    z-index: 1;
 }
 
 .song-details-container {
@@ -48,8 +48,12 @@
 }
 
 .song-details-container > img {
-    width: 36vw;
+    width: 75vh;
+    height: 75vh;
     object-fit: cover;
+    max-width: 50vw;
+    max-height: 50vw;
+    background-color: lightgray;
 }
 
 .song-info {

@@ -5,12 +5,12 @@ import artistFont from "../../assets/fonts/Mulish-Light.ttf";
 
 function Subtitle({ position, title, artist, tileSize}) {
     return (
-        <group position={position}>
+        <group position={position} scale={1/tileSize}>
             <Text
                 color="#303030"
                 anchorX="left"
                 anchorY="top"
-                fontSize={12/tileSize}
+                fontSize={12}
                 font={titleFont}
             >
                 {title}
@@ -19,8 +19,8 @@ function Subtitle({ position, title, artist, tileSize}) {
                 color="#303030"
                 anchorX="left"
                 anchorY="top"
-                fontSize={12/tileSize}
-                position={[0, -14/tileSize, 0]}
+                fontSize={12}
+                position={[0, -14, 0]}
                 font={artistFont}
             >
                 by {artist}

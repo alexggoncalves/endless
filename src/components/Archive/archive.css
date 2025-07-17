@@ -1,12 +1,13 @@
-.archive-wrapper{
-    margin-top: 82px;
-    padding-bottom: 50px;
+.archive-wrapper {
+    position: relative;
+    height: 100vh;
 }
 
-.search-header{
+.search-header {
+    z-index: 1;
     top: 0;
-    padding-top: 82px;
-    padding-bottom: 40px;
+    padding-top: 8vh;
+    padding-bottom: 2vh;
     background-color: white;
     position: fixed;
     border-bottom: 1px solid #303030;
@@ -21,7 +22,6 @@
     border: 0;
     border-bottom: 1px solid #303030;
     padding: 0.5vw;
-    padding-bottom: 6px;
     font-size: 1.3rem;
     font-family: "Mulish";
     font-weight: 100;
@@ -73,7 +73,7 @@
 }
 
 .filters-container {
-    z-index: 1;
+
     position: absolute;
     left: 5vw;
     display: flex;
@@ -143,7 +143,7 @@
     height: 10px;
 }
 
-.underline{
+.underline {
     text-decoration: underline;
 }
 
@@ -192,30 +192,46 @@
     background-color: palevioletred;
 }
 
+.table-container {
+    height: 80vh;
+    overflow-y: auto;
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+}
+
 table {
     box-sizing: border-box;
     width: 100%;
     font-family: "Hind Madurai";
-    border-spacing: 0 12px;
+    border-spacing: 0;
     font-size: 1rem;
     line-height: 1.1rem;
-    margin-top: 220px;
+    background-color: white;
 }
+
+thead {
+    position: sticky;
+    background-color: white;
+    top: 0;
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    border-bottom: 1px solid #303030;
+    padding-top: 15px;
+}
+
 tr {
     cursor: pointer;
     padding: 20px 0;
 }
 
-tr:first-child {
-    cursor: default;
-}
 
 tr:hover {
     background-color: rgb(242, 242, 242);
-}
-
-tr:first-child:hover {
-    background-color: white;
 }
 
 th {
@@ -224,7 +240,6 @@ th {
     font-weight: normal;
     padding-bottom: 15px;
     width: 18vw;
-    border-bottom: 1px solid #303030;
 }
 
 th > span {
@@ -235,13 +250,14 @@ th > span {
 
 td {
     height: 7vh;
+    padding: 2px 0;
 }
 
 th:last-child,
 td:last-child {
     text-align: end;
     padding-right: 5vw;
-    width: 10%;
+    width: 12%;
 }
 
 th:first-child,
@@ -293,7 +309,6 @@ th:nth-child(2) {
     }
 
     .filter-clear {
-
         font-size: 3rem;
     }
 
@@ -302,7 +317,6 @@ th:nth-child(2) {
     }
 
     table {
-
         font-size: 3.5rem;
         line-height: 120%;
     }
@@ -381,12 +395,11 @@ th:nth-child(2) {
         font-size: 1.5rem;
     }
 
-    .filter-tab{
+    .filter-tab {
         width: 25vw;
     }
 
     .filter-clear {
-
         font-size: 1.5rem;
     }
 
@@ -395,7 +408,6 @@ th:nth-child(2) {
     }
 
     table {
-
         font-size: 1.8rem;
         line-height: 120%;
     }

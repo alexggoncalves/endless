@@ -47,8 +47,20 @@ export function MusicProvider({ children }) {
                 "metadata.cover_image",
                 "metadata.thumbnail",
             ])
-            .then((response) => {
-                setSongs(response.objects);
+            .then(async (response) => {
+                const newSongs = {}
+                
+                response.objects.forEach((song,index) => {
+                    const img = new Image()
+                    img.src = song.metadata.cover_image.imgix_url
+                    
+                    newSongs[song.id] = song;
+                    
+                    newSongs[song.id].coverImage = img
+                });
+
+                setSongs(newSongs);
+                
                 setLoading(false);
             })
             .catch((e) => {

@@ -7,7 +7,7 @@ const Root = () => {
 
     const moveCursor = (event) => {
         const mouseX = event.clientX;
-        const mouseY = event.clientY + window.scrollY;
+        const mouseY = event.clientY;
         if (cursor.current) {
             cursor.current.style.left = mouseX + "px";
             cursor.current.style.top = mouseY + "px";

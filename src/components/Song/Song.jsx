@@ -1,48 +1,78 @@
-import { useContext, useEffect, useState } from "react";
-import { Link, useParams, useLocation } from "react-router-dom";
-
 import "./song.css";
+
+import { useContext, useEffect, useState, useRef } from "react";
+import { Link, useParams, useLocation } from "react-router-dom";
+import { gsap } from "gsap";
+import { useNavigate } from "react-router-dom";
+
 import lines from "../../assets/lines.svg";
 import spotify from "../../assets/spotify.png";
 import back from "../../assets/back-button.svg";
+
 import { MusicContext } from "../../contexts/MusicContext.jsx";
-import Footer from "../Footer.jsx";
 
 function Song() {
+    const { getSongByID, songs } = useContext(MusicContext);
+
     const { songID } = useParams();
+    const containerRef = useRef();
+    const navigate = useNavigate();
     const location = useLocation();
 
-    const [song, setSong, setSongOpened] = useState();
+    const [song, setSong] = useState();
+    const [songOpened, setSongOpened] = useState(true);
 
-    const { getSongByID } = useContext(MusicContext);
+    // Get the preloaded image
+    const coverImage = songs?.[songID]?.coverImage;
 
     useEffect(() => {
+        // Fetch song details
         getSongByID(songID).then((song) => setSong(song));
     }, []);
 
+    useEffect(() => {
+        // If user comes from inside the website ->  slide page in
+        // Otherwise: place it on original position
+        if (location.state?.fromMain) {
+            slideIn();
+        } else {
+            gsap.set(containerRef.current, { y: '0' });
+        }
+    }, [song]);
+
+    // Slide song page out and navigate to explorer
+    const closePage = () => {
+        setSongOpened(false);
+        gsap.to(containerRef.current, { duration: 0.5, y: "100%" }).then(() => {
+            navigate(`/`);
+        });
+    };
+
+    const slideIn = () => {
+        gsap.to(containerRef.current, { duration: 0.5, y: "0", ease: "power3.out", });
+    };
+    
+
     if (song) {
         return (
-            <div className="song-page">
+            <div ref={containerRef} className="song-page">
                 <div className="song-details-container">
                     <div className="go-back">
-                            <h2>
-                                <Link
-                                    to={`${
-                                        location.pathname?.includes("archive")
-                                            ? "/archive/"
-                                            : "/"
-                                    }`}
-                                    onClick={() => setSongOpened(false)}
-                                >
-                                    <img src={back} alt={"back button"} />
-                                    go back
-                                </Link>
-                            </h2>
-                        </div>
-                    <img
-                        src={song.metadata.cover_image.imgix_url}
-                        alt={song.title + " cover art"}
-                    />
+                        <h2>
+                            <Link onClick={closePage}>
+                                <img src={back} alt={"back button"} />
+                                go back
+                            </Link>
+                        </h2>
+                    </div>
+
+                    {coverImage && (
+                        <img
+                            src={coverImage.src}
+                            alt={song.title + " cover art"}
+                        />
+                    )}
+
                     <div className="song-info">
                         <h1>{song.title}</h1>
                         <h2>by {song.metadata.artist[0].title}</h2>
@@ -58,7 +88,6 @@ function Song() {
                     </div>
 
                     <div className="song-details">
-                        
                         <span className="detail-label">GENRE</span>
                         <span className="detail">{song.metadata.genre}</span>
 
