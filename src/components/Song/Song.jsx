@@ -2,7 +2,8 @@ import "./song.css";
 
 import { useContext, useEffect, useState, useRef } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
-import { gsap } from "gsap";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import { useNavigate } from "react-router-dom";
 
 import lines from "../../assets/lines.svg";
@@ -22,6 +23,8 @@ function Song() {
     const [song, setSong] = useState();
     const [songOpened, setSongOpened] = useState(true);
 
+    const { contextSafe } = useGSAP({ scope: containerRef });
+
     // Get the preloaded image
     const coverImage = songs?.[songID]?.coverImage;
 
@@ -36,22 +39,30 @@ function Song() {
         if (location.state?.fromMain) {
             slideIn();
         } else {
-            gsap.set(containerRef.current, { y: '0' });
+            snapToTop();
         }
     }, [song]);
 
     // Slide song page out and navigate to explorer
-    const closePage = () => {
+    const closePage = contextSafe(() => {
         setSongOpened(false);
-        gsap.to(containerRef.current, { duration: 0.5, y: "100%" }).then(() => {
+
+        gsap.to(containerRef.current, { duration: 0.4, y: "100%" }).then(() => {
             navigate(`/`);
         });
-    };
+    });
 
-    const slideIn = () => {
-        gsap.to(containerRef.current, { duration: 0.5, y: "0", ease: "power3.out", });
-    };
-    
+    const slideIn = contextSafe(() => {
+        gsap.to(containerRef.current, {
+            duration: 0.4,
+            y: "0",
+            ease: "powe3.out",
+        });
+    });
+
+    const snapToTop = contextSafe(() => {
+       gsap.set(containerRef.current, { y: "0" });
+    });
 
     if (song) {
         return (

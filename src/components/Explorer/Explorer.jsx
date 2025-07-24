@@ -14,6 +14,10 @@ import { NavigationProvider } from "../../contexts/NavigationContext";
 
 function Explorer() {
     const { loading, getAllSongs, songs } = useContext(MusicContext);
+    const innerBounds= {x: 2500, y: 1200},
+        outerBounds= {x: 3300, y: 2000},
+        maxZ= 200
+
 
     useEffect(() => {
         if (songs.length == 0) getAllSongs();
@@ -26,7 +30,7 @@ function Explorer() {
                     <NavigationProvider>
                         <PerspectiveCamera
                             makeDefault
-                            position={[0, 0, 1000]}
+                            position={[0, 0, 2000]}
                             zoom={3}
                         />
                         <Content
@@ -34,7 +38,9 @@ function Explorer() {
                             minTileSize={180}
                             maxTileSize={300}
                             minMargin={50}
-                            boundSize={{x:2000, y: 1500, z: 200}}
+                            innerBounds={innerBounds}
+                            maxZ={maxZ}
+                            outerBounds={outerBounds}
                         />
                     </NavigationProvider>
                 </Canvas>

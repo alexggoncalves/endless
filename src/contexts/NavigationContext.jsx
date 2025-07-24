@@ -12,8 +12,8 @@ export function NavigationProvider({
     children,
     minZoom = 0.8,
     maxZoom = 2,
-    zoomSmoothness = 50,
-    cameraSmoothness = 40,
+    zoomSmoothness = 40,
+    cameraSmoothness = 50,
     panSpeed = 1,
 }) {
     const [zoom, setZoom] = useState(1);
@@ -97,9 +97,9 @@ export function NavigationProvider({
                 onPointerMove={handleMouseDrag}
                 onPointerLeave={handleMouseUp}
                 onWheel={updateZoom}
-                scale={[10000, 10000, 1]}
+                position={[cameraPosition.x, cameraPosition.y, -1]}
             >
-                <planeGeometry args={[1, 1]} position={[0, 0, -1]} />
+                <planeGeometry args={[4000, 3000]} />
                 <meshBasicMaterial color={"white"} />
             </mesh>
         </NavigationContext.Provider>
