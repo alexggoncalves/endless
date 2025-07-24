@@ -15,7 +15,7 @@ import { NavigationProvider } from "../../contexts/NavigationContext";
 function Explorer() {
     const { loading, getAllSongs, songs } = useContext(MusicContext);
     const innerBounds= {x: 2500, y: 1200},
-        outerBounds= {x: 3300, y: 2000},
+        outerBounds= {x: 3000, y: 1700},
         maxZ= 200
 
 

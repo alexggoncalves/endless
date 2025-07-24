@@ -176,7 +176,9 @@ function Content({
             } else break;
         }
 
-        setActiveTiles(newTiles);
+        if (newTiles.length != activeTiles.length && newTiles != null) {
+            setActiveTiles(newTiles);
+        }
 
         if (isInitialGeneration && newTiles.length > 0) {
             setIsInitialGeneration(false);
