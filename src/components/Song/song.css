@@ -1,33 +1,35 @@
-.go-back {
+.back-button {
+    background-color: #303030;
+    color: white;
+
+    position: fixed ;
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    
     display: flex;
     align-items: center;
-    height: 6vh;
-    padding-left: 1vw;
-    position: absolute;
-    right: 0;
+    justify-content: center;
+    right: 50%;
     top: 0;
-    margin-right: 5vw;
-}
-
-.go-back a {
-    text-align: center;
-    font-size: 1.5rem;
-    color: #303030;
+    z-index: 10;
+    margin-top: 20px;
+    transform: translateY(-300%);
+    
+    font-size: 20px;
     text-decoration: none;
-}
-
-.go-back a:hover {
-    text-decoration: underline;
-}
-
-.go-back img {
-    height: 0.9vw;
-    padding-right: 0.5vw;
+    font-weight: 800;
+    mix-blend-mode: difference;
+    background-color: #dfdfdf;
+    color: #303030;
+    cursor: none;
+    user-select: none;
 }
 
 .song-page {
+    box-shadow: 0px 150px 1000px #303030;
     top: 0;
-    transform: translate(0,100%);
+    transform: translate(0, 150%);
     padding-top: 82px;
     background-color: white;
     position: absolute;
@@ -37,6 +39,8 @@
     width: 100%;
     overflow-y: auto;
     z-index: 1;
+    scroll-behavior: smooth;
+
 }
 
 .song-details-container {
@@ -111,8 +115,9 @@
     margin-top: 20px;
     margin-bottom: 50px;
 }
-.song-extra-info-container > div {
+.song-extra-info-section {
     width: 25vw;
+    margin: 0 2vw;
 }
 
 .song-extra-info-container h2 {
@@ -148,7 +153,7 @@
 .bio {
     margin-top: 30px;
     margin-bottom: 40px;
-    width: 30vw;
+    width: 25vw;
     font-weight: 400;
     font-size: 1.1rem;
 }
@@ -158,11 +163,7 @@
     height: auto;
 }
 
-.mobile-only{
-    display: none;
-}
- 
-footer{
+footer {
     position: relative;
 }
 
@@ -283,7 +284,6 @@ footer{
 
     .song-link a {
         font-size: 2rem;
-
     }
 
     .song-link img {

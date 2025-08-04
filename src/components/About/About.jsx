@@ -1,10 +1,11 @@
 import instagram from "./../../assets/insta.png";
 import facebook from "./../../assets/fb.png";
 import spotify from "./../../assets/spotify.png";
-import lines from "../../assets/lines.svg";
+import WaveDivider from "../Waves/DividerWaves";
 
 import "./about.css";
 import Footer from "../Footer";
+
 
 const About = () => {
     return (
@@ -52,9 +53,7 @@ const About = () => {
                     </div>
                 </div>
             </div>
-            <div className="divider-lines align-bottom">
-                <img src={lines} alt={"divider lines"} />
-            </div>
+            <WaveDivider />
         </div>
     );
 };

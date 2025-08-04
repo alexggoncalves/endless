@@ -2,9 +2,10 @@ import { useFrame } from "@react-three/fiber";
 import SongTile from "./SongTile";
 import { v4 as uuidv4 } from "uuid";
 import { useContext, useMemo, useState, useRef, useEffect } from "react";
-import { NavigationContext } from "../../contexts/NavigationContext";
+import { ExplorerControlsContext } from "../../contexts/ExplorerControlsContext";
 
-const amount = 20;
+const amount = 18;
+const maxEqualTileDistance = 2000;
 
 function Content({
     songs,
@@ -15,14 +16,15 @@ function Content({
     outerBounds,
     maxZ,
 }) {
-    const { cameraPosition } = useContext(NavigationContext);
+    const { cameraPosition } = useContext(ExplorerControlsContext);
 
     const [activeTiles, setActiveTiles] = useState([]);
     const [isInitialGeneration, setIsInitialGeneration] = useState(true);
     const songQueue = useRef([]);
 
     // Check if placement is valid
-    const checkOverlap = (position, size, placed) => {
+    // Test overlap and distance to same song
+    const validatePosition = (songID, position, size, placed) => {
         for (const tile of placed) {
             const horizontalOverlap =
                 Math.abs(tile.position.x - position.x) <
@@ -31,11 +33,20 @@ function Content({
                 Math.abs(tile.position.y - position.y) <
                 (tile.size + size) / 2 + minMargin;
 
+            if (songID === tile.song[0]) {
+                const distance = Math.sqrt(
+                    Math.pow(position.x - tile.position.x, 2) +
+                        Math.pow(position.y - tile.position.y, 2)
+                );
+
+                if (distance <= maxEqualTileDistance) return false;
+            }
+
             if (horizontalOverlap && verticalOverlap) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     };
 
     // Calculate random position inside bounds
@@ -131,7 +142,7 @@ function Content({
         const size = Math.random() * (maxTileSize - minTileSize) + minTileSize;
 
         // Generate a random position on the outer ring and check for overlaps
-        let overlaps,
+        let positionIsValid,
             position,
             tries = 0;
         do {
@@ -145,9 +156,14 @@ function Content({
                 );
             }
 
-            overlaps = checkOverlap(position, size, newTiles);
+            positionIsValid = validatePosition(
+                song[0],
+                position,
+                size,
+                newTiles
+            );
             tries++;
-        } while (overlaps && tries < 20);
+        } while (!positionIsValid && tries < 20);
 
         if (tries >= 20) return null;
 

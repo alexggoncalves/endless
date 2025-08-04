@@ -3,14 +3,12 @@
     display: flex;
     justify-content: space-between;
     height: fit-content;
-    padding: 10vw;
-    /* height: 95vh; */
-    overflow-y: hidden;
+    padding: 10vw 10vw 10vh 10vw;;
+    
 }
 
 .about-us {
     width: 42vw;
-    height: fit-content;
 }
 
 p {
@@ -59,7 +57,6 @@ p {
     line-height: normal;
 }
 
-footer{position: absolute;}
 
 @media only screen and (max-width: 700px) {
     .no-scroll {

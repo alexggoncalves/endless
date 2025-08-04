@@ -1,107 +1,64 @@
-import { createContext, useState } from "react";
-import { useFrame } from "@react-three/fiber";
-import { Vector3 } from "three";
-import { lerp } from "three/src/math/MathUtils";
-import { useGesture, usePinch } from "@use-gesture/react";
+import { createContext, useRef, useEffect } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { useNavigate } from "react-router-dom";
 
 const initialValue = null;
 
 export const NavigationContext = createContext(initialValue);
 
-export function NavigationProvider({
-    children,
-    minZoom = 0.8,
-    maxZoom = 2,
-    zoomSmoothness = 40,
-    cameraSmoothness = 50,
-    panSpeed = 1,
-}) {
-    const [zoom, setZoom] = useState(1);
-    const [cameraPosition, setCameraPosition] = useState({
-        x: 0,
-        y: 0,
-        z: 1000,
+export function NavigationProvider({ children }) {
+    const isCursorFocused = useRef(false);
+    const isSongPageAnimating = useRef(false);
+
+    const { contextSafe } = useGSAP();
+
+    const getCursor = () => document.querySelector(".cursor");
+
+    const expandButton = contextSafe((backButton) => {
+        gsap.to(backButton.current, { duration: 0.2, fontSize: "1.4rem" });
     });
 
-    const [isDragging, setDragging] = useState(false);
-    const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 });
-    const [nextCameraPosition, setNextCameraPosition] = useState({
-        x: 0,
-        y: 0,
-        z: 1000,
+    const shrinkButton = contextSafe((backButton) => {
+        gsap.to(backButton.current, { duration: 0.1, fontSize: "1rem" });
     });
 
-    useFrame(({ camera }) => {
-        camera.position.lerp(
-            new Vector3(
-                nextCameraPosition.x,
-                nextCameraPosition.y,
-                nextCameraPosition.z
-            ),
-            1/(cameraSmoothness)
-        );
+    const focusCursor = contextSafe(() => {
+        const cursor = getCursor();
+        if (!cursor && !isCursorFocused.current) return;
+        isCursorFocused.current = true;
 
-        camera.zoom = lerp(camera.zoom, zoom, 1/(zoomSmoothness));
-        camera.updateProjectionMatrix();
-
-        setCameraPosition(camera.position);
+        gsap.killTweensOf(cursor);
+        gsap.to(cursor, {
+            duration: 0.15,
+            scale: 0.65,
+        });
     });
 
-    const handleMouseDown = (e) => {
-        setDragging(true);
-        const { clientX, clientY } = e;
-        setLastMousePos({ x: clientX, y: clientY });
-    };
+    const unfocusCursor = contextSafe(() => {
+        const cursor = getCursor();
+        if (!cursor && isCursorFocused.current) return;
+        isCursorFocused.current = false;
 
-    const handleMouseUp = () => {
-        setDragging(false);
-    };
-
-    
-
-    const handleMouseDrag = (e) => {
-        const { clientX, clientY } = e;
-        if (isDragging) {
-            const deltaX = clientX - lastMousePos.x;
-            const deltaY = clientY - lastMousePos.y;
-
-            setNextCameraPosition({
-                x: nextCameraPosition.x - deltaX * panSpeed,
-                y: nextCameraPosition.y + deltaY * panSpeed,
-                z: nextCameraPosition.z,
-            });
-        }
-
-        setLastMousePos({ x: clientX, y: clientY });
-    };
-
-    // Set zoom based on scroll wheel
-    const updateZoom = (e) => {
-        let newZoom = zoom - e.deltaY * (1/(zoomSmoothness*10));
-
-        if (newZoom < minZoom) newZoom = minZoom;
-        if (newZoom > maxZoom) newZoom = maxZoom;
-        setZoom(newZoom);
-    };
+        gsap.killTweensOf(cursor);
+        gsap.to(cursor, {
+            duration: 0.2,
+            scale: 1,
+            ease: "power2.out",
+        });
+    });
 
     return (
         <NavigationContext.Provider
             value={{
-                cameraPosition
+                expandButton,
+                shrinkButton,
+                focusCursor,
+                unfocusCursor,
+                isSongPageAnimating
             }}
         >
             {children}
-            <mesh
-                onPointerDown={handleMouseDown}
-                onPointerUp={handleMouseUp}
-                onPointerMove={handleMouseDrag}
-                onPointerLeave={handleMouseUp}
-                onWheel={updateZoom}
-                position={[cameraPosition.x, cameraPosition.y, -1]}
-            >
-                <planeGeometry args={[4000, 3000]} />
-                <meshBasicMaterial color={"white"} />
-            </mesh>
         </NavigationContext.Provider>
     );
 }

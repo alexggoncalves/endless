@@ -10,13 +10,13 @@ import { MusicContext } from "../../contexts/MusicContext";
 import Loading from "../Loading";
 
 import loadingGif from "./../../assets/icons8-loading.gif";
-import { NavigationProvider } from "../../contexts/NavigationContext";
+import { ExplorerControlsProvider } from "../../contexts/ExplorerControlsContext";
 
 function Explorer() {
     const { loading, getAllSongs, songs } = useContext(MusicContext);
-    const innerBounds= {x: 2500, y: 1200},
+    const innerBounds= {x: 2600, y: 1200},
         outerBounds= {x: 3000, y: 1700},
-        maxZ= 200
+        maxZ= 200;
 
 
     useEffect(() => {
@@ -27,7 +27,7 @@ function Explorer() {
         <>
             <div id="explorer">
                 <Canvas id="canvas" flat linear>
-                    <NavigationProvider>
+                    <ExplorerControlsProvider>
                         <PerspectiveCamera
                             makeDefault
                             position={[0, 0, 2000]}
@@ -42,7 +42,7 @@ function Explorer() {
                             maxZ={maxZ}
                             outerBounds={outerBounds}
                         />
-                    </NavigationProvider>
+                    </ExplorerControlsProvider>
                 </Canvas>
             </div>
             <div id="radial-blur-mask" />

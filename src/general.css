@@ -22,7 +22,7 @@ html {
     color: #303030;
     background-color: white;
     font-size: 1vw;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
 }
 
 .body {
@@ -33,6 +33,7 @@ html {
     overflow: hidden;
     color: white;
     cursor: none;
+    
 }
 
 .no-scroll {
@@ -54,13 +55,21 @@ html {
     color: #202020;
 }
 
-.divider-lines img {
-    height: 25vh;
-    overflow: hidden;
-    align-items: center;
-    justify-content: center;
+/* WAVES */
+
+.divider-waves {
+    position: relative;
+    padding: 40px 0;
 }
 
+.divider-waves svg {
+    width: 200vw;
+    margin: -30px 0;
+}
+
+.mobile-only {
+    display: none;
+}
 
 footer {
     position: absolute;
@@ -114,8 +123,8 @@ footer {
 
 .cursor {
     position: fixed;
-    width: 50px;
-    height: 50px;
+    width: 80px;
+    height: 80px;
     background-color: #dfdfdf;
     border-radius: 50%;
     transform: translate(-50%, -50%);
@@ -166,6 +175,8 @@ footer {
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+
 
 @media only screen and (max-width: 700px) {
     .cursor {
