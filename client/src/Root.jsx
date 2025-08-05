@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Header from "./components/Header";
 import { useRef, useEffect } from "react";
 import { NavigationProvider } from "./contexts/NavigationContext";
+import { SpotifyProvider } from "./contexts/SpotifyContext";
 
 const Root = () => {
     const cursor = useRef();
@@ -26,11 +27,13 @@ const Root = () => {
 
     return (
         <NavigationProvider cursor={cursor}>
-            <Header />
-            <div className="body black-text">
-                <Outlet />
-            </div>
-            <div ref={cursor} className="cursor"></div>
+            <SpotifyProvider>
+                <Header />
+                <div className="body black-text">
+                    <Outlet />
+                </div>
+                <div ref={cursor} className="cursor"></div>
+            </SpotifyProvider>
         </NavigationProvider>
     );
 };

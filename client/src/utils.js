@@ -1,11 +1,12 @@
-export const artistsToString = (array) => {
+export const artistsToString = (artists) => {
     let output = "";
 
-    for (let i = 0; i < array.length; i++) {
-        if (i == array.length - 1) {
-            output += array[i].title;
-        } else output += array[i].title + ", ";
-    }
+    artists.map((artist,index) => {
+        if (index == artists.length - 1) {
+            output += artist.name;
+        } else output += artist.name + ", ";
+    });
+    
     return output;
 };
 

@@ -6,29 +6,34 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useNavigate } from "react-router-dom";
 import { NavigationContext } from "../../contexts/NavigationContext.jsx";
+import { artistsToString } from "../../utils";
 
 import spotify from "../../assets/spotify.png";
 
 import { MusicContext } from "../../contexts/MusicContext.jsx";
 import DividerWaves from "../Waves/DividerWaves.jsx";
+import { SpotifyContext } from "../../contexts/SpotifyContext.jsx";
 
 function Song() {
-    const { getSongByID, songs } = useContext(MusicContext);
+    // const { getSongByID, songs } = useContext(MusicContext);
+    const { getSongById, songs } = useContext(SpotifyContext);
+    const [song, setSong] = useState();
+    const [artist, setArtist] = useState()
+
     const {
         expandButton,
         shrinkButton,
         focusCursor,
         unfocusCursor,
-        setSongPageAnimating,
         isSongPageAnimating,
     } = useContext(NavigationContext);
+
     const navigate = useNavigate();
     const location = useLocation();
     const { contextSafe } = useGSAP();
 
     const { songID } = useParams();
-    const [song, setSong] = useState();
-    const coverImage = songs?.[songID]?.coverImage; // Get the preloaded image
+    const coverImage = songs?.[songID]?.image; // Get the preloaded image
 
     const isSongPageOpen = useRef(false);
 
@@ -95,10 +100,11 @@ function Song() {
 
     useEffect(() => {
         // Fetch song details
-        getSongByID(songID).then((song) => setSong(song));
+        getSongById(songID).then((song) => setSong(song));
     }, []);
 
     useEffect(() => {
+        // if(song) console.log(song)
         // If user comes from inside the website ->  slide page in
         // Otherwise: place it on original position
         if (location.state?.fromMain) {
@@ -136,16 +142,16 @@ function Song() {
                         {coverImage && (
                             <img
                                 src={coverImage.src}
-                                alt={song.title + " cover art"}
+                                alt={song.name + " cover art"}
                             />
                         )}
 
                         <div className="song-info">
-                            <h1>{song.title}</h1>
-                            <h2>by {song.metadata.artist[0].title}</h2>
+                            <h1>{song.name}</h1>
+                            <h2>by {artistsToString(song.artists)}</h2>
                             <div className="song-link">
                                 <Link
-                                    to={`https://open.spotify.com/track/${song.metadata.spotify_id}`}
+                                    to={`https://open.spotify.com/track/${song.id}`}
                                     target="_blank"
                                 >
                                     Listen on spotify
@@ -155,55 +161,55 @@ function Song() {
                         </div>
 
                         <div className="song-details">
-                            <span className="detail-label">GENRE</span>
+                            {/* <span className="detail-label">GENRE</span>
                             <span className="detail">
                                 {song.metadata.genre}
-                            </span>
+                            </span>  */}
 
-                            <span className="detail-label">RELEASE YEAR</span>
-                            <span className="detail">{song.metadata.year}</span>
+                            <span className="detail-label">RELEASE DATE</span>
+                            <span className="detail">{song.album.release_date}</span>
 
                             <span className="detail-label">ALBUM</span>
                             <span className="detail">
-                                {song.metadata.album.title}
+                                {song.album.name}
                             </span>
 
                             <span className="detail-label">DURATION</span>
                             <span className="detail">
-                                {song.metadata.duration}
+                                {song.duration_ms}
                             </span>
 
-                            <span className="detail-label">LANGUAGE</span>
+                            <span className="detail-label">EXPLICIT</span>
                             <span className="detail">
-                                {song.metadata.language}
+                                {song.explicit ? "YES" : "NO"}
                             </span>
                         </div>
                     </div>
 
                     <DividerWaves />
 
-                    <div className="song-extra-info-container">
+                     <div className="song-extra-info-container">
                         <div className="song-extra-info-section">
                             <h2>THE ALBUM</h2>
-                            <h1>{song.metadata.album.title}</h1>
-                            <ol>
+                            <h1>{song.album.name}</h1>
+                            {/* <ol>
                                 {song.metadata.album.metadata.track_list
                                     .split("\n")
                                     .map((track, index) => (
                                         <li key={index}>{track}</li>
                                     ))}
-                            </ol>
+                            </ol> */}
                         </div>
 
                         <DividerWaves mobileOnly={true} />
 
                         <div className="song-extra-info-section">
                             <h2>THE ARTIST</h2>
-                            <h1>{song.metadata.artist[0].title}</h1>
+                            <h1>{song.artists[0].name}</h1>
                             <p className="bio">
-                                {song.metadata.artist[0].metadata.biography}
+                                {/* {song.metadata.artist[0].metadata.biography} */}
                             </p>
-                            <img
+                             {/* <img
                                 className="artist-image"
                                 height={400}
                                 src={song.metadata.artist[0].metadata.photo.url}
@@ -211,9 +217,9 @@ function Song() {
                                     song.metadata.artist[0].title +
                                     " artist photo"
                                 }
-                            />
+                            /> */}
                         </div>
-                    </div>
+                    </div> 
 
                     <DividerWaves />
                 </div>

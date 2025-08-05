@@ -254,7 +254,7 @@ export function MusicProvider({ children }) {
                 setSelectedFilters,
                 didFiltersChange,
                 areFiltersActive,
-                loading,
+                // loading,
                 releaseYears,
                 genres,
                 languages,

@@ -9,7 +9,6 @@ import ErrorPage from "./components/ErrorPage.jsx";
 import About from "./components/About/About.jsx";
 import Song from "./components/Song/Song.jsx";
 import SuggestSong from "./components/SuggestSong/SuggestSong.jsx";
-import Archive from "./components/Archive/Archive.jsx";
 import Explorer from "./components/Explorer/Explorer.jsx";
 import { MusicProvider } from "./contexts/MusicContext.jsx";
 
@@ -36,16 +35,6 @@ const router = createBrowserRouter([
             {
                 path: "/suggest",
                 element: <SuggestSong />,
-            },
-            {
-                path: "/archive",
-                element: <Archive />,
-                children: [
-                    {
-                        path: "/archive/:songID",
-                        element: <Song />,
-                    },
-                ],
             }
         ],
     },

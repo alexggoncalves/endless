@@ -57,6 +57,7 @@ function Content({
         return { x, y, z };
     };
 
+    // Calculate a random position outside the user view
     const getRandomOuterRingPosition = (innerBound, outerBound, maxZ) => {
         const bands = [
             {
@@ -121,6 +122,7 @@ function Content({
     };
 
     const initializeSongQueue = () => {
+        if(!songs) return;
         const entries = Object.entries(songs);
         const shuffledSongs = shuffle(entries);
         songQueue.current = [...shuffledSongs];
