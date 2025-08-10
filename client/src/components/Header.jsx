@@ -1,7 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
 import gsap from "gsap";
-import burgeropen from "./../assets/menu-open.gif";
-import burgerclose from "./../assets/menu-close.gif";
 import { useContext, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { NavigationContext } from "../contexts/NavigationContext";

@@ -6,29 +6,61 @@ import { useContext, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { NavigationContext } from "../../contexts/NavigationContext";
+import { SpotifyContext } from "../../contexts/SpotifyContext";
 
 import Subtitle from "./Subtitle";
 
 gsap.registerPlugin(useGSAP);
 
-function SongTile({ position, size, song }) {
-    const tile = useRef();
-    let img = null;
+const COUNTDOWN_DURATION = 600;
 
-    if(song.image) img = useLoader(TextureLoader, song.image.src);
-    
+function SongTile({ position, size, song }) {
+    const audio = useRef();
+    const tile = useRef();
+    const material = useRef();
 
     const navigate = useNavigate();
     const [pointerDownPos, setPointerDownPos] = useState(new Vector2(0, 0));
+    const {
+        focusCursor,
+        unfocusCursor,
+        isSongPageAnimating,
+        startCountdown,
+        cancelCountdown,
+    } = useContext(NavigationContext);
 
-    const { focusCursor, unfocusCursor, isSongPageAnimating } =
-        useContext(NavigationContext);
-
+    const { autoPlay, setPreviewUrl, songs } = useContext(SpotifyContext);
     //GSAP
     const { contextSafe } = useGSAP();
 
-    const handleMouseEnter = contextSafe(() => {
-        focusCursor();
+    // Convert image into texture
+    let img = null;
+    if (song.image) img = useLoader(TextureLoader, song.image.src);
+
+    let previewUrlLoadPromise = null
+
+    // Fade tile in
+    useGSAP(
+        () => {
+            if (!tile.current || !material.current) return;
+            gsap.from(tile.current.scale, {
+                x: 0,
+                y: 0,
+                ease: "power3.out",
+                duration: 1,
+            });
+
+            gsap.from(material.current, {
+                opacity: 0,
+                ease: "power3.out",
+                duration: 1,
+            });
+        },
+        { dependencies: [] }
+    );
+
+    const handleMouseEnter = contextSafe(async () => {
+        focusCursor(true);
 
         gsap.to(tile.current.scale, {
             x: size + 20,
@@ -36,7 +68,38 @@ function SongTile({ position, size, song }) {
             duration: 0.3,
             ease: "power2",
         });
+
+        previewUrlLoadPromise = setPreviewUrl(song.id);
+
+        if (autoPlay) playAfterCountdown();
     });
+
+    const playAfterCountdown = () => {
+        startCountdown(COUNTDOWN_DURATION, async () => {
+            await previewUrlLoadPromise;
+            await playAudio();
+        });
+    };
+
+    const playAudio = async () => {
+        const url = songs[song.id].previewUrl;
+
+        if (audio.current) {
+            audio.current.pause();
+            audio.current = null;
+        }
+
+        audio.current = new Audio(url);
+
+        await new Promise((resolve, reject) => {
+            audio.current.addEventListener("canplaythrough", resolve, {
+                once: true,
+            });
+            audio.current.addEventListener("error", reject, { once: true });
+        });
+
+        await audio.current.play();
+    };
 
     const handleMouseLeave = contextSafe(() => {
         unfocusCursor();
@@ -47,6 +110,15 @@ function SongTile({ position, size, song }) {
             duration: 0.4,
             ease: "power2",
         });
+
+        cancelCountdown();
+
+        if (!autoPlay) return;
+
+        if (audio.current) {
+            audio.current.pause();
+            audio.current = null;
+        }
     });
 
     const handlePointerDown = (e) => {
@@ -83,7 +155,9 @@ function SongTile({ position, size, song }) {
             }
         );
     });
+
     
+
     if (song) {
         return (
             <group
@@ -98,7 +172,12 @@ function SongTile({ position, size, song }) {
                     onPointerLeave={handleMouseLeave}
                 >
                     <planeGeometry></planeGeometry>
-                    <meshBasicMaterial map={img}></meshBasicMaterial>
+                    <meshBasicMaterial
+                        transparent={true}
+                        opacity={1}
+                        ref={material}
+                        map={img}
+                    ></meshBasicMaterial>
                 </mesh>
                 <Subtitle
                     tileSize={size}

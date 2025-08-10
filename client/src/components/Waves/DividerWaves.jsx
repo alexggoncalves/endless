@@ -85,7 +85,7 @@ const DividerWaves = ({ mobileOnly = false }) => {
                 scrollSpeed={scrollSpeed}
             />
             <Wave
-                weight={2.5}
+                weight={10}
                 direction={-1}
                 baseSpeed={getRandomBaseSpeed()}
                 scrollSpeed={scrollSpeed}

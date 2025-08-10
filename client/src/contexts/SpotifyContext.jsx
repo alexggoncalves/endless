@@ -2,8 +2,9 @@ import { createContext, useEffect, useState } from "react";
 
 const initialValue = null;
 
-const tokenURL = "http://localhost:3000/get-token";
 const defaultPlaylistId = "2ksVm2FT5zhQFl8jmXRIzL";
+
+const apiUrl = "http://localhost:3000";
 
 export const SpotifyContext = createContext(initialValue);
 
@@ -13,9 +14,10 @@ export function SpotifyProvider({ children }) {
     const [expiresAt, setExpiresAt] = useState(null);
     const [currentPlaylist, setCurrentPlaylist] = useState(null);
     const [songs, setSongs] = useState(null);
+    const [autoPlay,setAutoPlay] = useState(true);
 
     useEffect(() => {
-        fetch(tokenURL, { method: "POST" })
+        fetch(`${apiUrl}/get-token`, { method: "POST" })
             .then((res) => res.json())
             .then((data) => {
                 setAccessToken(data.access_token);
@@ -44,20 +46,92 @@ export function SpotifyProvider({ children }) {
 
         // Save each playlist track in the songs map
         const newSongs = {};
+        const previewSearches = [];
         const tracks = data.tracks.items;
         tracks.map((track, index) => {
             const newSong = track.track;
             newSongs[newSong.id] = newSong;
-            if (newSong.album.images.length > 0) {
-                const imageUrl = newSong.album.images[0].url; //get bigger image
 
+            if (newSong.album.images.length > 0) {
+                // Preload each song's image
+                const imageUrl = newSong.album.images[0].url; //get bigger image
                 const img = new Image();
                 img.src = imageUrl;
                 newSongs[newSong.id].image = img;
             }
+
+            // Add song to later search for its preview
+            previewSearches.push({
+                song: newSong.name,
+                artist: newSong.artists[0].name,
+            });
+            const progress = Math.round(((index + 1) / tracks.length) * 100);
+
         });
+
         setSongs(newSongs);
-        setLoading(false);
+    };
+
+    // Fetch a list of song preview urls [{song:"",artist:""}, {...} ]
+    // (Exceeds api calls really quickly)
+    const fetchPreviewUrls = async (searches) => {
+        if (!accessToken) return;
+
+        try {
+            const response = await fetch(`${apiUrl}/song-previews`, {
+                method: "POST",
+                body: JSON.stringify(searches),
+                headers: {
+                    "Content-Type": "application/json",
+                    // Authorization: "Bearer " + accessToken,
+                },
+            });
+            const data = await response.json();
+            console.log(data);
+            return data || [];
+        } catch (e) {
+            console.error("Failed to fetch preview URLs:", e);
+            return [];
+        }
+    };
+
+    // Fetch a song's preview url by song or artists
+    const fetchPreviewUrl = async (song, artist) => {
+        if (!accessToken) return;
+
+        if (!song || !artist) return;
+
+        const params = new URLSearchParams({
+            song: song,
+            artist: artist,
+        });
+
+        try {
+            const response = await fetch(
+                `${apiUrl}/song-preview?${params.toString()}`,
+                {
+                    method: "GET",
+                }
+            );
+            const data = await response.json();
+            return data || null;
+        } catch (e) {
+            console.error("Failed to fetch preview URLs:", e);
+            return null;
+        }
+    };
+
+    const setPreviewUrl = async (songID) => {
+        let url = songs[songID].previewUrl;
+        if (!url) {
+            const response = await fetchPreviewUrl(
+                songs[songID].name,
+                songs[songID].artists[0].name
+            );
+            url = response.results[0].previewUrls[0];
+
+            songs[songID].previewUrl = url;
+        }
     };
 
     const getSongById = async (songId) => {
@@ -82,6 +156,10 @@ export function SpotifyProvider({ children }) {
                 getSongById,
                 accessToken,
                 loading,
+                setLoading,
+                autoPlay,
+                setAutoPlay,
+                setPreviewUrl
             }}
         >
             {children}

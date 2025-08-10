@@ -2,7 +2,7 @@
     touch-action: none;
     height: 100vh;
     width: 100%;
-    user-select: none;;
+    user-select: none;
 }
 
 #radial-blur-mask {
@@ -16,9 +16,9 @@
         center,
         closest-side,
         transparent 60%,
-        white 90%
+        #dfdfdf 90%
     );
-    mask: radial-gradient(circle at center, transparent 60%, white 90%);
+    mask: radial-gradient(circle at center, transparent 60%, #dfdfdf 90%);
     backdrop-filter: blur(4px);
 }
 
@@ -29,4 +29,3 @@
     height: 100vh;
     width: 100vw;
 }
-

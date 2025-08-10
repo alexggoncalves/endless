@@ -20,7 +20,7 @@ html {
     width: 100%;
     font-family: "Mulish";
     color: #303030;
-    background-color: white;
+    background-color: #dfdfdf;
     font-size: 1vw;
     /* overflow-x: hidden; */
 }
@@ -31,9 +31,8 @@ html {
     min-height: 100vh;
     width: 100%;
     overflow: hidden;
-    color: white;
+    color: #dfdfdf;
     cursor: none;
-    
 }
 
 .no-scroll {
@@ -44,15 +43,15 @@ html {
 /* COLORS */
 
 .black-bg {
-    background-color: #202020;
+    background-color: #303030;
 }
 
 .white-bg {
-    background-color: #fffcf9;
+    background-color: #dfdfdf;
 }
 
 .black-text {
-    color: #202020;
+    color: #303030;
 }
 
 /* WAVES */
@@ -71,25 +70,11 @@ html {
     display: none;
 }
 
-footer {
-    position: absolute;
-    bottom: 0;
-    height: 2.5vh;
-    background-color: #303030;
-    width: 100vw;
-    color: white;
-    text-align: center;
-    font-size: 10pt;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .page-indicator {
     width: 6px;
     height: 6px;
     position: absolute;
-    background-color: white;
+    background-color: #dfdfdf;
     border-radius: 50%;
     left: -15px;
     vertical-align: middle;
@@ -121,16 +106,54 @@ footer {
     cursor: none;
 }
 
-.cursor {
+.point-cursor-wrapper {
     position: fixed;
-    width: 80px;
-    height: 80px;
-    background-color: #dfdfdf;
+    top: 0;
+    left: 0;
+
+    z-index: 11;
+    pointer-events: none;
+
+    
+    mix-blend-mode: difference;
+}
+
+.point-cursor {
+    width: 6px;
+    height: 6px;
+    border: 1.5px solid #dfdfdf;
     border-radius: 50%;
     transform: translate(-50%, -50%);
+}
+
+.invert-circle-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    transform: translate(-50%, -50%);
+    z-index: 10;
+
     pointer-events: none;
-    z-index: 9999;
     mix-blend-mode: difference;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.invert-circle {
+    width: 100px;
+    height: 100px;
+    background-color: #dfdfdf;
+    border-radius: 50%;
+}
+
+.count-down-circle {
+    position: absolute;
+
+    /* width: 100px;
+    height: 100px; */
+    background-color: transparent;
 }
 
 .no-results > span:last-child {
@@ -175,8 +198,6 @@ footer {
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
-
-
 
 @media only screen and (max-width: 700px) {
     .cursor {

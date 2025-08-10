@@ -6,23 +6,20 @@ import { Outlet } from "react-router-dom";
 import { PerspectiveCamera } from "@react-three/drei";
 
 import Content from "./Content";
-import Loading from "../Loading";
-import loadingGif from "./../../assets/icons8-loading.gif";
+import UserInteractionPrompt from "../UserInteractionPrompt/UserInteractionPrompt";
 
 import { ExplorerControlsProvider } from "../../contexts/ExplorerControlsContext";
-import { MusicContext } from "../../contexts/MusicContext";
 import { SpotifyContext } from "../../contexts/SpotifyContext";
 
+
 function Explorer() {
-    const { loading, getAllSongs} = useContext(MusicContext);
-    const { getPlaylistInfo, accessToken, songs } = useContext(SpotifyContext);
+    const { getPlaylistInfo, accessToken, songs, loading } = useContext(SpotifyContext);
 
     const innerBounds = { x: 2600, y: 1500 },
         outerBounds = { x: 3000, y: 1900 },
         maxZ = 200;
 
     useEffect(() => {
-        // if (songs.length == 0) getAllSongs();
         if (accessToken && !songs) {
             getPlaylistInfo()
         }
@@ -51,8 +48,10 @@ function Explorer() {
                 </Canvas>
             </div>
             <div id="radial-blur-mask" />
+
+            <UserInteractionPrompt/>
+
             <Outlet />
-            {loading ? <Loading loadingGif={loadingGif} /> : undefined}
         </>
     );
 }

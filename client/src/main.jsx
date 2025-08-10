@@ -6,9 +6,7 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./Root.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
-import About from "./components/About/About.jsx";
 import Song from "./components/Song/Song.jsx";
-import SuggestSong from "./components/SuggestSong/SuggestSong.jsx";
 import Explorer from "./components/Explorer/Explorer.jsx";
 import { MusicProvider } from "./contexts/MusicContext.jsx";
 
@@ -28,14 +26,6 @@ const router = createBrowserRouter([
                     },
                 ],
             },
-            {
-                path: "/about",
-                element: <About />,
-            },
-            {
-                path: "/suggest",
-                element: <SuggestSong />,
-            }
         ],
     },
 ]);

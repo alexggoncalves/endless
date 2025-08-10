@@ -1,0 +1,108 @@
+#interaction-prompt-background {
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(255, 255, 255);
+    mix-blend-mode: difference;
+    pointer-events: none;
+}
+
+#interaction-prompt-container {
+    background-color: rgba(48, 48, 48, 0.775);
+    color: #dfdfdf;
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+    backdrop-filter: blur(2px);
+}
+
+.interaction-prompt-text {
+    margin-bottom: 30px;
+}
+.interaction-prompt-text > p {
+    margin-top: 0;
+
+}
+
+.interaction-button {
+    position: relative;
+}
+
+.interaction-button > button {
+    border: 1px solid #dfdfdf;
+    background-color: transparent;
+    color: #dfdfdf;
+    font-family: "Prompt", sans-serif;
+    font-size: 0.8em;
+    border-radius: 25px;
+    cursor: none;
+    width: 150px;
+    overflow: hidden;
+}
+
+.toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.toggle-label {
+    font-size: 0.7em;
+    font-weight: 800;
+    margin-right: 15px;
+}
+
+.toggle-track {
+    border: 3px solid #dfdfdf;
+    border-radius: 20px;
+    width: 32px;
+    height: 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.toggle-thumb {
+    position: absolute;
+    height: 16px;
+    aspect-ratio: 1;
+    /* border-radius: 20px ; */
+    transform: translateX(-20%);
+    background-color: #dfdfdf;
+}
+
+.loader-container {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 20px;
+    transform: translate(140%, 13%);
+}
+
+.toggle-state {
+    width: 24px;
+    margin-left: 5px;
+    font-size: 0.8em;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 100%;
+    aspect-ratio: 1;
+    --_c: no-repeat linear-gradient(rgb(255, 255, 255) 0 0) 50%;
+    background: var(--_c) / 100% 50%, var(--_c) / 50% 100%;
+    border-radius: 50%;
+    animation: l29 2s infinite linear;
+}
+@keyframes l29 {
+    100% {
+        transform: rotate(1turn);
+    }
+}

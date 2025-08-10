@@ -3,6 +3,7 @@ import SongTile from "./SongTile";
 import { v4 as uuidv4 } from "uuid";
 import { useContext, useMemo, useState, useRef, useEffect } from "react";
 import { ExplorerControlsContext } from "../../contexts/ExplorerControlsContext";
+import { SpotifyContext } from "../../contexts/SpotifyContext";
 
 const amount = 18;
 const maxEqualTileDistance = 2000;
@@ -17,6 +18,7 @@ function Content({
     maxZ,
 }) {
     const { cameraPosition } = useContext(ExplorerControlsContext);
+    const {setLoading} = useContext(SpotifyContext)
 
     const [activeTiles, setActiveTiles] = useState([]);
     const [isInitialGeneration, setIsInitialGeneration] = useState(true);
@@ -200,6 +202,7 @@ function Content({
 
         if (isInitialGeneration && newTiles.length > 0) {
             setIsInitialGeneration(false);
+            setLoading(false);
         }
     });
 

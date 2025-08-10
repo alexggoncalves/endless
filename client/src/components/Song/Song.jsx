@@ -18,7 +18,7 @@ function Song() {
     // const { getSongByID, songs } = useContext(MusicContext);
     const { getSongById, songs } = useContext(SpotifyContext);
     const [song, setSong] = useState();
-    const [artist, setArtist] = useState()
+    const [artist, setArtist] = useState();
 
     const {
         expandButton,
@@ -167,17 +167,15 @@ function Song() {
                             </span>  */}
 
                             <span className="detail-label">RELEASE DATE</span>
-                            <span className="detail">{song.album.release_date}</span>
+                            <span className="detail">
+                                {song.album.release_date}
+                            </span>
 
                             <span className="detail-label">ALBUM</span>
-                            <span className="detail">
-                                {song.album.name}
-                            </span>
+                            <span className="detail">{song.album.name}</span>
 
                             <span className="detail-label">DURATION</span>
-                            <span className="detail">
-                                {song.duration_ms}
-                            </span>
+                            <span className="detail">{song.duration_ms}</span>
 
                             <span className="detail-label">EXPLICIT</span>
                             <span className="detail">
@@ -188,7 +186,7 @@ function Song() {
 
                     <DividerWaves />
 
-                     <div className="song-extra-info-container">
+                    <div className="song-extra-info-container">
                         <div className="song-extra-info-section">
                             <h2>THE ALBUM</h2>
                             <h1>{song.album.name}</h1>
@@ -209,7 +207,7 @@ function Song() {
                             <p className="bio">
                                 {/* {song.metadata.artist[0].metadata.biography} */}
                             </p>
-                             {/* <img
+                            {/* <img
                                 className="artist-image"
                                 height={400}
                                 src={song.metadata.artist[0].metadata.photo.url}
@@ -219,8 +217,7 @@ function Song() {
                                 }
                             /> */}
                         </div>
-                    </div> 
-
+                    </div>
                     <DividerWaves />
                 </div>
             </>
