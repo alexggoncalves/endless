@@ -6,13 +6,13 @@ import { ExplorerControlsContext } from "../../contexts/ExplorerControlsContext"
 import { MusicContext } from "../../contexts/MusicContext";
 
 import { useLoader } from "@react-three/fiber";
-import { TextureLoader, Vector2 } from "three";
+import { TextureLoader } from "three";
 
 import { shuffleArray } from "../../utils.js";
 
 import tileMask from "./../../assets/tile-mask.png";
 
-const MAX_PLACEMENT_TRIES = 5;
+const MAX_PLACEMENT_TRIES = 3;
 
 function Content({
     songs,
@@ -209,7 +209,7 @@ function Content({
 
     useFrame(() => {
         frameCount.current++;
-        if (frameCount.current % 5 !== 0) return;
+        if (frameCount.current % 10 !== 0) return;
 
         let newTiles = [...activeTilesRef.current];
 

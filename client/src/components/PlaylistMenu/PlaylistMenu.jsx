@@ -58,7 +58,7 @@ const PlaylistMenu = () => {
         gsap.to(playlistDetails, {
             duration: 0.5,
             ease: "power2.inOut",
-            marginTop: "340px",
+            top: "360px",
         });
 
         //Expand image
@@ -66,8 +66,8 @@ const PlaylistMenu = () => {
         gsap.to(playlistImage, {
             duration: 0.5,
             ease: "power3.inOut",
-            width: "320px",
-            height: "320px",
+            width: "350px",
+            height: "350px",
         });
 
         // Morph arrow
@@ -81,9 +81,9 @@ const PlaylistMenu = () => {
         // Move arrow
         gsap.killTweensOf(menuArrow);
         gsap.to(menuArrow, {
-            duration: 0.6,
+            duration: 0.5,
             ease: "power2.inOut",
-            top: "270px",
+            top: "370px",
         });
     });
 
@@ -115,7 +115,7 @@ const PlaylistMenu = () => {
         gsap.to(playlistDetails, {
             duration: 0.6,
             ease: "power3.inOut",
-            marginTop: "16px",
+            top: "17px",
         });
 
         //Shrink image
@@ -132,7 +132,7 @@ const PlaylistMenu = () => {
         gsap.to(menuArrow, {
             duration: 0.6,
             ease: "power2.inOut",
-            top: "0",
+            top: "26px",
         });
 
         // Morph arrow
@@ -161,6 +161,7 @@ const PlaylistMenu = () => {
             <div ref={backgroundRef} className="playlist-menu-content">
                 {/* Current playlist */}
                 <div className="current-playlist">
+                    {/* Playlist */}
                     <div
                         ref={playlistDetailsRef}
                         className="current-playlist-details"
@@ -174,6 +175,8 @@ const PlaylistMenu = () => {
                         src={currentPlaylist?.images[0].url}
                         alt=""
                     ></img>
+
+                    {/* Arrow */}
                     <svg
                         ref={menuArrowRef}
                         className="menu-arrow"
@@ -198,6 +201,7 @@ const PlaylistMenu = () => {
                         />
                     </svg>
                 </div>
+                {/* Song list */}
                 <div ref={listRef} className="list-wrapper">
                     <div className="list-separator">
                         <Wave

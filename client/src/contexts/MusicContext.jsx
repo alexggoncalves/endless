@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { artistsToString } from "./../utils.js"
+import { artistsToString } from "./../utils.js";
 
 const initialValue = null;
 
@@ -56,12 +56,18 @@ export function MusicProvider({ children }) {
 
                 if (newSong.album.images.length > 0) {
                     // Preload each song's image
-                    const imageUrl = newSong.album.images[0].url; //get bigger image
-                    const img = new Image();
-                    img.src = imageUrl;
-                    newSongs[newSong.id].image = img;
+                    const bigUrl = newSong.album.images[0].url; //get bigger image
+                    const smallUrl = newSong.album.images[1].url; //get smaller image
+                    const bigImg = new Image();
+                    const smallImg = new Image();
+                    bigImg.src = bigUrl;
+                    smallImg.src = smallUrl;
+                    newSongs[newSong.id].image = bigImg;
+                    newSongs[newSong.id].smallImage = smallImg;
                 }
-                newSongs[newSong.id].artistsString = artistsToString(newSongs[newSong.id].artists);
+                newSongs[newSong.id].artistsString = artistsToString(
+                    newSongs[newSong.id].artists
+                );
             }
         });
 

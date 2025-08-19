@@ -16,6 +16,7 @@ function Subtitle({ position, title, artist, tileSize }) {
                 fontSize={16}
                 font={titleFont}
                 maxWidth={tileSize}
+                lineHeight={0}
                 onSync={(text) => {
                     const height =
                         text.geometry.boundingBox.max.y -
@@ -30,7 +31,7 @@ function Subtitle({ position, title, artist, tileSize }) {
                 anchorX="left"
                 anchorY="top"
                 fontSize={12}
-                position={[0, -titleHeight, 0]}
+                position={[0, -titleHeight - 1, 0]}
                 font={artistFont}
                 maxWidth={tileSize}
             >

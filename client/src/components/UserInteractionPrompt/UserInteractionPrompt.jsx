@@ -65,7 +65,7 @@ const UserInteractionPrompt = () => {
         });
 
         gsap.to(waveSeparator, {
-            stroke: "#ffffff",
+            stroke: "#ffffffff",
             duration: 1,
             ease: "power1.out",
         });

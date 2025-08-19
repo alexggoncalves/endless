@@ -26,23 +26,25 @@ const PlaylistSong = ({ song }) => {
 
     const handleMouseEnter = contextSafe(() => {
         const container = containerRef.current;
-
         if (!container) return;
+
+        gsap.killTweensOf(container);
         gsap.to(container, {
-            backgroundColor: "#ffffff",
-            duration: 0.1,
-            ease: "power2.inOut",
+            backgroundColor: "#8f8f8f71",
+            duration: 0.2,
+            // ease: "power2.inOut",
         });
     });
 
     const handleMouseLeave = contextSafe(() => {
         const container = containerRef.current;
-
         if (!container) return;
+
+        gsap.killTweensOf(container);
         gsap.to(container, {
-            backgroundColor: "transparent",
-            duration: 0.1,
-            ease: "power2.inOut",
+            backgroundColor: "#38383800",
+            duration: 0.6,
+            // ease: "power2.inOut",
         });
     });
 

@@ -5,7 +5,7 @@
     margin: 22px;
     height: 80px;
 
-    width: 320px;
+    width: 350px;
     min-height: 80px;
     max-height: calc(100vh - 44px);
     border-radius: 14px;
@@ -30,15 +30,22 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    
 }
 
 .menu-arrow {
+    top: 26px;
     position: absolute;
-    top: 0px;
-    width: 50px;
+    left: 16px;
+    width: 24px;
     aspect-ratio: 1/1;
-    right: 0;
-    mix-blend-mode: difference;
+    
+}
+
+.menu-arrow path{
+    /* fill: aqua; */
+    backdrop-filter: invert(1);
+    /* box-shadow: 10px 5px 5px red; */
 }
 
 /* Current playlist */
@@ -55,28 +62,30 @@
     position: absolute;
     height: 80px;
     aspect-ratio: 1/1;
-    background-color: red;
+    /* background-color: red; */
     top: 0;
     right: 0;
 }
 
 .current-playlist-details {
-    margin: 16px;
+    /* margin: 16px; */
+    position: absolute;
     mix-blend-mode: difference;
-    margin-top: 16px;
+    top: 17px;
+    left: 60px;
 }
 
 .current-playlist-details > span {
     display: block;
     font-weight: 200;
-    font-size: 0.65rem;
-    line-height: 0.9rem;
+    font-size: 0.6rem;
+    line-height: 0.8rem;
 }
 .current-playlist-details > span:first-child {
     font-weight: 400;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-family: "Prompt";
-    line-height: 1.5rem;
+    line-height: 1.3rem;
 }
 
 /* song list */
@@ -95,26 +104,27 @@
     overflow: scroll;
     touch-action: pan-y;
     /* display: none; */
-    padding: 22px 0;
+    padding:0 0 22px 0;
 }
 
 .list-separator {
     width: 200%;
+    margin-top: 10px;
 }
 
 .playlist-song {
     height: 60px;
-    /* background-color: #a4a4a461; */
+    background-color: "transparent";
     border-radius: 8px;
-    margin: 0px 16px 0px 16px;
+    margin: 2px 16px 2px 16px;
     overflow: hidden;
     display: flex;
     align-items: center;
 }
 
 .playlist-song-image {
-    margin-left: 4px;
-    height: 90%;
+    margin-left: 6px;
+    height: 80%;
     border-radius: 4px;
 }
 

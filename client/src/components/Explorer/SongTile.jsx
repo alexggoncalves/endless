@@ -36,7 +36,7 @@ function SongTile({ position, size, song, mask }) {
 
     // Convert image into texture
     let img = null;
-    if (song.image) img = useLoader(TextureLoader, song.image.src);
+    if (song.image) img = useLoader(TextureLoader, song.smallImage.src);
 
     let previewUrlLoadPromise = null;
 
@@ -162,12 +162,6 @@ function SongTile({ position, size, song, mask }) {
         );
     });
 
-    useEffect(() => {
-        if (audio.current) {
-            console.log(audio.current)
-        }
-    }, [volume]);
-
     if (song) {
         return (
             <group
@@ -196,7 +190,7 @@ function SongTile({ position, size, song, mask }) {
                     title={song.name}
                     artist={songs[song.id].artistsString}
                 />
-                {/* <PlaybackState position={[-0.45, 0.45, 1]} tileScale={size}></PlaybackState> */}
+                <PlaybackState position={[-0.45, 0.45, 1]} tileScale={size}></PlaybackState>
             </group>
         );
     }
