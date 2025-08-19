@@ -114,7 +114,6 @@ html {
     z-index: 11;
     pointer-events: none;
 
-    
     mix-blend-mode: difference;
 }
 
@@ -130,29 +129,29 @@ html {
     position: fixed;
     top: 0;
     left: 0;
-
-    transform: translate(-50%, -50%);
     z-index: 10;
 
     pointer-events: none;
-    mix-blend-mode: difference;
     display: flex;
     justify-content: center;
     align-items: center;
+    mix-blend-mode: difference;
 }
 
 .invert-circle {
+    background-color: white;
     width: 100px;
     height: 100px;
-    background-color: #dfdfdf;
     border-radius: 50%;
+    /* backdrop-filter: invert(1); */
+    transform: translate(-50%, -50%);
 }
 
 .count-down-circle {
     position: absolute;
-
-    /* width: 100px;
-    height: 100px; */
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
     background-color: transparent;
 }
 

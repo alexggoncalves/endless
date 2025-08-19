@@ -9,14 +9,12 @@ import { NavigationContext } from "../../contexts/NavigationContext.jsx";
 import { artistsToString } from "../../utils";
 
 import spotify from "../../assets/spotify.png";
+import DividerWaves from "../Waves/DividerWaves.jsx";
 
 import { MusicContext } from "../../contexts/MusicContext.jsx";
-import DividerWaves from "../Waves/DividerWaves.jsx";
-import { SpotifyContext } from "../../contexts/SpotifyContext.jsx";
 
 function Song() {
-    // const { getSongByID, songs } = useContext(MusicContext);
-    const { getSongById, songs } = useContext(SpotifyContext);
+    const { getSongById, songs } = useContext(MusicContext);
     const [song, setSong] = useState();
     const [artist, setArtist] = useState();
 

@@ -1,13 +1,21 @@
 export const artistsToString = (artists) => {
     let output = "";
 
-    artists.map((artist,index) => {
+    artists.map((artist, index) => {
         if (index == artists.length - 1) {
             output += artist.name;
         } else output += artist.name + ", ";
     });
-    
+
     return output;
+};
+
+export const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
 };
 
 export const sortList = (array, sortBy, sortDirection) => {

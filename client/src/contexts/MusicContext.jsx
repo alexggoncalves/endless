@@ -1,263 +1,171 @@
 import { createContext, useEffect, useState } from "react";
-import { createBucketClient } from "@cosmicjs/sdk";
-import { sortByInt, sortList } from "../utils";
-import _, { set } from "lodash";
+import { artistsToString } from "./../utils.js"
 
 const initialValue = null;
 
-const BUCKET_SLUG = import.meta.env.VITE_BUCKET_SLUG;
-const READ_KEY = import.meta.env.VITE_READ_KEY;
+const defaultPlaylistId = "2ksVm2FT5zhQFl8jmXRIzL?si=e5d21c6c1ed944fd";
 
-const cosmic = createBucketClient({
-    bucketSlug: BUCKET_SLUG,
-    readKey: READ_KEY,
-});
+const apiUrl = "http://localhost:3000";
+
 export const MusicContext = createContext(initialValue);
 
-const filtersInit = { genre: [], language: [], year: [] };
-
 export function MusicProvider({ children }) {
-    const [songs, setSongs] = useState([]);
+    const [accessToken, setAccessToken] = useState(null);
     const [loading, setLoading] = useState([]);
-    const [sortBy, setSortBy] = useState("title"); //title,artist,genre,album,release year,duration
-    const [sortDirection, setSortDirection] = useState(1); // asc = 1 , desc = -1
-    const [searchInput, setSearchInput] = useState("");
-    const [selectedFilters, setSelectedFilters] = useState(filtersInit);
-    const [appliedFilters, setAppliedFilters] = useState(filtersInit);
-    const [releaseYears, setReleaseYears] = useState([]);
-    const [genres, setGenres] = useState([]);
-    const [languages, setLanguages] = useState([]);
+    const [expiresAt, setExpiresAt] = useState(null);
+    const [currentPlaylist, setCurrentPlaylist] = useState(null);
+    const [songs, setSongs] = useState(null);
+    const [autoPlay, setAutoPlay] = useState(true);
+    const [volume, setVolume] = useState(0.5);
 
     useEffect(() => {
-        setSongs(sortList([...songs], sortBy, sortDirection));
-    }, [sortBy, sortDirection]);
-
-    const getAllSongs = () => {
-        setSongs([]);
-        setLoading(true);
-        cosmic.objects
-            .find({
-                type: "songs",
-            })
-            .props([
-                "id",
-                "title",
-                "metadata.artist",
-                "metadata.album",
-                "metadata.cover_image",
-                "metadata.thumbnail",
-            ])
-            .then(async (response) => {
-                const newSongs = {}
-                
-                response.objects.forEach((song,index) => {
-                    const img = new Image()
-                    img.src = song.metadata.cover_image.imgix_url
-                    
-                    newSongs[song.id] = song;
-                    
-                    newSongs[song.id].coverImage = img
-                });
-
-                setSongs(newSongs);
-                
-                setLoading(false);
-            })
-            .catch((e) => {
-                setSongs([]);
-                setLoading(false);
+        fetch(`${apiUrl}/get-token`, { method: "POST" })
+            .then((res) => res.json())
+            .then((data) => {
+                setAccessToken(data.access_token);
+                setExpiresAt(Date.now() + data.expires_in * 1000);
             });
-    };
+    }, []);
 
-    const setExistingYears = (songs) => {
-        let years = [];
-        songs.map((song) => {
-            if (!years.includes(song.metadata.year)) {
-                years.push(song.metadata.year);
+    const getPlaylistInfo = async (playListId) => {
+        if (!accessToken) return;
+        if (!playListId) playListId = defaultPlaylistId;
+
+        setLoading(true);
+
+        // Request for playlist info
+        const response = await fetch(
+            `https://api.spotify.com/v1/playlists/${playListId}`,
+            {
+                method: "GET",
+                headers: { Authorization: "Bearer " + accessToken },
+            }
+        );
+
+        // Set current playlist to the data returned
+        const data = await response.json();
+        setCurrentPlaylist(data);
+
+        // Save each playlist track in the songs map
+        const newSongs = {};
+        const tracks = data.tracks.items;
+        tracks.map((track, index) => {
+            const newSong = track.track;
+            if (newSong.id != null) {
+                newSongs[newSong.id] = newSong;
+
+                if (newSong.album.images.length > 0) {
+                    // Preload each song's image
+                    const imageUrl = newSong.album.images[0].url; //get bigger image
+                    const img = new Image();
+                    img.src = imageUrl;
+                    newSongs[newSong.id].image = img;
+                }
+                newSongs[newSong.id].artistsString = artistsToString(newSongs[newSong.id].artists);
             }
         });
-        setReleaseYears(years.sort((a, b) => sortByInt(a, b, -1)));
-    };
-    const setExistingGenres = (songs) => {
-        let genres = [];
-        songs.map((song) => {
-            if (!genres.includes(song.metadata.genre)) {
-                genres.push(song.metadata.genre);
-            }
-        });
 
-        setGenres(genres);
+        setSongs(newSongs);
     };
 
-    const setExistingLanguages = (songs) => {
-        let languages = [];
-        songs.map((song) => {
-            if (!languages.includes(song.metadata.language)) {
-                languages.push(song.metadata.language);
-            }
-        });
-        setLanguages(languages);
-    };
+    // Fetch a list of song preview urls [{song:"",artist:""}, {...} ]
+    // (Exceeds api calls really quickly)
+    const fetchPreviewUrls = async (searches) => {
+        if (!accessToken) return;
 
-    const getArchiveSongs = () => {
-        useEffect(() => {
-            setLoading(true);
-            const query = {
-                type: "songs",
-                title: {
-                    $regex: searchInput,
-                    $options: "i",
+        try {
+            const response = await fetch(`${apiUrl}/song-previews`, {
+                method: "POST",
+                body: JSON.stringify(searches),
+                headers: {
+                    "Content-Type": "application/json",
+                    // Authorization: "Bearer " + accessToken,
                 },
-                // {
-                //     "metadata.artist": {
-                //         $elemMatch: {
-                //             title: {
-                //                 $regex: input,
-                //                 $options: "i",
-                //             },
-                //         },
-                //     },
-                // },
-            };
-
-            if (appliedFilters.genre.length > 0)
-                query["metadata.genre"] = {
-                    $in: appliedFilters.genre,
-                };
-
-            if (appliedFilters.language.length > 0)
-                query["metadata.language"] = {
-                    $in: appliedFilters.language,
-                };
-
-            if (appliedFilters.year.length > 0)
-                query["metadata.year"] = {
-                    $in: appliedFilters.year,
-                };
-
-            cosmic.objects
-                .find(query)
-                .props([
-                    "id",
-                    "title",
-                    "metadata.artist",
-                    "metadata.album",
-                    "metadata.cover_image",
-                    "metadata.thumbnail",
-                    "metadata.year",
-                    "metadata.genre",
-                    "metadata.duration",
-                    "metadata.language",
-                ])
-                .then((response) => {
-                    setLoading(false);
-                    setSongs(
-                        sortList([...response.objects], sortBy, sortDirection)
-                    );
-                    if (
-                        releaseYears.length == 0 ||
-                        genres.length == 0 ||
-                        languages.length == 0
-                    ) {
-                        setExistingYears(response.objects);
-                        setExistingGenres(response.objects);
-                        setExistingLanguages(response.objects);
-                    }
-                })
-                .catch((e) => {
-                    setLoading(false);
-                    setSongs([]);
-                });
-        }, [searchInput, appliedFilters]);
+            });
+            const data = await response.json();
+            return data || [];
+        } catch (e) {
+            console.error("Failed to fetch preview URLs:", e);
+            return [];
+        }
     };
 
-    const getSongByID = async (id) => {
-        const response = await cosmic.objects
-            .find({
-                type: "songs",
-                id: id,
-            })
-            .props([
-                "id",
-                "title",
-                "metadata.artist",
-                "metadata.album",
-                "metadata.cover_image",
-                "metadata.thumbnail",
-                "metadata.year",
-                "metadata.genre",
-                "metadata.duration",
-                "metadata.spotify_id",
-                "metadata.language",
-            ]);
-        return response.objects[0];
-    };
+    // Fetch a song's preview url by song or artists
+    const fetchPreviewUrl = async (song, artist) => {
+        if (!accessToken) return;
 
-    const applyFilters = () => {
-        setAppliedFilters(selectedFilters);
-    };
+        if (!song || !artist) return;
 
-    const didFiltersChange = () => {
-        return !_.isEqual(appliedFilters, selectedFilters);
-    };
-
-    const areFiltersActive = () => {
-        return !_.isEqual(appliedFilters, filtersInit);
-    };
-
-    const addFilter = (type, value) => {
-        setSelectedFilters({
-            ...selectedFilters,
-            [type]: [...selectedFilters[type], value],
+        const params = new URLSearchParams({
+            song: song,
+            artist: artist,
         });
+
+        try {
+            const response = await fetch(
+                `${apiUrl}/song-preview?${params.toString()}`,
+                {
+                    method: "GET",
+                }
+            );
+            const data = await response.json();
+            return data || null;
+        } catch (e) {
+            console.error("Failed to fetch preview URLs:", e);
+            return null;
+        }
     };
 
-    const removeFilter = (type, value) => {
-        setSelectedFilters({
-            ...selectedFilters,
-            [type]: selectedFilters[type].filter((filter) => {
-                return filter != value;
-            }),
-        });
+    const setPreviewUrl = async (songID) => {
+        const song = songs[songID];
+        let url = songs[songID].previewUrl;
+
+        // If song already has a preview url (even null), do nothing
+        if (song.previewUrl !== undefined) return;
+
+        if (!url) {
+            const response = await fetchPreviewUrl(
+                songs[songID].name,
+                songs[songID].artists[0].name
+            );
+
+            if (response.results) {
+                songs[songID].previewUrl = response.results[0].previewUrls[0];
+            } else {
+                songs[songID].previewUrl = null;
+            }
+        }
     };
 
-    const clearFilter = (type) => {
-        setSelectedFilters({
-            ...selectedFilters,
-            [type]: [],
-        });
-    };
+    const getSongById = async (songId) => {
+        if (!accessToken) return;
 
-    const clearAllFilters = () => {
-        setSelectedFilters(filtersInit);
+        const response = await fetch(
+            `https://api.spotify.com/v1/tracks/${songId}`,
+            {
+                method: "GET",
+                headers: { Authorization: "Bearer " + accessToken },
+            }
+        );
+
+        return await response.json();
     };
 
     return (
         <MusicContext.Provider
             value={{
                 songs,
-                getSongByID,
-                getArchiveSongs,
-                sortBy,
-                setSortBy,
-                sortDirection,
-                setSortDirection,
-                setSearchInput,
-                getAllSongs,
-                addFilter,
-                removeFilter,
-                clearFilter,
-                clearAllFilters,
-                appliedFilters,
-                applyFilters,
-                selectedFilters,
-                setSelectedFilters,
-                didFiltersChange,
-                areFiltersActive,
-                // loading,
-                releaseYears,
-                genres,
-                languages,
+                getPlaylistInfo,
+                getSongById,
+                accessToken,
+                loading,
+                setLoading,
+                autoPlay,
+                setAutoPlay,
+                setPreviewUrl,
+                setVolume,
+                volume,
+                currentPlaylist,
             }}
         >
             {children}

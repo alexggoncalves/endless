@@ -5,7 +5,7 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP); // register the hook to avoid React version discrepancies
 
-const Wave = ({ weight, direction, baseSpeed, scrollSpeed, scrollSpeedMultiplier = 3 }) => {
+const Wave = ({ weight,color, direction, baseSpeed, scrollSpeed, scrollSpeedMultiplier = 3 }) => {
     const wave = useRef();
     let x = 0;
 
@@ -45,7 +45,7 @@ const Wave = ({ weight, direction, baseSpeed, scrollSpeed, scrollSpeedMultiplier
         >
             <path
                 fill="none"
-                stroke="#202020"
+                stroke={color || "#303030"}
                 strokeWidth={weight || 1}
                 d="M3119 57.84c-53.75-.19-75.25-43.59-129-43.77-54.3-.19-76.2 44-130.5 43.77-53.75-.19-75.25-43.59-129-43.77-54.3-.19-76.2 44-130.5 43.77-53.75-.19-75.25-43.59-129-43.77-54.3-.19-78.7 42.59-133 42.4-53.75-.19-75.25-43.59-129-43.77-54.3-.19-76.2 44-130.5 43.77-53.75-.19-75.25-43.59-129-43.77-54.3-.19-76.2 44-130.5 43.77-53.75-.19-75.25-43.59-129-43.77-54.3-.19-76.2 44-130.5 43.77-54.3.23-76.2-43.96-130.5-43.77-53.75.18-75.25 43.58-129 43.77-54.3.23-76.2-43.96-130.5-43.77-53.75.18-75.25 43.58-129 43.77-54.3.23-76.2-43.96-130.5-43.77-53.73.18-75.24 43.58-129 43.77-54.3.19-78.7-42.59-133-42.4-53.73.18-75.24 43.63-129 43.77-54.3.23-76.2-43.96-130.5-43.77-53.75.18-75.23 43.63-129 43.77-54.3.23-76.2-43.96-130.5-43.77-53.73.18-75.24 43.63-129 43.77"
             ></path>

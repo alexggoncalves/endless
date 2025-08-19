@@ -47,49 +47,12 @@
     overflow: hidden;
 }
 
-.toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.toggle-label {
-    font-size: 0.7em;
-    font-weight: 800;
-    margin-right: 15px;
-}
-
-.toggle-track {
-    border: 3px solid #dfdfdf;
-    border-radius: 20px;
-    width: 32px;
-    height: 20px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-}
-
-.toggle-thumb {
-    position: absolute;
-    height: 16px;
-    aspect-ratio: 1;
-    /* border-radius: 20px ; */
-    transform: translateX(-20%);
-    background-color: #dfdfdf;
-}
-
 .loader-container {
     position: absolute;
     right: 0;
     top: 0;
     width: 20px;
     transform: translate(140%, 13%);
-}
-
-.toggle-state {
-    width: 24px;
-    margin-left: 5px;
-    font-size: 0.8em;
 }
 
 /* HTML: <div class="loader"></div> */

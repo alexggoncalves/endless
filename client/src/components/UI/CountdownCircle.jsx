@@ -22,7 +22,7 @@ const CountdownCircle = ({ progress }) => {
         gsap.to(countdownCircleRef.current, {
             duration: 0.2,
             drawSVG: `0 ${progress * 100}%`,
-            ease: "power2.out",
+            ease: "linear",
             overwrite: "auto",
         });
     });
@@ -43,7 +43,7 @@ const CountdownCircle = ({ progress }) => {
             <path
                 ref={countdownCircleRef}
                 fill="none"
-                stroke="#dfdfdf"
+                stroke="white"
                 strokeWidth="12px"
                 strokeLinecap="round"
                 d={`M ${cx}, ${cy}

@@ -2,7 +2,7 @@ import { createContext, useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
-import CountdownCircle from "./../components/CountdownCircle";
+import CountdownCircle from "../components/UI/CountdownCircle";
 
 export const NavigationContext = createContext(null);
 
@@ -17,25 +17,30 @@ export function NavigationProvider({ children }) {
     const animationFrameRef = useRef(null);
 
     const isCursorFocused = useRef(false);
+    const isMouseDown = useRef(false);
+
     const isSongPageAnimating = useRef(false);
 
-    const circleX = useRef();
-    const circleY = useRef();
+    // Invert circle easing
+    const pos = useRef({ x: 0, y: 0 });
+    const target = useRef({ x: 0, y: 0 });
 
     const { contextSafe } = useGSAP();
 
-    useGSAP(() => {
+    useEffect(() => {
         if (!invertCircleWrapper.current) return;
 
-        // Initialize quickTo
-        circleX.current = gsap.quickTo(invertCircleWrapper.current, "x", {
-            duration: 0.3,
-            ease: "power2.out",
+        gsap.ticker.add(() => {
+            const ease = isMouseDown.current ? 0.05 : 0.028 ;
+            pos.current.x += (target.current.x - pos.current.x) * ease;
+            pos.current.y += (target.current.y - pos.current.y) * ease;
+            gsap.set(invertCircleWrapper.current, {
+                x: pos.current.x,
+                y: pos.current.y,
+            });
         });
-        circleY.current = gsap.quickTo(invertCircleWrapper.current, "y", {
-            duration: 0.3,
-            ease: "power2.out",
-        });
+
+        return () => gsap.ticker.remove(() => {});
     }, []);
 
     const expandButton = contextSafe((button) => {
@@ -70,8 +75,6 @@ export function NavigationProvider({ children }) {
                 ease: "power2.out",
             });
         }
-        // Focus inverted circle
-
         // gsap.to(countdownCircleRef.current, {
 
         //     duration: 1,
@@ -98,7 +101,6 @@ export function NavigationProvider({ children }) {
 
     const moveCursor = contextSafe((event) => {
         if (!pointCursorWrapper.current || !invertCircleWrapper.current) return;
-        if (!circleX.current || !circleY.current) return;
 
         const mouseX = event.clientX;
         const mouseY = event.clientY;
@@ -106,9 +108,8 @@ export function NavigationProvider({ children }) {
         // Set center cursor to mouse position
         gsap.set(pointCursorWrapper.current, { x: mouseX, y: mouseY });
 
-        // Tween invert circle to mouse position using quickTo
-        circleX.current(mouseX);
-        circleY.current(mouseY);
+        target.current.x = mouseX;
+        target.current.y = mouseY;
     });
 
     useEffect(() => {
@@ -164,6 +165,7 @@ export function NavigationProvider({ children }) {
                 startCountdown,
                 cancelCountdown,
                 isSongPageAnimating,
+                isMouseDown,
             }}
         >
             {children}

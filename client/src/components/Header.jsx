@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { useContext, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { NavigationContext } from "../contexts/NavigationContext";
-import { SpotifyContext } from "../contexts/SpotifyContext";
+import { MusicContext } from "../contexts/MusicContext";
 
 const PageIndicator = () => {
     return <div className="page-indicator"></div>;

@@ -7,13 +7,15 @@ import { PerspectiveCamera } from "@react-three/drei";
 
 import Content from "./Content";
 import UserInteractionPrompt from "../UserInteractionPrompt/UserInteractionPrompt";
+import VolumeController from "../UI/VolumeController";
 
 import { ExplorerControlsProvider } from "../../contexts/ExplorerControlsContext";
-import { SpotifyContext } from "../../contexts/SpotifyContext";
-
+import { MusicContext } from "../../contexts/MusicContext";
+import PlaylistMenu from "../PlaylistMenu/PlaylistMenu";
 
 function Explorer() {
-    const { getPlaylistInfo, accessToken, songs, loading } = useContext(SpotifyContext);
+    const { getPlaylistInfo, accessToken, songs, currentPlaylist } =
+        useContext(MusicContext);
 
     const innerBounds = { x: 2600, y: 1500 },
         outerBounds = { x: 3000, y: 1900 },
@@ -21,14 +23,14 @@ function Explorer() {
 
     useEffect(() => {
         if (accessToken && !songs) {
-            getPlaylistInfo()
+            getPlaylistInfo();
         }
     }, [accessToken]);
 
     return (
         <>
             <div id="explorer">
-                <Canvas id="canvas" flat linear>
+                <Canvas id="canvas" flat shadows={false} dpr={[1, 1]}>
                     <ExplorerControlsProvider>
                         <PerspectiveCamera
                             makeDefault
@@ -37,20 +39,27 @@ function Explorer() {
                         />
                         <Content
                             songs={songs}
-                            minTileSize={180}
+                            minTileSize={140}
                             maxTileSize={300}
-                            minMargin={50}
+                            minMargin={100}
                             innerBounds={innerBounds}
                             maxZ={maxZ}
                             outerBounds={outerBounds}
+                            amount={18}
+                            maxEqualTileDistance={2000}
                         />
                     </ExplorerControlsProvider>
                 </Canvas>
             </div>
             <div id="radial-blur-mask" />
 
-            <UserInteractionPrompt/>
+            <UserInteractionPrompt />
 
+            <VolumeController defaultVolume={0.5} />
+
+            <PlaylistMenu currentPlaylist={currentPlaylist} />
+
+            {/* Song page */}
             <Outlet />
         </>
     );

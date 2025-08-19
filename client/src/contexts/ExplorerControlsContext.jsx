@@ -3,6 +3,9 @@ import { useFrame } from "@react-three/fiber";
 import { Vector3 } from "three";
 import { lerp } from "three/src/math/MathUtils";
 import { useGesture, usePinch } from "@use-gesture/react";
+import { useContext } from "react";
+
+import { NavigationContext } from "./NavigationContext";
 
 const initialValue = null;
 
@@ -12,9 +15,9 @@ export function ExplorerControlsProvider({
     children,
     minZoom = 0.8,
     maxZoom = 2,
-    zoomSmoothness = 40,
-    cameraSmoothness = 50,
-    panSpeed = 1,
+    zoomSmoothness = 80,
+    cameraSmoothness = 60,
+    panSpeed = 1.6,
 }) {
     const [zoom, setZoom] = useState(1);
     const [cameraPosition, setCameraPosition] = useState({
@@ -30,6 +33,8 @@ export function ExplorerControlsProvider({
         y: 0,
         z: 1000,
     });
+
+    const {isMouseDown} = useContext(NavigationContext)
 
     useFrame(({ camera }) => {
         camera.position.lerp(
@@ -51,10 +56,12 @@ export function ExplorerControlsProvider({
         setDragging(true);
         const { clientX, clientY } = e;
         setLastMousePos({ x: clientX, y: clientY });
+        isMouseDown.current = true;
     };
 
     const handleMouseUp = () => {
         setDragging(false);
+        isMouseDown.current = false;
     };
 
     const handleMouseDrag = (e) => {
@@ -98,7 +105,7 @@ export function ExplorerControlsProvider({
                 position={[cameraPosition.x, cameraPosition.y, -1]}
             >
                 <planeGeometry args={[4000, 3000]} />
-                <meshBasicMaterial color={"white"} />
+                <meshBasicMaterial color={"#e3e3e3ff"} />
             </mesh>
         </ExplorerControlsContext.Provider>
     );

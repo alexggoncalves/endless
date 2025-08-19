@@ -1,20 +1,19 @@
 import "./userInteractionPrompt.css";
 
-import { Link, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 
 import InteractionPromptButton from "./InteractionPromptButton";
-import Toggle from "./Toggle";
-import { SpotifyContext } from "../../contexts/SpotifyContext";
+import Toggle from "../UI/Toggle";
+import { MusicContext } from "../../contexts/MusicContext";
 
 const UserInteractionPrompt = () => {
     const container = useRef();
     const background = useRef();
 
     const { contextSafe } = useGSAP();
-    const { setAutoPlay } = useContext(SpotifyContext);
+    const { setAutoPlay } = useContext(MusicContext);
 
     const expandLogo = contextSafe(() => {
         const logo = document.querySelector(".logo");
@@ -43,6 +42,32 @@ const UserInteractionPrompt = () => {
             onComplete: () => {
                 background.current.style.display = "none";
             },
+        });
+
+        invertMenuColors();
+    });
+
+    const invertMenuColors = contextSafe(() => {
+        const playlist = document.querySelector(".playlist-menu-wrapper");
+        const background = document.querySelector(".playlist-menu-content");
+        const waveSeparator = document.querySelector(".list-separator svg path");
+
+        gsap.to(playlist, {
+            color: "#ffffff",
+            duration: 1,
+            ease: "power1.out",
+        });
+
+        gsap.to(background, {
+            backgroundColor: "#303030a7",
+            duration: 1,
+            ease: "power1.out",
+        });
+
+        gsap.to(waveSeparator, {
+            stroke: "#ffffff",
+            duration: 1,
+            ease: "power1.out",
         });
     });
 

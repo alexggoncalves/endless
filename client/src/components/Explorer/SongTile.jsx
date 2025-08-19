@@ -1,20 +1,21 @@
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader, Vector2 } from "three";
 import { useNavigate } from "react-router-dom";
-import { artistsToString } from "../../utils";
+
 import { useContext, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { NavigationContext } from "../../contexts/NavigationContext";
-import { SpotifyContext } from "../../contexts/SpotifyContext";
+import { MusicContext } from "../../contexts/MusicContext";
 
 import Subtitle from "./Subtitle";
+import PlaybackState from "./PlaybackState";
 
 gsap.registerPlugin(useGSAP);
 
 const COUNTDOWN_DURATION = 600;
 
-function SongTile({ position, size, song }) {
+function SongTile({ position, size, song, mask }) {
     const audio = useRef();
     const tile = useRef();
     const material = useRef();
@@ -29,7 +30,7 @@ function SongTile({ position, size, song }) {
         cancelCountdown,
     } = useContext(NavigationContext);
 
-    const { autoPlay, setPreviewUrl, songs } = useContext(SpotifyContext);
+    const { autoPlay, setPreviewUrl, songs, volume } = useContext(MusicContext);
     //GSAP
     const { contextSafe } = useGSAP();
 
@@ -37,7 +38,7 @@ function SongTile({ position, size, song }) {
     let img = null;
     if (song.image) img = useLoader(TextureLoader, song.image.src);
 
-    let previewUrlLoadPromise = null
+    let previewUrlLoadPromise = null;
 
     // Fade tile in
     useGSAP(
@@ -84,12 +85,15 @@ function SongTile({ position, size, song }) {
     const playAudio = async () => {
         const url = songs[song.id].previewUrl;
 
+        if (url === null) return;
+
         if (audio.current) {
             audio.current.pause();
             audio.current = null;
         }
 
         audio.current = new Audio(url);
+        audio.current.volume = volume;
 
         await new Promise((resolve, reject) => {
             audio.current.addEventListener("canplaythrough", resolve, {
@@ -97,6 +101,8 @@ function SongTile({ position, size, song }) {
             });
             audio.current.addEventListener("error", reject, { once: true });
         });
+
+        if (audio.current === null) return;
 
         await audio.current.play();
     };
@@ -156,7 +162,11 @@ function SongTile({ position, size, song }) {
         );
     });
 
-    
+    useEffect(() => {
+        if (audio.current) {
+            console.log(audio.current)
+        }
+    }, [volume]);
 
     if (song) {
         return (
@@ -177,14 +187,16 @@ function SongTile({ position, size, song }) {
                         opacity={1}
                         ref={material}
                         map={img}
+                        alphaMap={mask}
                     ></meshBasicMaterial>
                 </mesh>
                 <Subtitle
                     tileSize={size}
                     position={[-0.5, -0.51, 1.1]}
                     title={song.name}
-                    artist={artistsToString(song.artists)}
+                    artist={songs[song.id].artistsString}
                 />
+                {/* <PlaybackState position={[-0.45, 0.45, 1]} tileScale={size}></PlaybackState> */}
             </group>
         );
     }

@@ -1,12 +1,18 @@
 import { useFrame } from "@react-three/fiber";
 import SongTile from "./SongTile";
 import { v4 as uuidv4 } from "uuid";
-import { useContext, useMemo, useState, useRef, useEffect } from "react";
+import { useContext, useState, useRef } from "react";
 import { ExplorerControlsContext } from "../../contexts/ExplorerControlsContext";
-import { SpotifyContext } from "../../contexts/SpotifyContext";
+import { MusicContext } from "../../contexts/MusicContext";
 
-const amount = 18;
-const maxEqualTileDistance = 2000;
+import { useLoader } from "@react-three/fiber";
+import { TextureLoader, Vector2 } from "three";
+
+import { shuffleArray } from "../../utils.js";
+
+import tileMask from "./../../assets/tile-mask.png";
+
+const MAX_PLACEMENT_TRIES = 5;
 
 function Content({
     songs,
@@ -16,13 +22,20 @@ function Content({
     innerBounds,
     outerBounds,
     maxZ,
+    amount,
+    maxEqualTileDistance,
 }) {
     const { cameraPosition } = useContext(ExplorerControlsContext);
-    const {setLoading} = useContext(SpotifyContext)
+    const { setLoading } = useContext(MusicContext);
 
     const [activeTiles, setActiveTiles] = useState([]);
+    const activeTilesRef = useRef([]);
+    const frameCount = useRef(0);
+
     const [isInitialGeneration, setIsInitialGeneration] = useState(true);
     const songQueue = useRef([]);
+
+    const mask = useLoader(TextureLoader, tileMask);
 
     // Check if placement is valid
     // Test overlap and distance to same song
@@ -31,17 +44,18 @@ function Content({
             const horizontalOverlap =
                 Math.abs(tile.position.x - position.x) <
                 (tile.size + size) / 2 + minMargin;
+
             const verticalOverlap =
                 Math.abs(tile.position.y - position.y) <
                 (tile.size + size) / 2 + minMargin;
 
             if (songID === tile.song[0]) {
-                const distance = Math.sqrt(
-                    Math.pow(position.x - tile.position.x, 2) +
-                        Math.pow(position.y - tile.position.y, 2)
-                );
+                const dx = position.x - tile.position.x;
+                const dy = position.y - tile.position.y;
+                const distSq = dx * dx + dy * dy;
 
-                if (distance <= maxEqualTileDistance) return false;
+                if (distSq <= maxEqualTileDistance * maxEqualTileDistance)
+                    return false;
             }
 
             if (horizontalOverlap && verticalOverlap) {
@@ -61,30 +75,31 @@ function Content({
 
     // Calculate a random position outside the user view
     const getRandomOuterRingPosition = (innerBound, outerBound, maxZ) => {
+        // Define the limits of the spawn bands
         const bands = [
             {
-                //Top
+                // Top
                 xMin: -outerBound.x / 2,
                 xMax: outerBound.x / 2,
                 yMin: innerBound.y / 2,
                 yMax: outerBound.y / 2,
             },
             {
-                //Bottom
+                // Bottom
                 xMin: -outerBound.x / 2,
                 xMax: outerBound.x / 2,
                 yMin: -outerBound.y / 2,
                 yMax: -innerBound.y / 2,
             },
             {
-                //Left
+                // Left
                 xMin: -outerBound.x / 2,
                 xMax: -innerBound.x / 2,
                 yMin: -outerBound.y / 2,
                 yMax: outerBound.y / 2,
             },
             {
-                //Right
+                // Right
                 xMin: innerBound.x / 2,
                 xMax: outerBound.x / 2,
                 yMin: -outerBound.y / 2,
@@ -92,8 +107,27 @@ function Content({
             },
         ];
 
-        const band = bands[Math.floor(Math.random() * 4)];
+        // Calculate each band's area and total area
+        const areas = bands.map(
+            (band) => (band.xMax - band.xMin) * (band.yMax - band.yMin)
+        );
+        const totalArea = areas.reduce((sum, area) => sum + area, 0);
 
+        // Pick a random band weighted by area
+        let rand = Math.random() * totalArea;
+        let bandIndex = 0;
+
+        for (let i = 0; i < areas.length; i++) {
+            if (rand < areas[i]) {
+                bandIndex = i;
+                break;
+            }
+            rand -= areas[i];
+        }
+
+        const band = bands[bandIndex];
+
+        // Find a random position inside the chosen band
         const x =
             cameraPosition.x +
             Math.random() * (band.xMax - band.xMin) +
@@ -108,6 +142,7 @@ function Content({
     };
 
     const isInsideBounds = ({ x, y }, bounds) => {
+        // Calculate bounds in relation to the cameraPosition
         const minX = cameraPosition.x - bounds.x / 2;
         const maxX = cameraPosition.x + bounds.x / 2;
         const minY = cameraPosition.y - bounds.y / 2;
@@ -124,18 +159,10 @@ function Content({
     };
 
     const initializeSongQueue = () => {
-        if(!songs) return;
+        if (!songs) return;
         const entries = Object.entries(songs);
-        const shuffledSongs = shuffle(entries);
+        const shuffledSongs = shuffleArray(entries);
         songQueue.current = [...shuffledSongs];
-    };
-
-    const shuffle = (array) => {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
     };
 
     const generateTile = (isInitialGeneration, newTiles) => {
@@ -167,9 +194,9 @@ function Content({
                 newTiles
             );
             tries++;
-        } while (!positionIsValid && tries < 20);
+        } while (!positionIsValid && tries < MAX_PLACEMENT_TRIES);
 
-        if (tries >= 20) return null;
+        if (tries >= MAX_PLACEMENT_TRIES) return null;
 
         // If a valid position was found, return the tile
         return {
@@ -181,13 +208,17 @@ function Content({
     };
 
     useFrame(() => {
-        let newTiles = [...activeTiles];
+        frameCount.current++;
+        if (frameCount.current % 5 !== 0) return;
+
+        let newTiles = [...activeTilesRef.current];
 
         // Filter out tiles that are outside the camera limits
         newTiles = newTiles.filter(({ position }) =>
             isInsideBounds(position, outerBounds)
         );
 
+        // Generate tiles until desider amount is reached
         while (newTiles.length < amount) {
             const newTile = generateTile(isInitialGeneration, newTiles);
 
@@ -196,8 +227,10 @@ function Content({
             } else break;
         }
 
-        if (newTiles.length != activeTiles.length && newTiles != null) {
-            setActiveTiles(newTiles);
+        // If there were any changes, update the active tiles state
+        if (newTiles.length != activeTilesRef.current.length) {
+            activeTilesRef.current = newTiles;
+            setActiveTiles([...newTiles]);
         }
 
         if (isInitialGeneration && newTiles.length > 0) {
@@ -214,6 +247,7 @@ function Content({
                     position={position}
                     size={size}
                     song={song[1]}
+                    mask={mask}
                 />
             ))}
         </group>

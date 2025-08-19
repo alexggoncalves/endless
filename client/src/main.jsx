@@ -1,14 +1,16 @@
 import "./general.css";
-import "./header.css"
+import "./header.css";
+import  "./components/UI/ui.css"
+import  "./components/PlaylistMenu/playlistMenu.css"
 
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Root from "./Root.jsx";
+import Root from "./Root.jsx"
+
 import ErrorPage from "./components/ErrorPage.jsx";
 import Song from "./components/Song/Song.jsx";
 import Explorer from "./components/Explorer/Explorer.jsx";
-import { MusicProvider } from "./contexts/MusicContext.jsx";
 
 const router = createBrowserRouter([
     {
@@ -32,8 +34,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
-        <MusicProvider>
-            <RouterProvider router={router} />
-        </MusicProvider>
+        <RouterProvider router={router} />
     </React.StrictMode>
 );

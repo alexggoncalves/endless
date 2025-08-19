@@ -1,4 +1,4 @@
-import { SpotifyContext } from "../../contexts/SpotifyContext";
+import { MusicContext } from "../../contexts/MusicContext";
 import { useContext, useEffect, useRef, useState } from "react";
 
 import { useGSAP } from "@gsap/react";
@@ -6,7 +6,7 @@ import gsap from "gsap";
 import { NavigationContext } from "../../contexts/NavigationContext";
 
 const InteractionPromptButton = ({ closeUserInteractionPrompt }) => {
-    const { loading } = useContext(SpotifyContext);
+    const { loading } = useContext(MusicContext);
     const { focusCursor, unfocusCursor } = useContext(NavigationContext);
 
     const loader = useRef();
@@ -15,8 +15,6 @@ const InteractionPromptButton = ({ closeUserInteractionPrompt }) => {
     const { contextSafe } = useGSAP();
 
     const [locked, setLocked] = useState(true);
-
-    const logo = document.getElementById("logo");
 
     const handleAccept = (e) => {
         if (!locked) {
@@ -63,35 +61,16 @@ const InteractionPromptButton = ({ closeUserInteractionPrompt }) => {
         });
     });
 
-    const setBigLogo = contextSafe(() => {
-        gsap.set(logo, { fontSize: "30rem" });
-    });
-
-    const normalizeLogo = contextSafe(() => {
-        const logo = document.getElementById("logo");
-
-        gsap.to(logo, { duration: 0.1, fontSize: "1rem" });
-    });
-
     useEffect(() => {
         if (!loader.current) return;
         if (!locked) return;
 
         if (loading) {
             fadeInLoader();
-            setBigLogo();
         } else {
             fadeOutLoader();
         }
     }, [loading]);
-
-    useEffect(() => {
-        console.log(logo);
-        if (logo) {
-            console.log(logo);
-            gsap.set(logo, { fontSize: "30rem" });
-        }
-    }, [logo]);
 
     return (
         <div className="interaction-button">

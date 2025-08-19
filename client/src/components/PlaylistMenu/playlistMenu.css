@@ -1,0 +1,135 @@
+.playlist-menu-wrapper {
+    position: fixed;
+    right: 0;
+    top: 0;
+    margin: 22px;
+    height: 80px;
+
+    width: 320px;
+    min-height: 80px;
+    max-height: calc(100vh - 44px);
+    border-radius: 14px;
+
+    background-color: transparent;
+    color: #303030;
+    overflow: hidden;
+}
+
+.playlist-menu-background {
+    inset: 0;
+    background-color: transparent;
+    backdrop-filter: invert(1);
+    position: absolute;
+}
+
+.playlist-menu-content {
+    top: 0;
+    isolation: isolate;
+    background-color: #dfdfdf72;
+    backdrop-filter: blur(2px);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.menu-arrow {
+    position: absolute;
+    top: 0px;
+    width: 50px;
+    aspect-ratio: 1/1;
+    right: 0;
+    mix-blend-mode: difference;
+}
+
+/* Current playlist */
+
+.current-playlist {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    border-radius: 12px;
+    z-index: 20;
+}
+
+.current-playlist-image {
+    position: absolute;
+    height: 80px;
+    aspect-ratio: 1/1;
+    background-color: red;
+    top: 0;
+    right: 0;
+}
+
+.current-playlist-details {
+    margin: 16px;
+    mix-blend-mode: difference;
+    margin-top: 16px;
+}
+
+.current-playlist-details > span {
+    display: block;
+    font-weight: 200;
+    font-size: 0.65rem;
+    line-height: 0.9rem;
+}
+.current-playlist-details > span:first-child {
+    font-weight: 400;
+    font-size: 1.2rem;
+    font-family: "Prompt";
+    line-height: 1.5rem;
+}
+
+/* song list */
+
+.list-wrapper {
+    /* height: calc(50vh); */
+    font-size: 1rem;
+    flex: 1;
+    overflow: hidden;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.list {
+    height: 100%;
+    overflow: scroll;
+    touch-action: pan-y;
+    /* display: none; */
+    padding: 22px 0;
+}
+
+.list-separator {
+    width: 200%;
+}
+
+.playlist-song {
+    height: 60px;
+    /* background-color: #a4a4a461; */
+    border-radius: 8px;
+    margin: 0px 16px 0px 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.playlist-song-image {
+    margin-left: 4px;
+    height: 90%;
+    border-radius: 4px;
+}
+
+.playlist-song-details {
+    /* color: #dfdfdf; */
+    margin-left: 10px;
+}
+
+.playlist-song-details > span {
+    display: block;
+    white-space: nowrap;
+    font-size: 0.55rem;
+}
+
+.playlist-song-details > span:first-child {
+    font-size: 0.6rem;
+    font-weight: 600;
+}

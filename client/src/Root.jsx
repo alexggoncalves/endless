@@ -1,17 +1,17 @@
 import { Outlet } from "react-router-dom";
 import Header from "./components/Header";
 import { NavigationProvider } from "./contexts/NavigationContext";
-import { SpotifyProvider } from "./contexts/SpotifyContext";
+import { MusicProvider } from "./contexts/MusicContext";
 
 const Root = () => {
     return (
         <NavigationProvider>
-            <SpotifyProvider>
+            <MusicProvider>
                 <Header />
-                <div className="body black-text">
+                <div className="body">
                     <Outlet />
                 </div>
-            </SpotifyProvider>
+            </MusicProvider>
         </NavigationProvider>
     );
 };
