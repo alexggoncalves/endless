@@ -1,4 +1,4 @@
-#interaction-prompt-background {
+.overlay-background {
     position: absolute;
     top: 0;
     width: 100vw;
@@ -8,7 +8,7 @@
     pointer-events: none;
 }
 
-#interaction-prompt-container {
+.overlay-container {
     background-color: rgba(48, 48, 48, 0.775);
     color: #dfdfdf;
     position: absolute;
@@ -28,7 +28,6 @@
 }
 .interaction-prompt-text > p {
     margin-top: 0;
-
 }
 
 .interaction-button {
@@ -68,4 +67,59 @@
     100% {
         transform: rotate(1turn);
     }
+}
+
+/* Search Overlay */
+.search-input {
+    position: relative;
+    
+    
+    color: #303030;
+    font-family: "Prompt", sans-serif;
+    font-size: 0.7rem;
+    
+    outline: none;
+    display: flex;
+    align-items: center;
+}
+
+.search-input > span {
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translate(-50%,-30%);
+    font-size:0.7rem;
+    font-weight: 600;
+    color: #dfdfdf;
+}
+.search-input > input {
+    width: 30vw;
+    height: 36px;
+    border: none;
+    border-radius: 20px;
+
+    background-color: #dfdfdf;
+    color: #303030;
+    font-family: "Prompt", sans-serif;
+    font-size: 0.7rem;
+    outline: none;
+    padding: 0 14px;
+}
+.search-result {
+    margin-bottom: 10px;
+    height: 80px;
+    width: 400px;
+    border-radius: 10px;
+    background-color: #ffffff1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-button{
+    width: 40px;
+    aspect-ratio: 1/1;
+    background-color: #dfdfdf;
+    border-radius: 50%;
+    margin-left: 10px;
 }

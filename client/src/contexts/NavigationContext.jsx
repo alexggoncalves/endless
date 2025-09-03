@@ -20,6 +20,7 @@ export function NavigationProvider({ children }) {
     const isMouseDown = useRef(false);
 
     const isSongPageAnimating = useRef(false);
+    const [isMenuInverted, setIsMenuInverted] = useState(false);
 
     // Invert circle easing
     const pos = useRef({ x: 0, y: 0 });
@@ -30,17 +31,19 @@ export function NavigationProvider({ children }) {
     useEffect(() => {
         if (!invertCircleWrapper.current) return;
 
-        gsap.ticker.add(() => {
-            const ease = isMouseDown.current ? 0.05 : 0.028 ;
+        const tick = () => {
+            const ease = isMouseDown.current ? 0.05 : 0.028;
             pos.current.x += (target.current.x - pos.current.x) * ease;
             pos.current.y += (target.current.y - pos.current.y) * ease;
             gsap.set(invertCircleWrapper.current, {
                 x: pos.current.x,
                 y: pos.current.y,
             });
-        });
+        };
 
-        return () => gsap.ticker.remove(() => {});
+        gsap.ticker.add(tick);
+
+        return () => gsap.ticker.remove(tick);
     }, []);
 
     const expandButton = contextSafe((button) => {
@@ -75,11 +78,6 @@ export function NavigationProvider({ children }) {
                 ease: "power2.out",
             });
         }
-        // gsap.to(countdownCircleRef.current, {
-
-        //     duration: 1,
-        //     ease: "power1.inOut",
-        // });
     });
 
     const unfocusCursor = contextSafe(() => {
@@ -88,9 +86,7 @@ export function NavigationProvider({ children }) {
 
         isCursorFocused.current = false;
 
-        // Focus point
-
-        // Focus inverted circle
+        // Unfocus inverted circle
         gsap.to(invertCircle.current, {
             duration: 0.2,
             scale: 1,
@@ -153,6 +149,10 @@ export function NavigationProvider({ children }) {
         setCountdownProgress(0);
     };
 
+    const invertMenuColors = (value) => {
+        setIsMenuInverted(value);
+    };
+
     return (
         <NavigationContext.Provider
             value={{
@@ -166,6 +166,8 @@ export function NavigationProvider({ children }) {
                 cancelCountdown,
                 isSongPageAnimating,
                 isMouseDown,
+                isMenuInverted,
+                invertMenuColors,
             }}
         >
             {children}

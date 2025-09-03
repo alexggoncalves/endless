@@ -3,14 +3,8 @@ import gsap from "gsap";
 import { useContext, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { NavigationContext } from "../contexts/NavigationContext";
-import { MusicContext } from "../contexts/MusicContext";
-
-const PageIndicator = () => {
-    return <div className="page-indicator"></div>;
-};
 
 const Header = () => {
-    const navRef = useRef();
     const navigate = useNavigate();
 
     const { focusCursor, unfocusCursor } = useContext(NavigationContext);
@@ -62,23 +56,14 @@ const Header = () => {
     };
 
     return (
-        <>
-            <div
-                className="logo"
-                onMouseUp={handleLogoClick}
-                onMouseEnter={logoMouseEnter}
-                onMouseLeave={logoMouseLeave}
-            >
-                endless
-            </div>
-            {/* <nav
-                ref={navRef}
-                onMouseEnter={() => focusCursor()}
-                onMouseLeave={() => unfocusCursor()}
-            >
-                <img src={burgeropen} className="burger" />
-            </nav> */}
-        </>
+        <div
+            className="logo"
+            onMouseUp={handleLogoClick}
+            onMouseEnter={logoMouseEnter}
+            onMouseLeave={logoMouseLeave}
+        >
+            endless
+        </div>
     );
 };
 

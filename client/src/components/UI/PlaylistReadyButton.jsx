@@ -5,7 +5,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { NavigationContext } from "../../contexts/NavigationContext";
 
-const InteractionPromptButton = ({ closeUserInteractionPrompt }) => {
+const PlaylistReadyButton = ({ callback, label }) => {
     const { loading } = useContext(MusicContext);
     const { focusCursor, unfocusCursor } = useContext(NavigationContext);
 
@@ -18,7 +18,7 @@ const InteractionPromptButton = ({ closeUserInteractionPrompt }) => {
 
     const handleAccept = (e) => {
         if (!locked) {
-            closeUserInteractionPrompt(e);
+            callback(e);
         }
     };
 
@@ -80,7 +80,7 @@ const InteractionPromptButton = ({ closeUserInteractionPrompt }) => {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
             >
-                sounds good
+                {label}
             </button>
             <div ref={loader} className="loader-container">
                 <div className="loader"></div>
@@ -89,4 +89,4 @@ const InteractionPromptButton = ({ closeUserInteractionPrompt }) => {
     );
 };
 
-export default InteractionPromptButton;
+export default PlaylistReadyButton;

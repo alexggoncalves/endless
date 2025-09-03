@@ -5,15 +5,15 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP); // register the hook to avoid React version discrepancies
 
-const Wave = ({ weight,color, direction, baseSpeed, scrollSpeed, scrollSpeedMultiplier = 3 }) => {
-    const wave = useRef();
+const Wave = ({ weight,color, direction, baseSpeed, scrollSpeed, scrollSpeedMultiplier = 3 , waveRef}) => {
+    
     let x = 0;
 
     const scrollSpeedRef = useRef(scrollSpeed);
     scrollSpeedRef.current = scrollSpeed;
 
     useGSAP(() => {
-        const waveWidth = wave.current.clientWidth;
+        const waveWidth = waveRef.current.clientWidth;
         const xOffset = Math.random() * 50;
 
         x = direction === 1 ? waveWidth / 2 - xOffset : -waveWidth / 2 + xOffset;
@@ -27,7 +27,7 @@ const Wave = ({ weight,color, direction, baseSpeed, scrollSpeed, scrollSpeedMult
                 x = -waveWidth / 2;
             }
 
-            wave.current.style.transform = `translateX(${x}px)`;
+            waveRef.current.style.transform = `translateX(${x}px)`;
         });
 
         return () => {
@@ -36,12 +36,12 @@ const Wave = ({ weight,color, direction, baseSpeed, scrollSpeed, scrollSpeedMult
     });
 
     return (
-        <svg
+        <svg 
             xmlns="http://www.w3.org/2000/svg"
             id="Layer_1"
             data-name="Layer 1"
             viewBox="0 0 3119 70.53"
-            ref={wave}
+            ref={waveRef}
         >
             <path
                 fill="none"

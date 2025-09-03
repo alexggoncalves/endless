@@ -6,16 +6,22 @@ import { Outlet } from "react-router-dom";
 import { PerspectiveCamera } from "@react-three/drei";
 
 import Content from "./Content";
-import UserInteractionPrompt from "../UserInteractionPrompt/UserInteractionPrompt";
+import UserInteractionPrompt from "../Overlays/UserInteractionPrompt";
 import VolumeController from "../UI/VolumeController";
 
 import { ExplorerControlsProvider } from "../../contexts/ExplorerControlsContext";
 import { MusicContext } from "../../contexts/MusicContext";
 import PlaylistMenu from "../PlaylistMenu/PlaylistMenu";
+import Overlay from "../Overlays/Overlay";
+import PlaylistSearch from "../Overlays/PlaylistSearch";
+import PlaylistSearchButton from "../UI/PlaylistSearchButton";
 
 function Explorer() {
     const { getPlaylistInfo, accessToken, songs, currentPlaylist } =
         useContext(MusicContext);
+
+    const [isUserPromptOpen, setUserPromptOpen] = useState(true);
+    const [isPlaylistSearchOpen, setPlaylistSearchOpen] = useState(false);
 
     const innerBounds = { x: 2600, y: 1500 },
         outerBounds = { x: 3000, y: 1900 },
@@ -53,11 +59,33 @@ function Explorer() {
             </div>
             <div id="radial-blur-mask" />
 
-            <UserInteractionPrompt />
+            <PlaylistSearchButton
+                callback={() => setPlaylistSearchOpen(true)}
+            />
 
+            {/* User interaction prompt */}
+            <Overlay
+                isOpen={isUserPromptOpen}
+                onClose={() => setUserPromptOpen(false)}
+            >
+                {({ closeOverlay }) => (
+                    <UserInteractionPrompt closeOverlay={closeOverlay} />
+                )}
+            </Overlay>
+
+            {/* Playlist search */}
+            <Overlay
+                isOpen={isPlaylistSearchOpen}
+                onClose={() => setPlaylistSearchOpen(false)}
+            >
+                {({ closeOverlay }) => (
+                    <PlaylistSearch closeOverlay={closeOverlay} />
+                )}
+            </Overlay>
+
+            {/* UI components */}
             <VolumeController defaultVolume={0.5} />
-
-            <PlaylistMenu currentPlaylist={currentPlaylist} />
+            <PlaylistMenu currentPlaylist={currentPlaylist}></PlaylistMenu>
 
             {/* Song page */}
             <Outlet />

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import MorphSVGPlugin from "gsap/MorphSVGPlugin";
@@ -11,6 +11,8 @@ import PlaylistSong from "./PlaylistSong";
 import Wave from "../Waves/Wave";
 
 const PlaylistMenu = () => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     const containerRef = useRef();
     const playlistImageRef = useRef();
     const listRef = useRef();
@@ -18,16 +20,13 @@ const PlaylistMenu = () => {
     const menuArrowRef = useRef();
     const arrowDownRef = useRef();
     const backgroundRef = useRef();
+    const waveSeparatorRef = useRef();
 
     const { currentPlaylist, songs } = useContext(MusicContext);
-    const { focusCursor, unfocusCursor } = useContext(NavigationContext);
+    const { focusCursor, unfocusCursor, isMenuInverted } =
+        useContext(NavigationContext);
 
     const { contextSafe } = useGSAP();
-
-    const handleMouseEnter = contextSafe(() => {
-        focusCursor();
-        expandMenu();
-    });
 
     const expandMenu = contextSafe(() => {
         const container = containerRef.current;
@@ -87,6 +86,15 @@ const PlaylistMenu = () => {
         });
     });
 
+    const toggleMenu = () => {
+        if (isMenuOpen) {
+            closeMenu();
+        } else {
+            expandMenu();
+        }
+        setIsMenuOpen(!isMenuOpen);
+    };
+
     const closeMenu = contextSafe(() => {
         const container = containerRef.current;
         const playlistImage = playlistImageRef.current;
@@ -101,7 +109,7 @@ const PlaylistMenu = () => {
         gsap.to(container, {
             duration: 0.6,
             ease: "power3.inOut",
-            height: "80px",
+            height: "68px",
         });
 
         gsap.killTweensOf(list);
@@ -115,7 +123,7 @@ const PlaylistMenu = () => {
         gsap.to(playlistDetails, {
             duration: 0.6,
             ease: "power3.inOut",
-            top: "17px",
+            top: "12px",
         });
 
         //Shrink image
@@ -123,8 +131,8 @@ const PlaylistMenu = () => {
         gsap.to(playlistImage, {
             duration: 0.6,
             ease: "power2.inOut",
-            width: "80px",
-            height: "80px",
+            width: "68px",
+            height: "68px",
         });
 
         // Move arrow
@@ -132,7 +140,7 @@ const PlaylistMenu = () => {
         gsap.to(menuArrow, {
             duration: 0.6,
             ease: "power2.inOut",
-            top: "26px",
+            top: "20px",
         });
 
         // Morph arrow
@@ -149,13 +157,68 @@ const PlaylistMenu = () => {
         closeMenu();
     };
 
+    const invertMenuColors = (target) => {
+        // target is true or false for either end of the inversion
+        const playlist = containerRef.current;
+        const background = backgroundRef.current;
+        const waveSeparator = waveSeparatorRef.current;
+        const arrow = arrowDownRef.current;
+
+        gsap.killTweensOf(playlist);
+        gsap.killTweensOf(background);
+        gsap.killTweensOf(waveSeparator);
+        gsap.killTweensOf(arrow);
+
+        const colors = target
+            ? {
+                  playlist: "#ffffff",
+                  background: "#303030a7",
+                  wave: "#ffffffff",
+                  arrow: "#ffffffff",
+              }
+            : {
+                  playlist: "#303030",
+                  background: "#dfdfdf72",
+                  wave: "#303030",
+                  arrow: "#303030",
+              };
+
+        gsap.to(playlist, {
+            color: colors.playlist,
+            duration: 1,
+            ease: "power1.out",
+        });
+
+        gsap.to(background, {
+            backgroundColor: colors.background,
+            duration: 1,
+            ease: "power1.out",
+        });
+
+        gsap.to(waveSeparator, {
+            stroke: colors.wave,
+            duration: 1,
+            ease: "power1.out",
+        });
+
+        gsap.to(arrow, {
+            fill: colors.arrow,
+            duration: 1,
+            ease: "power1.out",
+        });
+    };
+
+    useEffect(() => {
+        invertMenuColors(isMenuInverted);
+    }, [isMenuInverted]);
+
     if (!songs) return;
     return (
         <div
             ref={containerRef}
             className="playlist-menu-wrapper"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            // onMouseEnter={handleMouseEnter}
+            // onMouseLeave={handleMouseLeave}
         >
             <div className="playlist-menu-background"></div>
             <div ref={backgroundRef} className="playlist-menu-content">
@@ -183,13 +246,14 @@ const PlaylistMenu = () => {
                         xmlns="http://www.w3.org/2000/svg"
                         data-name="Layer 1"
                         viewBox="0 0 800 800"
+                        onMouseDown={toggleMenu}
                     >
                         <path
                             ref={arrowDownRef}
                             id="arrow-down"
                             d="m205.57 237.75 178.67 178.67c8.7 8.7 22.81 8.7 31.51 0l178.67-178.67c23.52-23.52 61.68-23.46 85.13.14l1.29 1.3c23.34 23.49 23.28 61.43-.14 84.85L442.49 562.25c-23.47 23.47-61.52 23.47-84.99 0L119.29 324.04c-23.41-23.41-23.48-61.36-.14-84.85l1.29-1.3c23.45-23.6 61.6-23.66 85.13-.14Z"
                             style={{
-                                fill: "#ffffffff",
+                                fill: "#303030",
                             }}
                         />
                         <path
@@ -209,6 +273,7 @@ const PlaylistMenu = () => {
                             direction={1}
                             baseSpeed={0.1}
                             scrollSpeed={0}
+                            waveRef={waveSeparatorRef}
                         />
                     </div>
 
