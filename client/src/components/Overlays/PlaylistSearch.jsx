@@ -10,22 +10,67 @@ import { NavigationContext } from "../../contexts/NavigationContext";
 import PlaylistReadyButton from "../UI/PlaylistReadyButton";
 
 const PlaylistSearch = ({ closeOverlay }) => {
-    const container = useRef();
-    const background = useRef();
+    const [input, setInput] = useState("");
+    const [searchResult, setSearchResult] = useState(null);
+
+    const { findPlaylist, setPlaylist } = useContext(MusicContext);
 
     const { contextSafe } = useGSAP();
-    const { setAutoPlay } = useContext(MusicContext);
+
+    const updateInput = (e) => {
+        console.log(e.target.value);
+        setInput(e.target.value);
+    };
+
+    const handleSearch = contextSafe(async () => {
+        const result = await findPlaylist(input);
+        console.log(result);
+        setSearchResult(result);
+    });
+
+    const switchPlaylist = contextSafe(() => {
+        if (!searchResult) return;
+        setPlaylist(searchResult);
+        closeOverlay();
+    });
 
     return (
         <>
-            <div className="search-input" >
-                <span>PLAYLIST ID (OR LINK)</span>
-                <input type="text" />
-                <div className="search-button"></div>
+            <span className="search-overlay-title">SWITCH PLAYLIST</span>
+            <div className="search-input">
+                <input
+                    onChange={updateInput}
+                    placeholder="Enter playlist ID or link"
+                    type="text"
+                />
+                <div onClick={handleSearch} className="search-button"></div>
             </div>
 
-            <div className="search-result">The playlist wasn't found.</div>
-            <PlaylistReadyButton callback={closeOverlay} label={"go"} />
+            {searchResult && (
+                <>
+                    <div className="search-result">
+                        <img
+                            src={searchResult.images[0].url}
+                            alt={searchResult.name}
+                        />
+                        <div className="result-details">
+                            <span className="result-details-name">
+                                {searchResult.name}
+                            </span>
+                            <span className="result-details-owner">
+                                by {searchResult.owner.display_name}
+                            </span>
+                        </div>
+                        <span className="result-details-total">
+                            {searchResult.tracks.total} songs
+                        </span>
+                    </div>
+                    <PlaylistReadyButton
+                        callback={switchPlaylist}
+                        label={"switch playlist"}
+                    />
+                </>
+            )}
         </>
     );
 };

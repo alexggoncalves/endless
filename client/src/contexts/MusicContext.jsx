@@ -27,11 +27,30 @@ export function MusicProvider({ children }) {
             });
     }, []);
 
-    const getPlaylistInfo = async (playListId) => {
+    const findPlaylist = async (playListId) => {
+        const data = await requestPlaylist(playListId);
+
+        if (data.error) {
+            return null;
+        }
+
+        return data;
+    };
+
+    const setInitialPlaylist = async () => {
+        const data = await requestPlaylist();
+
+        if (data.error) {
+            setPlaylist(null);
+            return;
+        }
+        
+        setPlaylist(data);
+    };
+
+    const requestPlaylist = async (playListId) => {
         if (!accessToken) return;
         if (!playListId) playListId = defaultPlaylistId;
-
-        setLoading(true);
 
         // Request for playlist info
         const response = await fetch(
@@ -42,11 +61,16 @@ export function MusicProvider({ children }) {
             }
         );
 
-        // Set current playlist to the data returned
-        const data = await response.json();
+        // Return playlist data
+        return await response.json();
+    };
+
+    const setPlaylist = async (data) => {
+        if (!data) return;
+        
+        // set current playlist to the data returned
         setCurrentPlaylist(data);
 
-        // Save each playlist track in the songs map
         const newSongs = {};
         const tracks = data.tracks.items;
         tracks.map((track, index) => {
@@ -65,35 +89,16 @@ export function MusicProvider({ children }) {
                     newSongs[newSong.id].image = bigImg;
                     newSongs[newSong.id].smallImage = smallImg;
                 }
+
+                // Parse artists to string
                 newSongs[newSong.id].artistsString = artistsToString(
                     newSongs[newSong.id].artists
                 );
             }
         });
 
+        // Place all playlist's songs in the songs map 
         setSongs(newSongs);
-    };
-
-    // Fetch a list of song preview urls [{song:"",artist:""}, {...} ]
-    // (Exceeds api calls really quickly)
-    const fetchPreviewUrls = async (searches) => {
-        if (!accessToken) return;
-
-        try {
-            const response = await fetch(`${apiUrl}/song-previews`, {
-                method: "POST",
-                body: JSON.stringify(searches),
-                headers: {
-                    "Content-Type": "application/json",
-                    // Authorization: "Bearer " + accessToken,
-                },
-            });
-            const data = await response.json();
-            return data || [];
-        } catch (e) {
-            console.error("Failed to fetch preview URLs:", e);
-            return [];
-        }
     };
 
     // Fetch a song's preview url by song or artists
@@ -161,7 +166,8 @@ export function MusicProvider({ children }) {
         <MusicContext.Provider
             value={{
                 songs,
-                getPlaylistInfo,
+                // getPlaylistInfo,
+                setInitialPlaylist,
                 getSongById,
                 accessToken,
                 loading,
@@ -172,6 +178,8 @@ export function MusicProvider({ children }) {
                 setVolume,
                 volume,
                 currentPlaylist,
+                findPlaylist,
+                setPlaylist
             }}
         >
             {children}

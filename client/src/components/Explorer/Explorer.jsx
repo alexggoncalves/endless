@@ -17,7 +17,7 @@ import PlaylistSearch from "../Overlays/PlaylistSearch";
 import PlaylistSearchButton from "../UI/PlaylistSearchButton";
 
 function Explorer() {
-    const { getPlaylistInfo, accessToken, songs, currentPlaylist } =
+    const { setInitialPlaylist, accessToken, songs, currentPlaylist } =
         useContext(MusicContext);
 
     const [isUserPromptOpen, setUserPromptOpen] = useState(true);
@@ -29,7 +29,7 @@ function Explorer() {
 
     useEffect(() => {
         if (accessToken && !songs) {
-            getPlaylistInfo();
+            setInitialPlaylist();
         }
     }, [accessToken]);
 
@@ -44,6 +44,7 @@ function Explorer() {
                             zoom={3}
                         />
                         <Content
+                            key={currentPlaylist?.id}
                             songs={songs}
                             minTileSize={140}
                             maxTileSize={300}

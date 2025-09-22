@@ -188,7 +188,7 @@ function SongTile({ position, size, song, mask }) {
                     tileSize={size}
                     position={[-0.5, -0.51, 1.1]}
                     title={song.name}
-                    artist={songs[song.id].artistsString}
+                    // artist={songs[song.id].artistsString}
                 />
                 {/* <PlaybackState position={[-0.45, 0.45, 1]} tileScale={size}></PlaybackState> */}
             </group>
