@@ -129,6 +129,8 @@ html {
     position: fixed;
     top: 0;
     left: 0;
+    width: 0;
+    height: 0;
     z-index: 10;
 
     pointer-events: none;
@@ -143,8 +145,8 @@ html {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    /* backdrop-filter: invert(1); */
-    transform: translate(-50%, -50%);
+    flex-shrink: 0;
+    transition: transform 0.2s ease-out;
 }
 
 .count-down-circle {
@@ -172,6 +174,27 @@ html {
 .loading > img {
     margin-top: 20px;
     width: 30px;
+}
+
+/* Buttons */
+.circle-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #dfdfdf;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s ease-out;
+}
+
+.circle-button:hover {
+    transform: scale(1.2);
+}
+
+.circle-button:active {
+    transform: scale(0.9);
 }
 
 /* Scroll bar */

@@ -1,5 +1,18 @@
+.playlist-menu{
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.playlist-search-button{
+    margin-top: 36px;
+    border: none;
+    background-color: white;
+    z-index: 2;
+}
+
 .playlist-menu-wrapper {
-    position: fixed;
+    position: relative;
     right: 0;
     top: 0;
     margin: 22px;
@@ -13,6 +26,8 @@
     background-color: transparent;
     color: #303030;
     overflow: hidden;
+
+    transition: color 1s ease-out;
 }
 
 .playlist-menu-background {
@@ -30,7 +45,8 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    
+
+    transition: background-color 1s ease-out;
 }
 
 .menu-arrow {
@@ -42,6 +58,12 @@
     padding: 6px;
     cursor: pointer;
 }
+
+.menu-arrow #arrow-down {
+    fill: #303030;
+    transition: fill 1s ease-out;
+}
+
 
 .menu-arrow path{
     /* fill: aqua; */
@@ -80,7 +102,7 @@
     display: block;
     font-weight: 200;
     font-size: 0.6rem;
-    line-height: 0.8rem;
+    line-height: 1rem;
 }
 .current-playlist-details > span:first-child {
     font-weight: 400;
@@ -110,17 +132,44 @@
 
 .list-separator {
     width: 200%;
-    margin-top: 10px;
+    margin-top: 20px;
+}
+
+.list-separator path {
+    stroke: #303030;
+    transition: stroke 1s ease-out;
 }
 
 .playlist-song {
     height: 60px;
-    background-color: "transparent";
     border-radius: 8px;
     margin: 2px 16px 2px 16px;
     overflow: hidden;
     display: flex;
     align-items: center;
+
+    /* rest state */
+    color: #303030;
+    background-color: transparent;
+    transition:
+        background-color 0.6s,
+        color 0.6s; /* slow fade out */
+}
+
+.playlist-song:hover {
+    color: #dfdfdf;
+    background-color: #303030;
+    transition-duration: 0.2s; /* fast fade in */
+}
+
+/* menu inverted */
+.playlist-song.inverted {
+    color: #dfdfdf;
+}
+
+.playlist-song.inverted:hover {
+    color: #303030;
+    background-color: #dfdfdf;
 }
 
 .playlist-song-image {
@@ -143,4 +192,17 @@
 .playlist-song-details > span:first-child {
     font-size: 0.6rem;
     font-weight: 600;
+}
+
+.playlist-menu-wrapper.inverted {
+    color: #fff;
+}
+.inverted .playlist-menu-content {
+    background-color: #303030a7;
+}
+.inverted .menu-arrow #arrow-down {
+    fill: #fff;
+}
+.inverted .list-separator path {
+    stroke: #fff;
 }

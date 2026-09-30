@@ -5,12 +5,12 @@ import MorphSVGPlugin from "gsap/MorphSVGPlugin";
 
 gsap.registerPlugin(MorphSVGPlugin);
 
-import { NavigationContext } from "../../contexts/NavigationContext";
+import { CursorContext } from "../../contexts/CursorContext";
 import { MusicContext } from "../../contexts/MusicContext";
 import PlaylistSong from "./PlaylistSong";
 import Wave from "../Waves/Wave";
 
-const PlaylistMenu = () => {
+const PlaylistMenu = ({ children }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const containerRef = useRef();
@@ -24,7 +24,7 @@ const PlaylistMenu = () => {
 
     const { currentPlaylist, songs } = useContext(MusicContext);
     const { focusCursor, unfocusCursor, isMenuInverted } =
-        useContext(NavigationContext);
+        useContext(CursorContext);
 
     const { contextSafe } = useGSAP();
 
@@ -152,135 +152,85 @@ const PlaylistMenu = () => {
         });
     });
 
+    const handleMouseEnter = () => {
+        focusCursor();
+        // expandMenu();
+    };
+
     const handleMouseLeave = () => {
         unfocusCursor();
-        closeMenu();
+        // closeMenu();
     };
-
-    const invertMenuColors = (target) => {
-        // target is true or false for either end of the inversion
-        const playlist = containerRef.current;
-        const background = backgroundRef.current;
-        const waveSeparator = waveSeparatorRef.current;
-        const arrow = arrowDownRef.current;
-
-        gsap.killTweensOf(playlist);
-        gsap.killTweensOf(background);
-        gsap.killTweensOf(waveSeparator);
-        gsap.killTweensOf(arrow);
-
-        const colors = target
-            ? {
-                  playlist: "#ffffff",
-                  background: "#303030a7",
-                  wave: "#ffffffff",
-                  arrow: "#ffffffff",
-              }
-            : {
-                  playlist: "#303030",
-                  background: "#dfdfdf72",
-                  wave: "#303030",
-                  arrow: "#303030",
-              };
-
-        gsap.to(playlist, {
-            color: colors.playlist,
-            duration: 1,
-            ease: "power1.out",
-        });
-
-        gsap.to(background, {
-            backgroundColor: colors.background,
-            duration: 1,
-            ease: "power1.out",
-        });
-
-        gsap.to(waveSeparator, {
-            stroke: colors.wave,
-            duration: 1,
-            ease: "power1.out",
-        });
-
-        gsap.to(arrow, {
-            fill: colors.arrow,
-            duration: 1,
-            ease: "power1.out",
-        });
-    };
-
-    useEffect(() => {
-        invertMenuColors(isMenuInverted);
-    }, [isMenuInverted]);
 
     if (!songs) return;
     return (
-        <div
-            ref={containerRef}
-            className="playlist-menu-wrapper"
-            // onMouseEnter={handleMouseEnter}
-            // onMouseLeave={handleMouseLeave}
-        >
-            <div className="playlist-menu-background"></div>
-            <div ref={backgroundRef} className="playlist-menu-content">
-                {/* Current playlist */}
-                <div className="current-playlist">
-                    {/* Playlist */}
-                    <div
-                        ref={playlistDetailsRef}
-                        className="current-playlist-details"
-                    >
-                        <span>{currentPlaylist?.name}</span>
-                        <span>by {currentPlaylist?.owner.display_name}</span>
-                    </div>
-                    <img
-                        ref={playlistImageRef}
-                        className="current-playlist-image"
-                        src={currentPlaylist?.images[0].url}
-                        alt=""
-                    ></img>
+        <div className="playlist-menu">
+            {children}
+            <div
+                ref={containerRef}
+                className={`playlist-menu-wrapper${isMenuInverted ? " inverted" : ""}`}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+            >
+                <div className="playlist-menu-background"></div>
+                <div ref={backgroundRef} className="playlist-menu-content">
+                    {/* Current playlist */}
+                    <div className="current-playlist">
+                        {/* Playlist */}
+                        <div
+                            ref={playlistDetailsRef}
+                            className="current-playlist-details"
+                        >
+                            <span>{currentPlaylist?.name}</span>
+                            <span>
+                                by {currentPlaylist?.owner.display_name}
+                            </span>
+                        </div>
+                        <img
+                            ref={playlistImageRef}
+                            className="current-playlist-image"
+                            src={currentPlaylist?.images[0].url}
+                            alt=""
+                        ></img>
 
-                    {/* Arrow */}
-                    <svg
-                        ref={menuArrowRef}
-                        className="menu-arrow"
-                        xmlns="http://www.w3.org/2000/svg"
-                        data-name="Layer 1"
-                        viewBox="0 0 800 800"
-                        onMouseDown={toggleMenu}
-                    >
-                        <path
-                            ref={arrowDownRef}
-                            id="arrow-down"
-                            d="m205.57 237.75 178.67 178.67c8.7 8.7 22.81 8.7 31.51 0l178.67-178.67c23.52-23.52 61.68-23.46 85.13.14l1.29 1.3c23.34 23.49 23.28 61.43-.14 84.85L442.49 562.25c-23.47 23.47-61.52 23.47-84.99 0L119.29 324.04c-23.41-23.41-23.48-61.36-.14-84.85l1.29-1.3c23.45-23.6 61.6-23.66 85.13-.14Z"
-                            style={{
-                                fill: "#303030",
-                            }}
-                        />
-                        <path
-                            id="arrow-up"
-                            d="M594.43 562.25 415.76 383.58c-8.7-8.7-22.81-8.7-31.51 0L205.58 562.25c-23.52 23.52-61.68 23.46-85.13-.14l-1.29-1.3c-23.34-23.49-23.28-61.43.14-84.85l238.21-238.21c23.47-23.47 61.52-23.47 84.99 0l238.21 238.21c23.41 23.41 23.48 61.36.14 84.85l-1.29 1.3c-23.45 23.6-61.6 23.66-85.13.14Z"
-                            style={{
-                                fill: "none",
-                            }}
-                        />
-                    </svg>
-                </div>
-                {/* Song list */}
-                <div ref={listRef} className="list-wrapper">
-                    <div className="list-separator">
-                        <Wave
-                            weight={10}
-                            direction={1}
-                            baseSpeed={0.1}
-                            scrollSpeed={0}
-                            waveRef={waveSeparatorRef}
-                        />
+                        {/* Arrow */}
+                        <svg
+                            ref={menuArrowRef}
+                            className="menu-arrow"
+                            xmlns="http://www.w3.org/2000/svg"
+                            data-name="Layer 1"
+                            viewBox="0 0 800 800"
+                            onMouseUp={toggleMenu}
+                        >
+                            <path
+                                ref={arrowDownRef}
+                                id="arrow-down"
+                                d="m205.57 237.75 178.67 178.67c8.7 8.7 22.81 8.7 31.51 0l178.67-178.67c23.52-23.52 61.68-23.46 85.13.14l1.29 1.3c23.34 23.49 23.28 61.43-.14 84.85L442.49 562.25c-23.47 23.47-61.52 23.47-84.99 0L119.29 324.04c-23.41-23.41-23.48-61.36-.14-84.85l1.29-1.3c23.45-23.6 61.6-23.66 85.13-.14Z"
+                            />
+                            <path
+                                id="arrow-up"
+                                d="M594.43 562.25 415.76 383.58c-8.7-8.7-22.81-8.7-31.51 0L205.58 562.25c-23.52 23.52-61.68 23.46-85.13-.14l-1.29-1.3c-23.34-23.49-23.28-61.43.14-84.85l238.21-238.21c23.47-23.47 61.52-23.47 84.99 0l238.21 238.21c23.41 23.41 23.48 61.36.14 84.85l-1.29 1.3c-23.45 23.6-61.6 23.66-85.13.14Z"
+                                fill="none"
+                            />
+                        </svg>
                     </div>
+                    {/* Song list */}
+                    <div ref={listRef} className="list-wrapper">
+                        <div className="list-separator">
+                            <Wave
+                                weight={10}
+                                direction={1}
+                                baseSpeed={0.1}
+                                scrollSpeed={0}
+                                waveRef={waveSeparatorRef}
+                            />
+                        </div>
 
-                    <div className="list">
-                        {[...Object.entries(songs)].map(([key, value]) => {
-                            return <PlaylistSong key={key} song={value} />;
-                        })}
+                        <div className="list">
+                            {[...Object.entries(songs)].map(([key, value]) => {
+                                return <PlaylistSong key={key} song={value} />;
+                            })}
+                        </div>
                     </div>
                 </div>
             </div>

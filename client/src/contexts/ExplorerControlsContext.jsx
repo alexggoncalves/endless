@@ -1,111 +1,140 @@
-import { createContext, useState } from "react";
-import { useFrame } from "@react-three/fiber";
-import { Vector3 } from "three";
-import { lerp } from "three/src/math/MathUtils";
-import { useGesture, usePinch } from "@use-gesture/react";
-import { useContext } from "react";
+import {
+    createContext,
+    useContext,
+    useEffect,
+    useRef,
+    useLayoutEffect,
+} from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { MathUtils } from "three";
+import { CursorContext } from "./CursorContext";
 
-import { NavigationContext } from "./NavigationContext";
-
-const initialValue = null;
-
-export const ExplorerControlsContext = createContext(initialValue);
+export const ExplorerControlsContext = createContext(null);
 
 export function ExplorerControlsProvider({
     children,
-    minZoom = 0.8,
+    minZoom = 1,
     maxZoom = 2,
-    zoomSmoothness = 80,
-    cameraSmoothness = 60,
+    zoomSmoothing = 8,
+    panSmoothing = 6,
     panSpeed = 1.6,
 }) {
-    const [zoom, setZoom] = useState(1);
-    const [cameraPosition, setCameraPosition] = useState({
-        x: 0,
-        y: 0,
-        z: 1000,
-    });
+    const { isMouseDown } = useContext(CursorContext);
+    const camera = useThree((s) => s.camera);
+    const events = useThree((s) => s.events);
 
-    const [isDragging, setDragging] = useState(false);
-    const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 });
-    const [nextCameraPosition, setNextCameraPosition] = useState({
-        x: 0,
-        y: 0,
-        z: 1000,
-    });
+    const target = useRef({ x: 0, y: 0 });
+    const targetZoom = useRef(MathUtils.clamp(camera.zoom, minZoom, maxZoom));
+    const dragging = useRef(false);
+    const last = useRef({ x: 0, y: 0 });
+    const plane = useRef();
+    const isPointerOverCanvas = useRef(false);
+    const lastCameraState = useRef({ x: 0, y: 0, zoom: 0 });
 
-    const {isMouseDown} = useContext(NavigationContext)
+    // Track whether the pointer is over the canvas (and not over HTML UI on top of it)
+    useEffect(() => {
+        const element = events.connected;
+        if (!element) return;
 
-    useFrame(({ camera }) => {
-        camera.position.lerp(
-            new Vector3(
-                nextCameraPosition.x,
-                nextCameraPosition.y,
-                nextCameraPosition.z
-            ),
-            1/(cameraSmoothness)
+        const onEnter = () => (isPointerOverCanvas.current = true);
+        const onLeave = () => (isPointerOverCanvas.current = false);
+
+        element.addEventListener("pointermove", onEnter);
+        element.addEventListener("pointerleave", onLeave);
+        return () => {
+            element.removeEventListener("pointermove", onEnter);
+            element.removeEventListener("pointerleave", onLeave);
+        };
+    }, [events.connected]);
+
+    useFrame((_, delta) => {
+        camera.position.x = MathUtils.damp(
+            camera.position.x,
+            target.current.x,
+            panSmoothing,
+            delta,
         );
-
-        camera.zoom = lerp(camera.zoom, zoom, 1/(zoomSmoothness));
+        camera.position.y = MathUtils.damp(
+            camera.position.y,
+            target.current.y,
+            panSmoothing,
+            delta,
+        );
+        camera.zoom = MathUtils.damp(
+            camera.zoom,
+            targetZoom.current,
+            zoomSmoothing,
+            delta,
+        );
         camera.updateProjectionMatrix();
 
-        setCameraPosition(camera.position);
+        plane.current?.position.set(camera.position.x, camera.position.y, -1);
+
+        const prev = lastCameraState.current;
+        const cameraMoved =
+            Math.abs(camera.position.x - prev.x) > 0.01 ||
+            Math.abs(camera.position.y - prev.y) > 0.01 ||
+            Math.abs(camera.zoom - prev.zoom) > 0.0001;
+
+        if (cameraMoved && isPointerOverCanvas.current) events.update?.();
+
+        prev.x = camera.position.x;
+        prev.y = camera.position.y;
+        prev.zoom = camera.zoom;
     });
 
-    const handleMouseDown = (e) => {
-        setDragging(true);
-        const { clientX, clientY } = e;
-        setLastMousePos({ x: clientX, y: clientY });
+    useLayoutEffect(() => {
+        camera.zoom = targetZoom.current;
+        camera.position.x = target.current.x;
+        camera.position.y = target.current.y;
+        camera.updateProjectionMatrix();
+    }, [camera]);
+
+    const onPointerDown = (e) => {
+        e.target.setPointerCapture?.(e.pointerId);
+        dragging.current = true;
         isMouseDown.current = true;
+        last.current = { x: e.clientX, y: e.clientY };
     };
 
-    const handleMouseUp = () => {
-        setDragging(false);
+    const endDrag = () => {
+        dragging.current = false;
         isMouseDown.current = false;
     };
 
-    const handleMouseDrag = (e) => {
-        const { clientX, clientY } = e;
-        if (isDragging) {
-            const deltaX = clientX - lastMousePos.x;
-            const deltaY = clientY - lastMousePos.y;
+    const onPointerMove = (e) => {
+        if (!dragging.current) return;
+        const dx = e.clientX - last.current.x;
+        const dy = e.clientY - last.current.y;
+        last.current = { x: e.clientX, y: e.clientY };
 
-            setNextCameraPosition({
-                x: nextCameraPosition.x - deltaX * panSpeed,
-                y: nextCameraPosition.y + deltaY * panSpeed,
-                z: nextCameraPosition.z,
-            });
-        }
-
-        setLastMousePos({ x: clientX, y: clientY });
+        target.current.x -= (dx * panSpeed) / camera.zoom;
+        target.current.y += (dy * panSpeed) / camera.zoom;
     };
 
-    // Set zoom based on scroll wheel
-    const updateZoom = (e) => {
-        let newZoom = zoom - e.deltaY * (1/(zoomSmoothness*10));
-
-        if (newZoom < minZoom) newZoom = minZoom;
-        if (newZoom > maxZoom) newZoom = maxZoom;
-        setZoom(newZoom);
+    const onWheel = (e) => {
+        targetZoom.current = MathUtils.clamp(
+            targetZoom.current - e.deltaY * 0.001,
+            minZoom,
+            maxZoom,
+        );
     };
 
     return (
         <ExplorerControlsContext.Provider
-            value={{
-                cameraPosition
-            }}
+            value={{ cameraPosition: camera.position, target }}
         >
             {children}
             <mesh
-                onPointerDown={handleMouseDown}
-                onPointerUp={handleMouseUp}
-                onPointerMove={handleMouseDrag}
-                onPointerLeave={handleMouseUp}
-                onWheel={updateZoom}
-                position={[cameraPosition.x, cameraPosition.y, -1]}
+                ref={plane}
+                onPointerDown={onPointerDown}
+                onPointerUp={endDrag}
+                onPointerCancel={endDrag}
+                onPointerMove={onPointerMove}
+                onWheel={onWheel}
             >
-                <planeGeometry args={[4000, 3000]} />
-                <meshBasicMaterial color={"#e3e3e3ff"} />
+                <planeGeometry args={[100000, 100000]} />
+                <meshBasicMaterial color="#e3e3e3" />
             </mesh>
         </ExplorerControlsContext.Provider>
     );

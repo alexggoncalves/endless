@@ -96,21 +96,3 @@
     user-select: none;
 }
 
-/* Open playlist button */
-
-.playlist-search-button{
-    top: 36px;
-    right: 388px;
-    position: absolute;
-    background-color: 200;
-    width: 40px;
-    height: 40px;
-    z-index: 6;
-    border: 1px solid #303030;
-    color: 303030;
-    border-radius: 20px;
-    background-color: tr;
-}
-
-
-

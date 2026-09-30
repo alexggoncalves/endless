@@ -5,26 +5,21 @@ import { Link, useParams, useLocation } from "react-router-dom";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useNavigate } from "react-router-dom";
-import { NavigationContext } from "../../contexts/NavigationContext.jsx";
+import { CursorContext } from "../../contexts/CursorContext.jsx";
 import { artistsToString } from "../../utils";
 
 import spotify from "../../assets/spotify.png";
 import DividerWaves from "../Waves/DividerWaves.jsx";
 
 import { MusicContext } from "../../contexts/MusicContext.jsx";
+import { XIcon } from "../../Icons.jsx";
 
 function Song() {
     const { getSongById, songs } = useContext(MusicContext);
     const [song, setSong] = useState();
-    const [artist, setArtist] = useState();
 
-    const {
-        expandButton,
-        shrinkButton,
-        focusCursor,
-        unfocusCursor,
-        isSongPageAnimating,
-    } = useContext(NavigationContext);
+    const { focusCursor, unfocusCursor, isSongPageAnimating } =
+        useContext(CursorContext);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -34,23 +29,12 @@ function Song() {
     const coverImage = songs?.[songID]?.image; // Get the preloaded image
 
     const isSongPageOpen = useRef(false);
-
     const container = useRef();
-    const backButton = useRef();
 
     const slideSongPageIn = contextSafe(() => {
         if (isSongPageOpen.current || isSongPageAnimating.current) return;
-        if (!backButton?.current || !container?.current) return;
 
         isSongPageAnimating.current = true;
-
-        // Slide back button in
-        gsap.killTweensOf(backButton.current);
-        gsap.fromTo(
-            backButton.current,
-            { y: "-300%" },
-            { duration: 0.6, ease: "power3.inOut", y: "0" }
-        );
 
         gsap.killTweensOf(container.current);
         gsap.to(container.current, {
@@ -67,13 +51,11 @@ function Song() {
     // Slide song page out and navigate to explorer
     const slideSongPageOut = contextSafe(() => {
         if (!isSongPageOpen.current || isSongPageAnimating.current) return;
-        if (!backButton?.current || !container?.current) return;
 
         isSongPageAnimating.current = true;
 
-        // Hide back button
-        gsap.killTweensOf(backButton.current);
-        gsap.to(backButton.current, { duration: 0.4, y: "-300%" });
+        // The back button unmounts without a mouseleave, so release the cursor now
+        unfocusCursor();
 
         // Animate container
         gsap.killTweensOf(container.current);
@@ -91,50 +73,29 @@ function Song() {
 
     const snapSongPageToTop = contextSafe(() => {
         gsap.set(container.current, { y: "0" });
-        gsap.set(backButton.current, { y: "0" });
         isSongPageOpen.current = true;
         isSongPageAnimating.current = false;
     });
 
     useEffect(() => {
-        // Fetch song details
-        getSongById(songID).then((song) => setSong(song));
-    }, []);
+        let cancelled = false;
+        getSongById(songID).then((s) => {
+            if (!cancelled) setSong(s);
+        });
+        return () => {
+            cancelled = true;
+        };
+    }, [songID]);
 
     useEffect(() => {
-        // if(song) console.log(song)
-        // If user comes from inside the website ->  slide page in
-        // Otherwise: place it on original position
-        if (location.state?.fromMain) {
-            slideSongPageIn();
-        } else {
-            snapSongPageToTop();
-        }
+        if (!song) return;
+        if (location.state?.fromMain) slideSongPageIn();
+        else snapSongPageToTop();
     }, [song]);
 
     if (song) {
         return (
             <>
-                <Link
-                    ref={backButton}
-                    className="back-button"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        slideSongPageOut();
-                    }}
-                    onMouseEnter={(e) => {
-                        e.preventDefault();
-                        expandButton(backButton);
-                        focusCursor();
-                    }}
-                    onMouseLeave={(e) => {
-                        e.preventDefault();
-                        shrinkButton(backButton);
-                        unfocusCursor();
-                    }}
-                >
-                    X
-                </Link>
                 <div ref={container} className="song-page">
                     <div className="song-details-container">
                         {coverImage && (
@@ -159,11 +120,6 @@ function Song() {
                         </div>
 
                         <div className="song-details">
-                            {/* <span className="detail-label">GENRE</span>
-                            <span className="detail">
-                                {song.metadata.genre}
-                            </span>  */}
-
                             <span className="detail-label">RELEASE DATE</span>
                             <span className="detail">
                                 {song.album.release_date}
@@ -181,42 +137,24 @@ function Song() {
                             </span>
                         </div>
                     </div>
-
                     <DividerWaves />
-
-                    <div className="song-extra-info-container">
-                        <div className="song-extra-info-section">
-                            <h2>THE ALBUM</h2>
-                            <h1>{song.album.name}</h1>
-                            {/* <ol>
-                                {song.metadata.album.metadata.track_list
-                                    .split("\n")
-                                    .map((track, index) => (
-                                        <li key={index}>{track}</li>
-                                    ))}
-                            </ol> */}
-                        </div>
-
-                        <DividerWaves mobileOnly={true} />
-
-                        <div className="song-extra-info-section">
-                            <h2>THE ARTIST</h2>
-                            <h1>{song.artists[0].name}</h1>
-                            <p className="bio">
-                                {/* {song.metadata.artist[0].metadata.biography} */}
-                            </p>
-                            {/* <img
-                                className="artist-image"
-                                height={400}
-                                src={song.metadata.artist[0].metadata.photo.url}
-                                alt={
-                                    song.metadata.artist[0].title +
-                                    " artist photo"
-                                }
-                            /> */}
-                        </div>
-                    </div>
-                    <DividerWaves />
+                    <Link
+                        className="back-button circle-button"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            slideSongPageOut();
+                        }}
+                        onMouseEnter={(e) => {
+                            e.preventDefault();
+                            focusCursor();
+                        }}
+                        onMouseLeave={(e) => {
+                            e.preventDefault();
+                            unfocusCursor();
+                        }}
+                    >
+                        <XIcon></XIcon>
+                    </Link>
                 </div>
             </>
         );

@@ -1,10 +1,23 @@
-const PlaylistSearchButton = ({ callback }) => {
+import {useContext} from "react";
 
-    return (
-        <button onClick={callback} className="playlist-search-button">
-            
-        </button>
-    );
+import { CursorContext } from "../../contexts/CursorContext";
+import { PlaylistSearchIcon, XIcon } from "../../Icons";
+
+const PlaylistSearchButton = ({ callback, isOpen }) => {
+    const { focusCursor, unfocusCursor } = useContext(CursorContext);
+
+    const handleMouseClick = () => {
+        unfocusCursor();
+        callback();
+    }
+
+    if (!isOpen) {
+        return (
+            <button onMouseEnter={focusCursor} onMouseLeave={unfocusCursor} onClick={handleMouseClick} className="circle-button playlist-search-button">
+                <PlaylistSearchIcon />
+            </button>
+        );
+    }
 };
 
 export default PlaylistSearchButton;

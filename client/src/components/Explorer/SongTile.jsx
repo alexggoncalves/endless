@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { NavigationContext } from "../../contexts/NavigationContext";
+import { CursorContext } from "../../contexts/CursorContext";
 import { MusicContext } from "../../contexts/MusicContext";
 
 import Subtitle from "./Subtitle";
@@ -28,7 +28,7 @@ function SongTile({ position, size, song, mask }) {
         isSongPageAnimating,
         startCountdown,
         cancelCountdown,
-    } = useContext(NavigationContext);
+    } = useContext(CursorContext);
 
     const { autoPlay, setPreviewUrl, songs, volume } = useContext(MusicContext);
     //GSAP
@@ -39,6 +39,17 @@ function SongTile({ position, size, song, mask }) {
     if (song.image) img = useLoader(TextureLoader, song.smallImage.src);
 
     let previewUrlLoadPromise = null;
+
+    // If the tile is removed while hovered (culled, playlist switch) no leave
+    // event fires, so release the cursor and countdown here
+    const isHovered = useRef(false);
+    useEffect(() => {
+        return () => {
+            if (!isHovered.current) return;
+            unfocusCursor();
+            cancelCountdown();
+        };
+    }, []);
 
     // Fade tile in
     useGSAP(
@@ -61,6 +72,7 @@ function SongTile({ position, size, song, mask }) {
     );
 
     const handleMouseEnter = contextSafe(async () => {
+        isHovered.current = true;
         focusCursor(true);
 
         gsap.to(tile.current.scale, {
@@ -108,6 +120,7 @@ function SongTile({ position, size, song, mask }) {
     };
 
     const handleMouseLeave = contextSafe(() => {
+        isHovered.current = false;
         unfocusCursor();
 
         gsap.to(tile.current.scale, {
@@ -188,9 +201,8 @@ function SongTile({ position, size, song, mask }) {
                     tileSize={size}
                     position={[-0.5, -0.51, 1.1]}
                     title={song.name}
-                    // artist={songs[song.id].artistsString}
+                    artist={songs[song.id].artistsString}
                 />
-                {/* <PlaybackState position={[-0.45, 0.45, 1]} tileScale={size}></PlaybackState> */}
             </group>
         );
     }

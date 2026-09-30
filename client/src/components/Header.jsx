@@ -2,12 +2,12 @@ import { Link, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { useContext, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
-import { NavigationContext } from "../contexts/NavigationContext";
+import { CursorContext } from "../contexts/CursorContext";
 
 const Header = () => {
     const navigate = useNavigate();
 
-    const { focusCursor, unfocusCursor } = useContext(NavigationContext);
+    const { focusCursor, unfocusCursor } = useContext(CursorContext);
 
     const { contextSafe } = useGSAP();
 

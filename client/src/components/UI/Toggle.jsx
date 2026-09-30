@@ -2,7 +2,7 @@ import { useRef, useState, useContext, useEffect } from "react";
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { NavigationContext } from "../../contexts/NavigationContext";
+import { CursorContext } from "../../contexts/CursorContext";
 
 const Toggle = ({ initialState, label, callback }) => {
     const thumb = useRef();
@@ -11,7 +11,7 @@ const Toggle = ({ initialState, label, callback }) => {
     const mouseLeft = useRef();
     mouseLeft.current = false;
 
-    const { focusCursor, unfocusCursor } = useContext(NavigationContext);
+    const { focusCursor, unfocusCursor } = useContext(CursorContext);
 
     const { contextSafe } = useGSAP();
 

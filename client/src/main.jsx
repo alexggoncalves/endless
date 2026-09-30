@@ -10,7 +10,7 @@ import Root from "./Root.jsx"
 
 import ErrorPage from "./components/ErrorPage.jsx";
 import Song from "./components/Song/Song.jsx";
-import Explorer from "./components/Explorer/Explorer.jsx";
+import App from "./App.jsx";
 
 const router = createBrowserRouter([
     {
@@ -20,7 +20,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <Explorer />,
+                element: <App />,
                 children: [
                     {
                         path: "/explorer/:songID",

@@ -9,7 +9,7 @@ import mute from "../../assets/mute.svg";
 import low from "../../assets/low.svg";
 import down from "../../assets/down.svg";
 import up from "../../assets/up.svg";
-import { NavigationContext } from "../../contexts/NavigationContext";
+import { CursorContext } from "../../contexts/CursorContext";
 
 const VolumeController = ({
     defaultVolume,
@@ -33,7 +33,7 @@ const VolumeController = ({
         return gain;
     };
 
-    const { focusCursor, unfocusCursor } = useContext(NavigationContext);
+    const { focusCursor, unfocusCursor } = useContext(CursorContext);
     const { volume, setVolume } = useContext(MusicContext);
     const { contextSafe } = useGSAP();
 

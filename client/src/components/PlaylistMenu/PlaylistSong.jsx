@@ -1,60 +1,23 @@
 import { useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-
 import { MusicContext } from "../../contexts/MusicContext";
-import { NavigationContext } from "../../contexts/NavigationContext";
+import { CursorContext } from "../../contexts/CursorContext";
 
 const PlaylistSong = ({ song }) => {
-    const containerRef = useRef();
-
     const { songs } = useContext(MusicContext);
-    const { contextSafe } = useGSAP();
-
-    const { focusCursor, unfocusCursor } = useContext(NavigationContext);
-
+    const { unfocusCursor, isMenuInverted } = useContext(CursorContext);
     const navigate = useNavigate();
 
-    const handleClick = contextSafe(() => {
+    const handleClick = () => {
         unfocusCursor();
-        navigate(`/explorer/${song.id}`, {
-            state: { fromMain: true },
-        });
-    });
-
-    const handleMouseEnter = contextSafe(() => {
-        const container = containerRef.current;
-        if (!container) return;
-
-        gsap.killTweensOf(container);
-        gsap.to(container, {
-            backgroundColor: "#8f8f8f71",
-            duration: 0.2,
-            // ease: "power2.inOut",
-        });
-    });
-
-    const handleMouseLeave = contextSafe(() => {
-        const container = containerRef.current;
-        if (!container) return;
-
-        gsap.killTweensOf(container);
-        gsap.to(container, {
-            backgroundColor: "#38383800",
-            duration: 0.6,
-            // ease: "power2.inOut",
-        });
-    });
+        navigate(`/explorer/${song.id}`, { state: { fromMain: true } });
+    };
 
     return (
         <div
-            ref={containerRef}
-            className="playlist-song"
+            className={`playlist-song${isMenuInverted ? " inverted" : ""}`}
             onClick={handleClick}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
         >
             <img className="playlist-song-image" src={song.image.src} alt="" />
             <div className="playlist-song-details">

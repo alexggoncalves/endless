@@ -4,89 +4,43 @@ import gsap from "gsap";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 
-import { NavigationContext } from "../../contexts/NavigationContext";
+import { CursorContext } from "../../contexts/CursorContext";
 
 const Overlay = ({ children, isOpen, onClose }) => {
     const container = useRef();
     const background = useRef();
-    const firstRender = useRef(true);
+    const initiallyOpen = useRef(isOpen);
+    const prevOpen = useRef(isOpen);
 
-    const { contextSafe } = useGSAP();
-    const { invertMenuColors } = useContext(NavigationContext);
+    const { invertMenuColors } = useContext(CursorContext);
 
-    const closeOverlay = contextSafe(() => {
-        if (!container.current || !background.current) return;
+    useGSAP(
+        () => {
+            if (prevOpen.current === isOpen) return;
+            prevOpen.current = isOpen;
 
-        onClose?.();
+            gsap.to([background.current, container.current], {
+                autoAlpha: isOpen ? 1 : 0,
+                duration: 1,
+                ease: "power1.out",
+                overwrite: "auto",
+            });
+            invertMenuColors(!isOpen);
+        },
+        { dependencies: [isOpen] },
+    );
 
-        container.current.style.pointerEvents = "none";
-        gsap.to(container.current, {
-            opacity: 0,
-            duration: 1,
-            ease: "power1.out",
-        });
+    const closeOverlay = () => onClose?.();
 
-        gsap.to(background.current, {
-            opacity: 0,
-            duration: 1,
-            ease: "power1.out",
-            onComplete: () => {
-                background.current.style.display = "none";
-            },
-        });
-
-        invertMenuColors(true);
-    });
-
-    const openOverlay = contextSafe(() => {
-        if (!container.current || !background.current) return;
-
-        gsap.to(container.current, {
-            opacity: 1,
-            duration: 1,
-            ease: "power1.out",
-            onComplete: () => {
-                container.current.style.pointerEvents = "auto";
-            },
-        });
-
-        background.current.style.display = "block";
-        gsap.to(background.current, {
-            opacity: 1,
-            duration: 1,
-            ease: "power1.out",
-        });
-
-        invertMenuColors(false);
-    });
-
-    useEffect(() => {
-        if (firstRender.current) {
-            firstRender.current = false;
-            if (isOpen) {
-                container.current.style.opacity = "1";
-                container.current.style.pointerEvents = "auto";
-                background.current.style.opacity = "1";
-                background.current.style.display = "block";
-            } else {
-                container.current.style.opacity = "0";
-                container.current.style.pointerEvents = "none";
-                background.current.style.opacity = "0";
-                background.current.style.display = "none";
-            }
-        } else {
-            if (isOpen) {
-                openOverlay();
-            } else {
-                closeOverlay();
-            }
-        }
-    }, [isOpen]);
+    const style = {
+        opacity: initiallyOpen.current ? 1 : 0,
+        visibility: initiallyOpen.current ? "visible" : "hidden",
+    };
 
     return (
         <>
-            <div ref={background} className="overlay-background" />
-            <div ref={container} className="overlay-container">
+            <div ref={background} className="overlay-background" style={style} />
+            <div ref={container} className="overlay-container" style={style}>
                 {typeof children === "function"
                     ? children({ closeOverlay })
                     : children}

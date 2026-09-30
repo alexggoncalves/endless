@@ -3,11 +3,11 @@ import { useContext, useEffect, useRef, useState } from "react";
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { NavigationContext } from "../../contexts/NavigationContext";
+import { CursorContext } from "../../contexts/CursorContext";
 
 const PlaylistReadyButton = ({ callback, label }) => {
     const { loading } = useContext(MusicContext);
-    const { focusCursor, unfocusCursor } = useContext(NavigationContext);
+    const { focusCursor, unfocusCursor } = useContext(CursorContext);
 
     const loader = useRef();
     const button = useRef();

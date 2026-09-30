@@ -1,19 +1,11 @@
 import "./overlay.css";
-
-import gsap from "gsap";
-import { useContext, useEffect, useRef, useState } from "react";
-import { useGSAP } from "@gsap/react";
+import { useContext} from "react";
 
 import Toggle from "../UI/Toggle";
 import { MusicContext } from "../../contexts/MusicContext";
-import { NavigationContext } from "../../contexts/NavigationContext";
 import PlaylistReadyButton from "../UI/PlaylistReadyButton";
 
 const UserInteractionPrompt = ({ closeOverlay }) => {
-    const container = useRef();
-    const background = useRef();
-
-    const { contextSafe } = useGSAP();
     const { setAutoPlay } = useContext(MusicContext);
 
     return (

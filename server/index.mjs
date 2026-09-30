@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cors());
 
 const spotifyPreviewFinder = await import("spotify-preview-finder").then(
-    (mod) => mod.default || mod
+    (mod) => mod.default || mod,
 );
 
 app.post("/get-token", async (req, res) => {
@@ -81,12 +81,6 @@ app.get("/song-preview", async (req, res) => {
 });
 
 app.post("/song-previews", async (req, res) => {
-    // const searches = [
-    //     { song: "Bohemian Rhapsody", artist: "Queen" },
-    //     { song: "Hotel California", artist: "Eagles" },
-    //     { song: "Imagine", artist: "John Lennon" },
-    // ];
-
     const searches = req.body;
 
     if (!Array.isArray(searches) || searches.length === 0) {
@@ -105,7 +99,7 @@ app.post("/song-previews", async (req, res) => {
                 result = await spotifyPreviewFinder(
                     search.song,
                     search.artist,
-                    1
+                    1,
                 );
             } else {
                 result = await spotifyPreviewFinder(search.song, 1);

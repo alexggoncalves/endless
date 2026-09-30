@@ -1,20 +1,9 @@
 .back-button {
     background-color: #303030;
     color: white;
-
-    position: fixed ;
-    height: 40px;
-    width: 40px;
-    border-radius: 20px;
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    right: 50%;
-    top: 0;
-    z-index: 10;
-    margin-top: 20px;
-    transform: translateY(-300%);
+    position: absolute;
+    top: 5vw;
+    right: 5vw;
     
     font-size: 20px;
     text-decoration: none;
@@ -37,7 +26,7 @@
     height: 100%;
     overflow-x: hidden;
     width: 100%;
-    overflow-y: auto;
+    overflow-y: hidden;
     z-index: 5;
     scroll-behavior: smooth;
     color: #303030;
@@ -47,8 +36,9 @@
     position: relative;
     display: flex;
     align-items: flex-end;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
     width: 100vw;
+    justify-content: space-between;
 }
 
 .song-details-container > img {
@@ -60,8 +50,16 @@
     background-color: lightgray;
 }
 
+.song-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-right: 5vw;
+    text-align: right;
+}
+
 .song-info {
-    width: 50vw;
+    width: 45vw;
     padding-left: 30px;
 }
 
@@ -93,14 +91,6 @@
     padding-left: 15px;
 }
 
-.song-details {
-    display: flex;
-    flex-direction: column;
-    width: 14vw;
-    align-items: flex-end;
-    margin-right: 5vw;
-}
-
 .detail-label {
     font-weight: 700;
 }
@@ -109,63 +99,6 @@
     margin-bottom: 40px;
 }
 
-.song-extra-info-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    margin-bottom: 50px;
-}
-.song-extra-info-section {
-    width: 25vw;
-    margin: 0 2vw;
-}
-
-.song-extra-info-container h2 {
-    font-weight: 300;
-    margin-bottom: 5px;
-}
-
-.song-extra-info-container h1 {
-    line-height: 100%;
-    font-family: "Prompt";
-    font-size: 3.6rem;
-}
-
-.song-extra-info-container ol {
-    word-break: break-all;
-    margin: 0;
-    padding: 0;
-    margin-top: 30px;
-}
-
-.song-extra-info-container li {
-    margin-bottom: 15px;
-    font-size: 1.1rem;
-    list-style-position: inside;
-}
-.song-extra-info-container li::before {
-    content: "";
-    width: 20px;
-    display: inline-block;
-    text-align: right;
-}
-
-.bio {
-    margin-top: 30px;
-    margin-bottom: 40px;
-    width: 25vw;
-    font-weight: 400;
-    font-size: 1.1rem;
-}
-
-.artist-image {
-    width: 25vw;
-    height: auto;
-}
-
-footer {
-    position: relative;
-}
 
 @media only screen and (max-width: 700px) {
     .go-back a {

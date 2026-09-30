@@ -6,8 +6,9 @@ import { useGSAP } from "@gsap/react";
 
 import Toggle from "../UI/Toggle";
 import { MusicContext } from "../../contexts/MusicContext";
-import { NavigationContext } from "../../contexts/NavigationContext";
+import { CursorContext } from "../../contexts/CursorContext";
 import PlaylistReadyButton from "../UI/PlaylistReadyButton";
+import { SearchIcon } from "../../Icons";
 
 const PlaylistSearch = ({ closeOverlay }) => {
     const [input, setInput] = useState("");
@@ -43,7 +44,9 @@ const PlaylistSearch = ({ closeOverlay }) => {
                     placeholder="Enter playlist ID or link"
                     type="text"
                 />
-                <div onClick={handleSearch} className="search-button"></div>
+                <div onClick={handleSearch} className="circle-button">
+                    <SearchIcon></SearchIcon>
+                </div>
             </div>
 
             {searchResult && (
