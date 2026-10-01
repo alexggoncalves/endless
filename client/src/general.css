@@ -40,6 +40,28 @@ html {
     overflow: hidden;
 }
 
+.logo {
+    z-index: 10;
+    top: 16px;
+    left: 20px;
+    padding: 5px 20px 7px 20px;
+    position: fixed;
+
+    font-family: "Mulish", sans-serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 4vh;
+
+    border-radius: 25px;
+    overflow: hidden;
+    color: #dfdfdf;
+    text-decoration: none;
+    pointer-events: auto;
+    cursor: none;
+    mix-blend-mode: difference;
+    user-select: none;
+}
+
 /* COLORS */
 
 .black-bg {
@@ -174,27 +196,6 @@ html {
 .loading > img {
     margin-top: 20px;
     width: 30px;
-}
-
-/* Buttons */
-.circle-button {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #dfdfdf;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: transform 0.2s ease-out;
-}
-
-.circle-button:hover {
-    transform: scale(1.2);
-}
-
-.circle-button:active {
-    transform: scale(0.9);
 }
 
 /* Scroll bar */

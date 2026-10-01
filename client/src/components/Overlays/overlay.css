@@ -1,26 +1,52 @@
-.overlay-background {
+.overlay-background,
+.overlay-backdrop,
+.overlay-container {
     position: absolute;
     top: 0;
     width: 100vw;
     height: 100vh;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease-out, visibility 0s linear 1s;
+}
+
+.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 1s ease-out, visibility 0s;
+}
+
+.overlay-background {
     background-color: rgb(255, 255, 255);
     mix-blend-mode: difference;
     pointer-events: none;
 }
 
-.overlay-container {
+.overlay-backdrop {
     background-color: rgba(48, 48, 48, 0.775);
+    backdrop-filter: blur(2px);
+    pointer-events: none;
+}
+
+.overlay-container {
     color: #dfdfdf;
-    position: absolute;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.overlay-content {
+    display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 15px;
-    backdrop-filter: blur(2px);
+    animation: overlay-content-in 0.4s ease-out;
+}
+
+@keyframes overlay-content-in {
+    from {
+        opacity: 0;
+    }
 }
 
 .interaction-prompt-text {
@@ -30,54 +56,14 @@
     margin-top: 0;
 }
 
-.interaction-button {
-    position: relative;
-}
-
-.interaction-button > button {
-    border: 1px solid #dfdfdf;
-    background-color: transparent;
-    color: #dfdfdf;
-    font-family: "Prompt", sans-serif;
-    font-size: 0.8em;
-    border-radius: 25px;
-    cursor: none;
-    width: 150px;
-    overflow: hidden;
-}
-
-.loader-container {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 20px;
-    transform: translate(140%, 13%);
-}
-
-/* HTML: <div class="loader"></div> */
-.loader {
-    width: 100%;
-    aspect-ratio: 1;
-    --_c: no-repeat linear-gradient(rgb(255, 255, 255) 0 0) 50%;
-    background: var(--_c) / 100% 50%, var(--_c) / 50% 100%;
-    border-radius: 50%;
-    animation: l29 2s infinite linear;
-}
-@keyframes l29 {
-    100% {
-        transform: rotate(1turn);
-    }
-}
-
 /* Search Overlay */
 .search-input {
     position: relative;
-    
-    
+
     color: #303030;
     font-family: "Prompt", sans-serif;
     font-size: 0.7rem;
-    
+
     outline: none;
     display: flex;
     align-items: center;
@@ -85,7 +71,7 @@
 
 .search-overlay-title {
     margin-bottom: 10px;
-    font-size:1.8rem;
+    font-size: 1.8rem;
     font-weight: 600;
     color: #dfdfdf;
 }
@@ -103,7 +89,7 @@
     padding: 1px 14px 0px 14px;
 }
 .search-result {
-    top: 0px;
+    top: 4px;
     position: relative;
     /* height: 200px; */
     width: 200px;
@@ -113,7 +99,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    
+
     color: #303030;
     margin-bottom: 20px;
 }
@@ -127,7 +113,7 @@
 
 .result-details {
     width: 100%;
-    padding: 10px 15px 10px ;
+    padding: 10px 15px 14px 15px;
     display: flex;
     flex-direction: column;
 }
@@ -158,8 +144,7 @@
     color: #dfdfdf;
 }
 
-
-.search-button{
+.search-button {
     width: 40px;
     aspect-ratio: 1/1;
     background-color: #dfdfdf;

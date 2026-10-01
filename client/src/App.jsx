@@ -15,8 +15,7 @@ function App() {
     const { setInitialPlaylist, accessToken, songs, currentPlaylist } =
         useContext(MusicContext);
 
-    const [isUserPromptOpen, setUserPromptOpen] = useState(true);
-    const [isPlaylistSearchOpen, setPlaylistSearchOpen] = useState(false);
+    const [overlayView, setOverlayView] = useState("intro"); // null | "intro" | "playlist"
 
     useEffect(() => {
         if (accessToken && !songs) {
@@ -28,32 +27,28 @@ function App() {
         <>
             <Explorer></Explorer>
 
-            {/* User interaction prompt */}
+            {/* Overlays */}
             <Overlay
-                isOpen={isUserPromptOpen}
-                onClose={() => setUserPromptOpen(false)}
-            >
-                {({ closeOverlay }) => (
-                    <UserInteractionPrompt closeOverlay={closeOverlay} />
-                )}
-            </Overlay>
+                view={overlayView}
+                onClose={() => setOverlayView(null)}
+                views={{
+                    intro: ({ closeOverlay }) => (
+                        <UserInteractionPrompt closeOverlay={closeOverlay} />
+                    ),
+                    playlist: ({ closeOverlay }) => (
+                        <PlaylistSearch closeOverlay={closeOverlay} />
+                    ),
+                }}
+            />
 
-            {/* Playlist search */}
-            <Overlay
-                isOpen={isPlaylistSearchOpen}
-                onClose={() => setPlaylistSearchOpen(false)}
-            >
-                {({ closeOverlay }) => (
-                    <PlaylistSearch closeOverlay={closeOverlay} />
-                )}
-            </Overlay>
-
-            {/* UI components */}
+            {/* Volume Controller*/}
             <VolumeController defaultVolume={0.5} />
+
+            {/* Playlist Menu */}
             <PlaylistMenu currentPlaylist={currentPlaylist}>
                 <PlaylistSearchButton
-                    callback={() => setPlaylistSearchOpen(true)}
-                    isOpen={isPlaylistSearchOpen}
+                    callback={() => setOverlayView("playlist")}
+                    isOpen={overlayView === "playlist"}
                 />
             </PlaylistMenu>
 

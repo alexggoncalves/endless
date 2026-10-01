@@ -1,10 +1,9 @@
 import { useFrame } from "@react-three/fiber";
 import SongTile from "./SongTile";
 import { v4 as uuidv4 } from "uuid";
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, Suspense } from "react";
 import { ExplorerControlsContext } from "../../contexts/ExplorerControlsContext";
 import { MusicContext } from "../../contexts/MusicContext";
-
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 
@@ -109,7 +108,7 @@ function Content({
 
         // Calculate each band's area and total area
         const areas = bands.map(
-            (band) => (band.xMax - band.xMin) * (band.yMax - band.yMin)
+            (band) => (band.xMax - band.xMin) * (band.yMax - band.yMin),
         );
         const totalArea = areas.reduce((sum, area) => sum + area, 0);
 
@@ -183,7 +182,7 @@ function Content({
                 position = getRandomOuterRingPosition(
                     innerBounds,
                     outerBounds,
-                    maxZ
+                    maxZ,
                 );
             }
 
@@ -191,12 +190,12 @@ function Content({
                 song[0],
                 position,
                 size,
-                newTiles
+                newTiles,
             );
             tries++;
         } while (!positionIsValid && tries < MAX_PLACEMENT_TRIES);
 
-        if (tries >= MAX_PLACEMENT_TRIES) return null;
+        if (!positionIsValid) return null;
 
         // If a valid position was found, return the tile
         return {
@@ -211,26 +210,26 @@ function Content({
         frameCount.current++;
         if (frameCount.current % 10 !== 0) return;
 
-        let newTiles = [...activeTilesRef.current];
+        const prev = activeTilesRef.current;
 
         // Filter out tiles that are outside the camera limits
-        newTiles = newTiles.filter(({ position }) =>
-            isInsideBounds(position, outerBounds)
+        let newTiles = prev.filter(({ position }) =>
+            isInsideBounds(position, outerBounds),
         );
+        let changed = newTiles.length !== prev.length;
 
-        // Generate tiles until desider amount is reached
+        // Generate tiles until desired amount is reached
         while (newTiles.length < amount) {
             const newTile = generateTile(isInitialGeneration, newTiles);
-
-            if (newTile != null) {
-                newTiles.push(newTile);
-            } else break;
+            if (!newTile) break;
+            newTiles.push(newTile);
+            changed = true;
         }
 
-        // If there were any changes, update the active tiles state
-        if (newTiles.length != activeTilesRef.current.length) {
+        // If anything was removed or added, update the active tiles
+        if (changed) {
             activeTilesRef.current = newTiles;
-            setActiveTiles([...newTiles]);
+            setActiveTiles(newTiles);
         }
 
         if (isInitialGeneration && newTiles.length > 0) {
@@ -242,13 +241,14 @@ function Content({
     return (
         <group>
             {activeTiles.map(({ key, position, size, song }) => (
-                <SongTile
-                    key={key}
-                    position={position}
-                    size={size}
-                    song={song[1]}
-                    mask={mask}
-                />
+                <Suspense key={key} fallback={null}>
+                    <SongTile
+                        position={position}
+                        size={size}
+                        song={song[1]}
+                        mask={mask}
+                    />
+                </Suspense>
             ))}
         </group>
     );

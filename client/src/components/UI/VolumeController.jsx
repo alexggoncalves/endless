@@ -1,15 +1,24 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
 import { MusicContext } from "../../contexts/MusicContext";
-
-import mute from "../../assets/mute.svg";
-import low from "../../assets/low.svg";
-import down from "../../assets/down.svg";
-import up from "../../assets/up.svg";
 import { CursorContext } from "../../contexts/CursorContext";
+
+import {
+    VolumeOffIcon,
+    LowVolumeIcon,
+    MidVolumeIcon,
+    HighVolumeIcon,
+} from "../../Icons";
+
+const getIcon = (percentage) => {
+    if (percentage === 0) return <VolumeOffIcon />;
+    if (percentage < 0.33) return <LowVolumeIcon />;
+    if (percentage < 0.66) return <MidVolumeIcon />;
+    return <HighVolumeIcon />;
+};
 
 const VolumeController = ({
     defaultVolume,
@@ -20,98 +29,60 @@ const VolumeController = ({
     const trackRef = useRef();
     const thumbRef = useRef();
     const containerRef = useRef();
+    const thumbY = useRef();
 
-    const isDragging = useRef();
+    const isDragging = useRef(false);
+    const isCursorFocused = useRef(false);
+    const closeWhenMouseUp = useRef(false);
 
     const volumePercentage = useRef(defaultVolume);
     const volumeBeforeMute = useRef(defaultVolume);
+    const [icon, setIcon] = useState(() => getIcon(defaultVolume));
 
-    const closeWhenMouseUp = useRef(false);
+    const { focusCursor, unfocusCursor, colorsInverted } =
+        useContext(CursorContext);
+    const { setVolume } = useContext(MusicContext);
 
-    const getLogGain = (value) => {
-        const gain = Math.pow(value, 3) * maxVolume;
-        return gain;
+    // Cubic curve so the slider feels linear to the ear
+    const getGain = (percentage) => Math.pow(percentage, 3) * maxVolume;
+
+    // Always position against the full track height, not the animated one
+    const getThumbY = (percentage) => {
+        const thumbHeight = thumbRef.current.offsetHeight;
+        return (
+            (trackHeight - thumbHeight - thumbMargin * 2) * (1 - percentage) +
+            thumbMargin
+        );
     };
 
-    const { focusCursor, unfocusCursor } = useContext(CursorContext);
-    const { volume, setVolume } = useContext(MusicContext);
-    const { contextSafe } = useGSAP();
-
-    // Create quick to function for thumb movement
-    const thumbY = useRef();
-    useEffect(() => {
+    // Place thumb at the default volume and create the quickTo for movement
+    const { contextSafe } = useGSAP(() => {
+        gsap.set(thumbRef.current, { y: getThumbY(defaultVolume) });
         thumbY.current = gsap.quickTo(thumbRef.current, "y", { duration: 0.2 });
-    }, []);
-
-    const updateVolume = (clientY) => {
-        const track = trackRef.current;
-        const thumb = thumbRef.current;
-
-        if (!track || !thumb) return;
-
-        const bounds = track.getBoundingClientRect();
-        let percentage = (bounds.bottom - clientY) / bounds.height;
-        percentage = Math.max(0, Math.min(percentage, 1));
-        setVolume(getLogGain(percentage));
-        volumePercentage.current = percentage;
-
-        const thumbWidth = thumb.getBoundingClientRect().height;
-
-        const thumbPosition =
-            (bounds.height - thumbWidth - thumbMargin * 2) * (1 - percentage) +
-            thumbMargin;
-        thumbY.current(thumbPosition);
-    };
-
-    const updateVolumePercentage = (percentage) => {
-        const thumb = thumbRef.current;
-        const track = trackRef.current;
-
-        percentage = Math.max(0, Math.min(percentage, 1));
-        setVolume(getLogGain(percentage));
-        volumePercentage.current = percentage;
-
-        const thumbWidth = thumb.getBoundingClientRect().height;
-
-        const bounds = track.getBoundingClientRect();
-        const thumbPosition =
-            (bounds.height - thumbWidth - thumbMargin * 2) * (1 - percentage) +
-            thumbMargin;
-        thumbY.current(thumbPosition);
-    };
-
-    const getVolumeIcon = () => {
-        if (volumePercentage.current === 0) return mute;
-        if (volumePercentage.current < 0.33) return low;
-        if (volumePercentage.current < 0.66) return down;
-        return up;
-    };
-
-    const handleMouseDown = (e) => {
-        e.preventDefault();
-        isDragging.current = true;
-        updateVolume(e.clientY);
-    };
-
-    const handleMouseEnter = contextSafe(() => {
-        focusCursor();
-        showSlider();
     });
 
-    const handleMouseLeave = () => {
-        if (isDragging.current) {
-            closeWhenMouseUp.current = true;
-            return;
-        }
-        unfocusCursor();
-        hideSlider();
+    useEffect(() => {
+        setVolume(getGain(defaultVolume));
+    }, []);
+
+    const applyPercentage = (percentage) => {
+        percentage = Math.max(0, Math.min(percentage, 1));
+        volumePercentage.current = percentage;
+        setVolume(getGain(percentage));
+        setIcon(getIcon(percentage));
+        thumbY.current?.(getThumbY(percentage));
+    };
+
+    const updateFromPointer = (clientY) => {
+        const bounds = trackRef.current.getBoundingClientRect();
+        if (bounds.height === 0) return;
+        applyPercentage((bounds.bottom - clientY) / bounds.height);
     };
 
     const showSlider = contextSafe(() => {
         const container = containerRef.current;
         const track = trackRef.current;
-        const thumb = thumbRef.current;
-        if (!container || !thumb || !track) return;
+        if (!container || !track) return;
 
         // Extend container
         gsap.killTweensOf(container);
@@ -132,13 +103,11 @@ const VolumeController = ({
         });
     });
 
-    // Slide song page out and navigate to explorer
+    // Collapse container and fade track out
     const hideSlider = contextSafe(() => {
         const container = containerRef.current;
         const track = trackRef.current;
-        const thumb = thumbRef.current;
-
-        if (!container || !thumb || !track) return;
+        if (!container || !track) return;
 
         gsap.killTweensOf(container);
         gsap.to(container, {
@@ -156,20 +125,55 @@ const VolumeController = ({
         });
     });
 
+    const handleMouseDown = (e) => {
+        e.preventDefault();
+        isDragging.current = true;
+        updateFromPointer(e.clientY);
+    };
+
+    const handleMouseEnter = () => {
+        closeWhenMouseUp.current = false;
+        isCursorFocused.current = true;
+        focusCursor();
+        showSlider();
+    };
+
+    const handleMouseLeave = () => {
+        if (isDragging.current) {
+            closeWhenMouseUp.current = true;
+            return;
+        }
+        isCursorFocused.current = false;
+        unfocusCursor();
+        hideSlider();
+    };
+
+    const toggleMute = () => {
+        if (volumePercentage.current === 0) {
+            applyPercentage(Math.max(0.1, volumeBeforeMute.current));
+        } else {
+            volumeBeforeMute.current = volumePercentage.current;
+            applyPercentage(0);
+        }
+    };
+
+    // Dragging continues outside the slider, so listen on the document
     useEffect(() => {
-        const handleMouseUp = () => {
-            isDragging.current = false;
-            if (closeWhenMouseUp.current) {
-                unfocusCursor();
-                hideSlider();
-                closeWhenMouseUp.current = false;
-            }
+        const handleMouseMove = (e) => {
+            if (!isDragging.current) return;
+            e.preventDefault();
+            updateFromPointer(e.clientY);
         };
 
-        const handleMouseMove = (e) => {
-            e.preventDefault();
-            if (isDragging.current) {
-                updateVolume(e.clientY);
+        const handleMouseUp = () => {
+            if (!isDragging.current) return;
+            isDragging.current = false;
+
+            if (closeWhenMouseUp.current) {
+                closeWhenMouseUp.current = false;
+                isCursorFocused.current = false;
+                unfocusCursor();
+                hideSlider();
             }
         };
 
@@ -179,38 +183,13 @@ const VolumeController = ({
         return () => {
             document.removeEventListener("mousemove", handleMouseMove);
             document.removeEventListener("mouseup", handleMouseUp);
+            if (isCursorFocused.current) unfocusCursor();
         };
     }, []);
 
-    const toggleMute = () => {
-        if (volumePercentage.current === 0) {
-            const newVolume = Math.max(0.1, volumeBeforeMute.current);
-            updateVolumePercentage(newVolume);
-        } else {
-            // mute
-            volumeBeforeMute.current = volumePercentage.current;
-            updateVolumePercentage(0);
-        }
-    };
-
-    useEffect(() => {
-        setVolume(getLogGain(defaultVolume));
-
-        const track = trackRef.current;
-        const thumb = thumbRef.current;
-
-        if (!track || !thumb) return;
-        // const trackHeight = track.clientHeight;
-        const thumbWidth = thumb.getBoundingClientRect().height;
-        const thumbY =
-            (1 - defaultVolume) * (trackHeight - thumbWidth - thumbMargin * 2) +
-            thumbMargin;
-        gsap.set(thumb, { y: thumbY });
-    }, [defaultVolume, setVolume]);
-
     return (
         <div
-            className="volume-controller"
+            className={`volume-controller ${colorsInverted && "inverted"}`}
             ref={containerRef}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
@@ -226,7 +205,7 @@ const VolumeController = ({
             </div>
 
             <div className="volume-state" onClick={toggleMute}>
-                <img src={getVolumeIcon()} alt="" />
+                {icon}
             </div>
         </div>
     );

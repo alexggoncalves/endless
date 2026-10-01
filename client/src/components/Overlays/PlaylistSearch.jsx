@@ -1,57 +1,80 @@
 import "./overlay.css";
 
-import gsap from "gsap";
-import { useContext, useEffect, useRef, useState } from "react";
-import { useGSAP } from "@gsap/react";
+import { useContext, useState } from "react";
 
-import Toggle from "../UI/Toggle";
 import { MusicContext } from "../../contexts/MusicContext";
 import { CursorContext } from "../../contexts/CursorContext";
 import PlaylistReadyButton from "../UI/PlaylistReadyButton";
-import { SearchIcon } from "../../Icons";
+import { SearchIcon, XIcon } from "../../Icons";
 
 const PlaylistSearch = ({ closeOverlay }) => {
     const [input, setInput] = useState("");
-    const [searchResult, setSearchResult] = useState(null);
 
-    const { findPlaylist, setPlaylist } = useContext(MusicContext);
+    const { findPlaylist, setPlaylist, currentPlaylist } =
+        useContext(MusicContext);
 
-    const { contextSafe } = useGSAP();
+    const { focusCursor, unfocusCursor } = useContext(CursorContext);
+    const [searchResult, setSearchResult] = useState(currentPlaylist);
+
+    const [resultFound, setResultFound] = useState(false);
 
     const updateInput = (e) => {
-        console.log(e.target.value);
         setInput(e.target.value);
     };
 
-    const handleSearch = contextSafe(async () => {
+    const handleSearch = async () => {
         const result = await findPlaylist(input);
-        console.log(result);
         setSearchResult(result);
-    });
+        setResultFound(!!result);
+    };
 
-    const switchPlaylist = contextSafe(() => {
+    const switchPlaylist = () => {
         if (!searchResult) return;
         setPlaylist(searchResult);
+        setResultFound(false);
+        setInput("");
         closeOverlay();
-    });
+    };
+
+    const handleMouseEnter = () => {
+        focusCursor();
+    };
+
+    const handleMouseLeave = () => {
+        unfocusCursor();
+    };
 
     return (
         <>
+            <button
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                onClick={closeOverlay}
+                className={`circle-button inverted`}
+            >
+                <XIcon />
+            </button>
             <span className="search-overlay-title">SWITCH PLAYLIST</span>
             <div className="search-input">
                 <input
+                    value={input}
                     onChange={updateInput}
                     placeholder="Enter playlist ID or link"
                     type="text"
                 />
-                <div onClick={handleSearch} className="circle-button">
+                <div
+                    onClick={handleSearch}
+                    className="circle-button inverted"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                >
                     <SearchIcon></SearchIcon>
                 </div>
             </div>
 
-            {searchResult && (
-                <>
-                    <div className="search-result">
+            <div className="search-result">
+                {searchResult && (
+                    <>
                         <img
                             src={searchResult.images[0].url}
                             alt={searchResult.name}
@@ -67,12 +90,20 @@ const PlaylistSearch = ({ closeOverlay }) => {
                         <span className="result-details-total">
                             {searchResult.tracks.total} songs
                         </span>
-                    </div>
-                    <PlaylistReadyButton
-                        callback={switchPlaylist}
-                        label={"switch playlist"}
-                    />
-                </>
+                    </>
+                )}
+            </div>
+            {resultFound ? (
+                <PlaylistReadyButton
+                    callback={switchPlaylist}
+                    label={"switch playlist"}
+                />
+            ) : (
+                <div className="pill-button">
+                    <button className="pill-disabled" disabled>
+                        CURRENT PLAYLIST
+                    </button>
+                </div>
             )}
         </>
     );

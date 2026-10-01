@@ -1,88 +1,32 @@
-import { MusicContext } from "../../contexts/MusicContext";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
+import { MusicContext } from "../../contexts/MusicContext";
 import { CursorContext } from "../../contexts/CursorContext";
 
 const PlaylistReadyButton = ({ callback, label }) => {
     const { loading } = useContext(MusicContext);
     const { focusCursor, unfocusCursor } = useContext(CursorContext);
 
-    const loader = useRef();
-    const button = useRef();
-
-    const { contextSafe } = useGSAP();
-
     const [locked, setLocked] = useState(true);
 
-    const handleAccept = (e) => {
-        if (!locked) {
-            callback(e);
-        }
-    };
-
-    const fadeOutLoader = contextSafe(() => {
-        gsap.to(loader.current, {
-            opacity: 0,
-            delay: 0.1,
-            duration: 1,
-        });
-        setLocked(false);
-    });
-    const fadeInLoader = contextSafe(() => {
-        gsap.to(loader.current, {
-            opacity: 1,
-            duration: 0.2,
-        });
-    });
-
-    const handleMouseEnter = contextSafe((e) => {
-        if (!button.current) return;
-        focusCursor();
-
-        gsap.to(button.current, {
-            backgroundColor: "#dfdfdf",
-            color: "#303030",
-            borderRadius: "25px",
-            duration: 0.3,
-        });
-    });
-
-    const handleMouseLeave = contextSafe(() => {
-        if (!button.current) return;
-
-        unfocusCursor();
-
-        gsap.to(button.current, {
-            color: "#dfdfdf",
-            backgroundColor: "transparent",
-            duration: 0.3,
-        });
-    });
-
     useEffect(() => {
-        if (!loader.current) return;
-        if (!locked) return;
-
-        if (loading) {
-            fadeInLoader();
-        } else {
-            fadeOutLoader();
-        }
+        if (!loading) setLocked(false);
     }, [loading]);
 
+    const handleAccept = (e) => {
+        if (!locked) callback(e);
+    };
+
     return (
-        <div className="interaction-button">
+        <div className="pill-button">
             <button
-                ref={button}
                 onClick={handleAccept}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                onMouseEnter={() => focusCursor()}
+                onMouseLeave={unfocusCursor}
             >
                 {label}
             </button>
-            <div ref={loader} className="loader-container">
+            <div className={"loader-container" + (locked ? "" : " is-hidden")}>
                 <div className="loader"></div>
             </div>
         </div>

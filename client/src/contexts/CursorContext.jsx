@@ -1,6 +1,6 @@
-import { createContext, useRef, useEffect, useState, useMemo } from "react";
+import { createContext, useRef, useEffect, useState } from "react";
 
-import CountdownCircle from "../components/UI/CountdownCircle";
+import CountdownCircle, { CIRCUMFERENCE } from "../components/UI/CountdownCircle";
 
 export const CursorContext = createContext(null);
 
@@ -8,12 +8,13 @@ export function CursorProvider({ children }) {
     const pointCursorWrapper = useRef();
     const invertCircleWrapper = useRef();
     const invertCircle = useRef();
+    const countdownPath = useRef();
     const logoRef = useRef();
 
     const countdownFrame = useRef(null);
     const isMouseDown = useRef(false);
     const isSongPageAnimating = useRef(false);
-    const [isMenuInverted, setIsMenuInverted] = useState(false);
+    const [colorsInverted, setColorsInverted] = useState(true);
 
     // Cursor movement + eased circle
     useEffect(() => {
@@ -56,7 +57,10 @@ export function CursorProvider({ children }) {
     };
 
     const setCountdownProgress = (progress) => {
-        invertCircleWrapper.current?.style.setProperty("--progress", progress);
+        const path = countdownPath.current;
+        if (!path) return;
+        path.setAttribute("stroke-dashoffset", CIRCUMFERENCE * (1 - progress));
+        path.setAttribute("opacity", progress > 0 ? 1 : 0);
     };
 
     const cancelCountdown = () => {
@@ -83,6 +87,10 @@ export function CursorProvider({ children }) {
         countdownFrame.current = requestAnimationFrame(update);
     };
 
+    const invertColors = (invert) => {
+        setColorsInverted(invert);
+    }
+
     return (
         <CursorContext.Provider
             value={{
@@ -93,8 +101,8 @@ export function CursorProvider({ children }) {
                 cancelCountdown,
                 focusCursor,
                 unfocusCursor,
-                isMenuInverted,
-                invertMenuColors: setIsMenuInverted,
+                colorsInverted,
+                invertColors,
             }}
         >
             {children}
@@ -103,7 +111,7 @@ export function CursorProvider({ children }) {
             </div>
             <div ref={invertCircleWrapper} className="invert-circle-wrapper">
                 <div ref={invertCircle} className="invert-circle"></div>
-                <CountdownCircle />
+                <CountdownCircle pathRef={countdownPath} />
             </div>
         </CursorContext.Provider>
     );

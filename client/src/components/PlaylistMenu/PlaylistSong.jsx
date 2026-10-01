@@ -6,7 +6,7 @@ import { CursorContext } from "../../contexts/CursorContext";
 
 const PlaylistSong = ({ song }) => {
     const { songs } = useContext(MusicContext);
-    const { unfocusCursor, isMenuInverted } = useContext(CursorContext);
+    const { unfocusCursor, colorsInverted } = useContext(CursorContext);
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -16,7 +16,7 @@ const PlaylistSong = ({ song }) => {
 
     return (
         <div
-            className={`playlist-song${isMenuInverted ? " inverted" : ""}`}
+            className={`playlist-song${colorsInverted ? " inverted" : ""}`}
             onClick={handleClick}
         >
             <img className="playlist-song-image" src={song.image.src} alt="" />

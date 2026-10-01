@@ -23,7 +23,7 @@ const PlaylistMenu = ({ children }) => {
     const waveSeparatorRef = useRef();
 
     const { currentPlaylist, songs } = useContext(MusicContext);
-    const { focusCursor, unfocusCursor, isMenuInverted } =
+    const { focusCursor, unfocusCursor, colorsInverted } =
         useContext(CursorContext);
 
     const { contextSafe } = useGSAP();
@@ -154,12 +154,10 @@ const PlaylistMenu = ({ children }) => {
 
     const handleMouseEnter = () => {
         focusCursor();
-        // expandMenu();
     };
 
     const handleMouseLeave = () => {
         unfocusCursor();
-        // closeMenu();
     };
 
     if (!songs) return;
@@ -168,9 +166,7 @@ const PlaylistMenu = ({ children }) => {
             {children}
             <div
                 ref={containerRef}
-                className={`playlist-menu-wrapper${isMenuInverted ? " inverted" : ""}`}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                className={`playlist-menu-wrapper${colorsInverted ? " inverted" : ""}`}
             >
                 <div className="playlist-menu-background"></div>
                 <div ref={backgroundRef} className="playlist-menu-content">
@@ -201,6 +197,8 @@ const PlaylistMenu = ({ children }) => {
                             data-name="Layer 1"
                             viewBox="0 0 800 800"
                             onMouseUp={toggleMenu}
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
                         >
                             <path
                                 ref={arrowDownRef}
@@ -215,7 +213,12 @@ const PlaylistMenu = ({ children }) => {
                         </svg>
                     </div>
                     {/* Song list */}
-                    <div ref={listRef} className="list-wrapper">
+                    <div
+                        ref={listRef}
+                        className="list-wrapper"
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={handleMouseLeave}
+                    >
                         <div className="list-separator">
                             <Wave
                                 weight={10}

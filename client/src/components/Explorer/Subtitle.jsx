@@ -30,7 +30,7 @@ function Subtitle({ position, title, artist, tileSize }) {
                 color="#303030"
                 anchorX="left"
                 anchorY="top"
-                fontSize={12}
+                fontSize={14}
                 position={[0, -titleHeight - 3, 0]}
                 font={artistFont}
                 maxWidth={tileSize}

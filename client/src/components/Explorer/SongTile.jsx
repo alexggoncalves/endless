@@ -2,7 +2,7 @@ import { useLoader } from "@react-three/fiber";
 import { TextureLoader, Vector2 } from "three";
 import { useNavigate } from "react-router-dom";
 
-import { useContext, useEffect, useRef, useState } from "react";
+import { memo, useContext, useEffect, useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { CursorContext } from "../../contexts/CursorContext";
@@ -14,14 +14,22 @@ import PlaybackState from "./PlaybackState";
 gsap.registerPlugin(useGSAP);
 
 const COUNTDOWN_DURATION = 600;
+const CLICK_MOVE_TOLERANCE = 5;
+
+// 1x1 dark grey pixel, used when a song has no album art
+const FALLBACK_IMAGE =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGMwNjYGAAE2AJp53qClAAAAAElFTkSuQmCC";
 
 function SongTile({ position, size, song, mask }) {
-    const audio = useRef();
+    const audio = useRef(null);
     const tile = useRef();
     const material = useRef();
 
+    const isHovered = useRef(false);
+    const previewUrlLoadPromise = useRef(null);
+    const pointerDownPos = useRef(new Vector2());
+
     const navigate = useNavigate();
-    const [pointerDownPos, setPointerDownPos] = useState(new Vector2(0, 0));
     const {
         focusCursor,
         unfocusCursor,
@@ -31,25 +39,35 @@ function SongTile({ position, size, song, mask }) {
     } = useContext(CursorContext);
 
     const { autoPlay, setPreviewUrl, songs, volume } = useContext(MusicContext);
-    //GSAP
+
     const { contextSafe } = useGSAP();
 
-    // Convert image into texture
-    let img = null;
-    if (song.image) img = useLoader(TextureLoader, song.smallImage.src);
+    // Always call the hook (rules of hooks); fall back if there's no album art
+    const img = useLoader(
+        TextureLoader,
+        song.smallImage?.src ?? song.image?.src ?? FALLBACK_IMAGE,
+    );
 
-    let previewUrlLoadPromise = null;
+    const stopAudio = () => {
+        if (!audio.current) return;
+        audio.current.pause();
+        audio.current = null;
+    };
 
-    // If the tile is removed while hovered (culled, playlist switch) no leave
-    // event fires, so release the cursor and countdown here
-    const isHovered = useRef(false);
+    // If the tile is removed stop audio and release the cursor/countdown here
     useEffect(() => {
         return () => {
+            stopAudio();
             if (!isHovered.current) return;
             unfocusCursor();
             cancelCountdown();
         };
     }, []);
+
+    // Keep volume in sync if it changes while a preview is playing
+    useEffect(() => {
+        if (audio.current) audio.current.volume = volume;
+    }, [volume]);
 
     // Fade tile in
     useGSAP(
@@ -68,10 +86,41 @@ function SongTile({ position, size, song, mask }) {
                 duration: 1,
             });
         },
-        { dependencies: [] }
+        { dependencies: [] },
     );
 
-    const handleMouseEnter = contextSafe(async () => {
+    const playAudio = async () => {
+        let a = null;
+        try {
+            await previewUrlLoadPromise.current;
+
+            // Pointer may have left while the preview url was loading
+            if (!isHovered.current) return;
+
+            const url = songs[song.id]?.previewUrl;
+            if (!url) return; // null or undefined: no preview available
+
+            stopAudio();
+            a = new Audio(url);
+            a.volume = volume;
+            audio.current = a;
+
+            await new Promise((resolve, reject) => {
+                a.addEventListener("canplaythrough", resolve, { once: true });
+                a.addEventListener("error", reject, { once: true });
+            });
+
+            // Pointer left, or another playback started, while loading
+            if (audio.current !== a || !isHovered.current) return;
+
+            await a.play();
+        } catch (e) {
+            if (a && audio.current === a) audio.current = null;
+            console.warn("Preview playback failed:", e);
+        }
+    };
+
+    const handleMouseEnter = contextSafe(() => {
         isHovered.current = true;
         focusCursor(true);
 
@@ -82,42 +131,10 @@ function SongTile({ position, size, song, mask }) {
             ease: "power2",
         });
 
-        previewUrlLoadPromise = setPreviewUrl(song.id);
+        previewUrlLoadPromise.current = setPreviewUrl(song.id);
 
-        if (autoPlay) playAfterCountdown();
+        if (autoPlay) startCountdown(COUNTDOWN_DURATION, playAudio);
     });
-
-    const playAfterCountdown = () => {
-        startCountdown(COUNTDOWN_DURATION, async () => {
-            await previewUrlLoadPromise;
-            await playAudio();
-        });
-    };
-
-    const playAudio = async () => {
-        const url = songs[song.id].previewUrl;
-
-        if (url === null) return;
-
-        if (audio.current) {
-            audio.current.pause();
-            audio.current = null;
-        }
-
-        audio.current = new Audio(url);
-        audio.current.volume = volume;
-
-        await new Promise((resolve, reject) => {
-            audio.current.addEventListener("canplaythrough", resolve, {
-                once: true,
-            });
-            audio.current.addEventListener("error", reject, { once: true });
-        });
-
-        if (audio.current === null) return;
-
-        await audio.current.play();
-    };
 
     const handleMouseLeave = contextSafe(() => {
         isHovered.current = false;
@@ -131,24 +148,20 @@ function SongTile({ position, size, song, mask }) {
         });
 
         cancelCountdown();
-
-        if (!autoPlay) return;
-
-        if (audio.current) {
-            audio.current.pause();
-            audio.current = null;
-        }
+        stopAudio();
     });
 
     const handlePointerDown = (e) => {
-        setPointerDownPos(new Vector2(e.clientX, e.clientY));
+        pointerDownPos.current.set(e.clientX, e.clientY);
     };
 
     const handlePointerUp = contextSafe((e) => {
-        const currentPosition = new Vector2(e.clientX, e.clientY);
+        const dx = e.clientX - pointerDownPos.current.x;
+        const dy = e.clientY - pointerDownPos.current.y;
 
+        // Ignore drags and clicks during the song page animation
         if (
-            currentPosition.distanceTo(pointerDownPos) > 5 ||
+            Math.hypot(dx, dy) > CLICK_MOVE_TOLERANCE ||
             isSongPageAnimating.current
         )
             return;
@@ -171,41 +184,39 @@ function SongTile({ position, size, song, mask }) {
                 yoyo: true,
                 repeat: 1,
                 ease: "power1.inOut",
-            }
+            },
         );
     });
 
-    if (song) {
-        return (
-            <group
-                ref={tile}
-                scale={[size, size, 1]}
-                position={[position.x, position.y, position.z]}
+    return (
+        <group
+            ref={tile}
+            scale={[size, size, 1]}
+            position={[position.x, position.y, position.z]}
+        >
+            <mesh
+                onPointerDown={handlePointerDown}
+                onPointerUp={handlePointerUp}
+                onPointerEnter={handleMouseEnter}
+                onPointerLeave={handleMouseLeave}
             >
-                <mesh
-                    onPointerDown={handlePointerDown}
-                    onPointerUp={handlePointerUp}
-                    onPointerEnter={handleMouseEnter}
-                    onPointerLeave={handleMouseLeave}
-                >
-                    <planeGeometry></planeGeometry>
-                    <meshBasicMaterial
-                        transparent={true}
-                        opacity={1}
-                        ref={material}
-                        map={img}
-                        alphaMap={mask}
-                    ></meshBasicMaterial>
-                </mesh>
-                <Subtitle
-                    tileSize={size}
-                    position={[-0.5, -0.51, 1.1]}
-                    title={song.name}
-                    artist={songs[song.id].artistsString}
+                <planeGeometry />
+                <meshBasicMaterial
+                    ref={material}
+                    transparent
+                    opacity={1}
+                    map={img}
+                    alphaMap={mask}
                 />
-            </group>
-        );
-    }
+            </mesh>
+            <Subtitle
+                tileSize={size}
+                position={[-0.5, -0.51, 1.1]}
+                title={song.name}
+                artist={songs[song.id]?.artistsString ?? song.artistsString}
+            />
+        </group>
+    );
 }
 
 export default SongTile;

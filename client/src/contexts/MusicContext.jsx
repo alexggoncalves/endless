@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useRef } from "react";
 import { artistsToString } from "./../utils.js";
 
 const initialValue = null;
@@ -11,12 +11,13 @@ export const MusicContext = createContext(initialValue);
 
 export function MusicProvider({ children }) {
     const [accessToken, setAccessToken] = useState(null);
-    const [loading, setLoading] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [expiresAt, setExpiresAt] = useState(null);
     const [currentPlaylist, setCurrentPlaylist] = useState(null);
     const [songs, setSongs] = useState(null);
     const [autoPlay, setAutoPlay] = useState(true);
     const [volume, setVolume] = useState(0.5);
+    const pendingPreviews = useRef({});
 
     useEffect(() => {
         fetch(`${apiUrl}/get-token`, { method: "POST" })
@@ -44,7 +45,7 @@ export function MusicProvider({ children }) {
             setPlaylist(null);
             return;
         }
-        
+
         setPlaylist(data);
     };
 
@@ -58,7 +59,7 @@ export function MusicProvider({ children }) {
             {
                 method: "GET",
                 headers: { Authorization: "Bearer " + accessToken },
-            }
+            },
         );
 
         // Return playlist data
@@ -67,7 +68,7 @@ export function MusicProvider({ children }) {
 
     const setPlaylist = async (data) => {
         if (!data) return;
-        
+
         // set current playlist to the data returned
         setCurrentPlaylist(data);
 
@@ -92,12 +93,12 @@ export function MusicProvider({ children }) {
 
                 // Parse artists to string
                 newSongs[newSong.id].artistsString = artistsToString(
-                    newSongs[newSong.id].artists
+                    newSongs[newSong.id].artists,
                 );
             }
         });
 
-        // Place all playlist's songs in the songs map 
+        // Place all playlist's songs in the songs map
         setSongs(newSongs);
     };
 
@@ -117,7 +118,7 @@ export function MusicProvider({ children }) {
                 `${apiUrl}/song-preview?${params.toString()}`,
                 {
                     method: "GET",
-                }
+                },
             );
             const data = await response.json();
             return data || null;
@@ -127,25 +128,20 @@ export function MusicProvider({ children }) {
         }
     };
 
-    const setPreviewUrl = async (songID) => {
+    const setPreviewUrl = (songID) => {
         const song = songs[songID];
-        let url = songs[songID].previewUrl;
+        if (song.previewUrl !== undefined) return Promise.resolve();
 
-        // If song already has a preview url (even null), do nothing
-        if (song.previewUrl !== undefined) return;
-
-        if (!url) {
-            const response = await fetchPreviewUrl(
-                songs[songID].name,
-                songs[songID].artists[0].name
-            );
-
-            if (response.results) {
-                songs[songID].previewUrl = response.results[0].previewUrls[0];
-            } else {
-                songs[songID].previewUrl = null;
-            }
-        }
+        return (pendingPreviews.current[songID] ??= fetchPreviewUrl(
+            song.name,
+            song.artists[0]?.name,
+        )
+            .then((res) => {
+                song.previewUrl = res?.results?.[0]?.previewUrls?.[0] ?? null;
+            })
+            .finally(() => {
+                delete pendingPreviews.current[songID];
+            }));
     };
 
     const getSongById = async (songId) => {
@@ -156,7 +152,7 @@ export function MusicProvider({ children }) {
             {
                 method: "GET",
                 headers: { Authorization: "Bearer " + accessToken },
-            }
+            },
         );
 
         return await response.json();
@@ -179,7 +175,7 @@ export function MusicProvider({ children }) {
                 volume,
                 currentPlaylist,
                 findPlaylist,
-                setPlaylist
+                setPlaylist,
             }}
         >
             {children}

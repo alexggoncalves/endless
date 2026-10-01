@@ -1,49 +1,34 @@
 import "./overlay.css";
 
-import gsap from "gsap";
-import { useContext, useEffect, useRef, useState } from "react";
-import { useGSAP } from "@gsap/react";
+import { useContext, useEffect, useRef } from "react";
 
 import { CursorContext } from "../../contexts/CursorContext";
 
-const Overlay = ({ children, isOpen, onClose }) => {
-    const container = useRef();
-    const background = useRef();
-    const initiallyOpen = useRef(isOpen);
-    const prevOpen = useRef(isOpen);
+const Overlay = ({ view, views, onClose }) => {
+    const { invertColors } = useContext(CursorContext);
+    const isOpen = view != null;
 
-    const { invertMenuColors } = useContext(CursorContext);
+    // Keep showing the last view while the overlay fades out
+    const lastView = useRef(view);
+    if (view != null) lastView.current = view;
+    const shownView = lastView.current;
 
-    useGSAP(
-        () => {
-            if (prevOpen.current === isOpen) return;
-            prevOpen.current = isOpen;
+    useEffect(() => {
+        invertColors(isOpen);
+    }, [isOpen]);
 
-            gsap.to([background.current, container.current], {
-                autoAlpha: isOpen ? 1 : 0,
-                duration: 1,
-                ease: "power1.out",
-                overwrite: "auto",
-            });
-            invertMenuColors(!isOpen);
-        },
-        { dependencies: [isOpen] },
-    );
-
-    const closeOverlay = () => onClose?.();
-
-    const style = {
-        opacity: initiallyOpen.current ? 1 : 0,
-        visibility: initiallyOpen.current ? "visible" : "hidden",
-    };
+    const visibleClass = isOpen ? " is-visible" : "";
 
     return (
         <>
-            <div ref={background} className="overlay-background" style={style} />
-            <div ref={container} className="overlay-container" style={style}>
-                {typeof children === "function"
-                    ? children({ closeOverlay })
-                    : children}
+            <div className={"overlay-background" + visibleClass} />
+            <div className={"overlay-backdrop" + visibleClass} />
+            <div className={"overlay-container" + visibleClass}>
+                {shownView && (
+                    <div key={shownView} className="overlay-content">
+                        {views[shownView]({ closeOverlay: onClose })}
+                    </div>
+                )}
             </div>
         </>
     );
