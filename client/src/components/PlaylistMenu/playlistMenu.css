@@ -87,7 +87,6 @@
     position: absolute;
     height: 68px;
     aspect-ratio: 1/1;
-    /* background-color: red; */
     top: 0;
     right: 0;
 }
@@ -103,14 +102,14 @@
 .current-playlist-details > span {
     display: block;
     font-weight: 200;
-    font-size: 0.8rem;
-    line-height: 1rem;
+    font-size: 14px;
+    line-height: 18px;
 }
 .current-playlist-details > span:first-child {
     font-weight: 400;
-    font-size: 1.1rem;
+    font-size: 20px;
     font-family: "Prompt";
-    line-height: 1.4rem;
+    line-height: 20px;
 }
 
 .current-playlist,
@@ -190,11 +189,11 @@
 .playlist-song-details > span {
     display: block;
     white-space: nowrap;
-    font-size: 0.7rem;
+    font-size: 13px;
 }
 
 .playlist-song-details > span:first-child {
-    font-size: 0.8rem;
+    font-size: 14px;
     font-weight: 600;
 }
 

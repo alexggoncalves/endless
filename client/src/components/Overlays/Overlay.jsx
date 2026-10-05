@@ -2,10 +2,10 @@ import "./overlay.css";
 
 import { useContext, useEffect, useRef } from "react";
 
-import { CursorContext } from "../../contexts/CursorContext";
+import { ExplorerContext } from "../../contexts/ExplorerContext";
 
 const Overlay = ({ view, views, onClose }) => {
-    const { invertColors } = useContext(CursorContext);
+    const { invertColors } = useContext(ExplorerContext);
     const isOpen = view != null;
 
     // Keep showing the last view while the overlay fades out

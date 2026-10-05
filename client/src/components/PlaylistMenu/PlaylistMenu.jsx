@@ -7,6 +7,7 @@ gsap.registerPlugin(MorphSVGPlugin);
 
 import { CursorContext } from "../../contexts/CursorContext";
 import { MusicContext } from "../../contexts/MusicContext";
+import { ExplorerContext } from "../../contexts/ExplorerContext";
 import PlaylistSong from "./PlaylistSong";
 import Wave from "../Waves/Wave";
 
@@ -23,8 +24,8 @@ const PlaylistMenu = ({ children }) => {
     const waveSeparatorRef = useRef();
 
     const { currentPlaylist, songs } = useContext(MusicContext);
-    const { focusCursor, unfocusCursor, colorsInverted } =
-        useContext(CursorContext);
+    const { focusCursor, unfocusCursor } = useContext(CursorContext);
+    const { colorsInverted } = useContext(ExplorerContext);
 
     const { contextSafe } = useGSAP();
 

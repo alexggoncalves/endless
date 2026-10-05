@@ -1,11 +1,11 @@
 import "./explorer.css";
 
-import { useEffect, useContext} from "react";
+import { useEffect, useContext } from "react";
 import { Canvas } from "@react-three/fiber";
 
 import Content from "./Content";
 
-import { ExplorerControlsProvider } from "../../contexts/ExplorerControlsContext";
+import { CameraProvider } from "../../contexts/CameraContext";
 import { MusicContext } from "../../contexts/MusicContext";
 
 const innerBounds = { x: 2600, y: 1500 },
@@ -36,7 +36,7 @@ function Explorer() {
                         far: 5000,
                     }}
                 >
-                    <ExplorerControlsProvider>
+                    <CameraProvider>
                         <Content
                             key={currentPlaylist?.id}
                             songs={songs}
@@ -49,7 +49,7 @@ function Explorer() {
                             amount={18}
                             maxEqualTileDistance={2000}
                         />
-                    </ExplorerControlsProvider>
+                    </CameraProvider>
                 </Canvas>
             </div>
 

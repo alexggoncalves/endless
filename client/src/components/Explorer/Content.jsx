@@ -2,7 +2,7 @@ import { useFrame } from "@react-three/fiber";
 import SongTile from "./SongTile";
 import { v4 as uuidv4 } from "uuid";
 import { useContext, useState, useRef, Suspense } from "react";
-import { ExplorerControlsContext } from "../../contexts/ExplorerControlsContext";
+import { CameraContext } from "../../contexts/CameraContext.jsx";
 import { MusicContext } from "../../contexts/MusicContext";
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
@@ -24,7 +24,7 @@ function Content({
     amount,
     maxEqualTileDistance,
 }) {
-    const { cameraPosition } = useContext(ExplorerControlsContext);
+    const { cameraPosition } = useContext(CameraContext);
     const { setLoading } = useContext(MusicContext);
 
     const [activeTiles, setActiveTiles] = useState([]);

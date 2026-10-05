@@ -9,12 +9,9 @@ export function CursorProvider({ children }) {
     const invertCircleWrapper = useRef();
     const invertCircle = useRef();
     const countdownPath = useRef();
-    const logoRef = useRef();
 
     const countdownFrame = useRef(null);
     const isMouseDown = useRef(false);
-    const isSongPageAnimating = useRef(false);
-    const [colorsInverted, setColorsInverted] = useState(true);
 
     // Cursor movement + eased circle
     useEffect(() => {
@@ -48,14 +45,15 @@ export function CursorProvider({ children }) {
         };
     }, []);
 
+    // Circle scaling on hover
     const focusCursor = (isSongTile = false) => {
         invertCircle.current.style.transform = `scale(${isSongTile ? 0.45 : 0.64})`;
     };
-
     const unfocusCursor = () => {
         invertCircle.current.style.transform = `scale(1)`;
     };
 
+    // Preview countdown circle
     const setCountdownProgress = (progress) => {
         const path = countdownPath.current;
         if (!path) return;
@@ -87,22 +85,14 @@ export function CursorProvider({ children }) {
         countdownFrame.current = requestAnimationFrame(update);
     };
 
-    const invertColors = (invert) => {
-        setColorsInverted(invert);
-    }
-
     return (
         <CursorContext.Provider
             value={{
-                logoRef,
-                isSongPageAnimating,
                 isMouseDown,
                 startCountdown,
                 cancelCountdown,
                 focusCursor,
                 unfocusCursor,
-                colorsInverted,
-                invertColors,
             }}
         >
             {children}

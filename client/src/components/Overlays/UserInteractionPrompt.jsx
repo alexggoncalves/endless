@@ -1,12 +1,12 @@
 import "./overlay.css";
-import { useContext} from "react";
+import { useContext } from "react";
 
 import Toggle from "../UI/Toggle";
-import { MusicContext } from "../../contexts/MusicContext";
+import { PreviewContext } from "../../contexts/PreviewContext";
 import PlaylistReadyButton from "../UI/PlaylistReadyButton";
 
 const UserInteractionPrompt = ({ closeOverlay }) => {
-    const { setAutoPlay } = useContext(MusicContext);
+    const { setAutoPlay } = useContext(PreviewContext);
 
     return (
         <>

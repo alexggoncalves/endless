@@ -3,10 +3,13 @@ import { useNavigate } from "react-router-dom";
 
 import { MusicContext } from "../../contexts/MusicContext";
 import { CursorContext } from "../../contexts/CursorContext";
+import { ExplorerContext } from "../../contexts/ExplorerContext";
 
 const PlaylistSong = ({ song }) => {
     const { songs } = useContext(MusicContext);
-    const { unfocusCursor, colorsInverted } = useContext(CursorContext);
+    const { unfocusCursor } = useContext(CursorContext);
+    const { colorsInverted } = useContext(ExplorerContext);
+
     const navigate = useNavigate();
 
     const handleClick = () => {

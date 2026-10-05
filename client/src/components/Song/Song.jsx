@@ -5,21 +5,26 @@ import { Link, useParams, useLocation } from "react-router-dom";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useNavigate } from "react-router-dom";
-import { CursorContext } from "../../contexts/CursorContext.jsx";
-import { artistsToString } from "../../utils";
 
-import spotify from "../../assets/spotify.png";
-import DividerWaves from "../Waves/DividerWaves.jsx";
+import { artistsToString, formatTime } from "../../utils";
 
 import { MusicContext } from "../../contexts/MusicContext.jsx";
-import { XIcon } from "../../Icons.jsx";
+import { CursorContext } from "../../contexts/CursorContext.jsx";
+import { ExplorerContext } from "../../contexts/ExplorerContext.jsx";
+import { usePreview } from "../../contexts/PreviewContext.jsx";
+
+import { XIcon, SpotifyLogoIcon } from "../UI/Icons.jsx";
+import DividerWaves from "../Waves/DividerWaves.jsx";
+import PreviewProgress from "./PreviewProgress.jsx";
 
 function Song() {
-    const { getSongById, songs } = useContext(MusicContext);
     const [song, setSong] = useState();
 
-    const { focusCursor, unfocusCursor, isSongPageAnimating } =
-        useContext(CursorContext);
+    const { getSongById, songs } = useContext(MusicContext);
+    const { focusCursor, unfocusCursor } = useContext(CursorContext);
+    const { isSongPageOpening, isSongPageClosing } =
+        useContext(ExplorerContext);
+    const preview = usePreview();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -32,9 +37,14 @@ function Song() {
     const container = useRef();
 
     const slideSongPageIn = contextSafe(() => {
-        if (isSongPageOpen.current || isSongPageAnimating.current) return;
+        if (
+            isSongPageOpen.current ||
+            isSongPageOpening.current ||
+            isSongPageClosing.current
+        )
+            return;
 
-        isSongPageAnimating.current = true;
+        isSongPageOpening.current = true;
 
         gsap.killTweensOf(container.current);
         gsap.to(container.current, {
@@ -43,19 +53,25 @@ function Song() {
             ease: "power3.out",
             onComplete: () => {
                 isSongPageOpen.current = true;
-                isSongPageAnimating.current = false;
+                isSongPageOpening.current = false;
             },
         });
     });
 
     // Slide song page out and navigate to explorer
-    const slideSongPageOut = contextSafe(() => {
-        if (!isSongPageOpen.current || isSongPageAnimating.current) return;
+    const closeSongPage = contextSafe(() => {
+        if (
+            !isSongPageOpen.current ||
+            isSongPageClosing.current ||
+            isSongPageOpening.current
+        )
+            return;
 
-        isSongPageAnimating.current = true;
+        isSongPageClosing.current = true;
 
-        // The back button unmounts without a mouseleave, so release the cursor now
         unfocusCursor();
+
+        preview.stop();
 
         // Animate container
         gsap.killTweensOf(container.current);
@@ -66,7 +82,7 @@ function Song() {
             onComplete: () => {
                 navigate("/");
                 isSongPageOpen.current = false;
-                isSongPageAnimating.current = false;
+                isSongPageClosing.current = false;
             },
         });
     });
@@ -74,7 +90,7 @@ function Song() {
     const snapSongPageToTop = contextSafe(() => {
         gsap.set(container.current, { y: "0" });
         isSongPageOpen.current = true;
-        isSongPageAnimating.current = false;
+        isSongPageOpening.current = false;
     });
 
     useEffect(() => {
@@ -106,16 +122,21 @@ function Song() {
                         )}
 
                         <div className="song-info">
-                            <h1>{song.name}</h1>
-                            <h2>by {artistsToString(song.artists)}</h2>
-                            <div className="song-link">
+                            <PreviewProgress songId={song.id} />
+                            <div>
+                                <h1>{song.name}</h1>
+                                <h2>by {artistsToString(song.artists)}</h2>
+
                                 <Link
+                                    className="song-link"
                                     to={`https://open.spotify.com/track/${song.id}`}
                                     target="_blank"
+                                    onMouseEnter={focusCursor}
+                                    onMouseLeave={unfocusCursor}
                                 >
-                                    Listen on spotify
+                                    <SpotifyLogoIcon />
+                                    <span>Listen on Spotify</span>
                                 </Link>
-                                <img src={spotify} alt={"spotify logo"} />
                             </div>
                         </div>
 
@@ -129,7 +150,7 @@ function Song() {
                             <span className="detail">{song.album.name}</span>
 
                             <span className="detail-label">DURATION</span>
-                            <span className="detail">{song.duration_ms}</span>
+                            <span className="detail">{formatTime(song.duration_ms)}</span>
 
                             <span className="detail-label">EXPLICIT</span>
                             <span className="detail">
@@ -138,23 +159,20 @@ function Song() {
                         </div>
                     </div>
                     <DividerWaves />
-                    <Link
+                    <button
                         className="back-button circle-button"
                         onClick={(e) => {
-                            e.preventDefault();
-                            slideSongPageOut();
+                            closeSongPage();
                         }}
                         onMouseEnter={(e) => {
-                            e.preventDefault();
                             focusCursor();
                         }}
                         onMouseLeave={(e) => {
-                            e.preventDefault();
                             unfocusCursor();
                         }}
                     >
                         <XIcon></XIcon>
-                    </Link>
+                    </button>
                 </div>
             </>
         );

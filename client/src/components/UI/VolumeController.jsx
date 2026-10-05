@@ -3,15 +3,16 @@ import { useContext, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
-import { MusicContext } from "../../contexts/MusicContext";
+import { PreviewContext } from "../../contexts/PreviewContext";
 import { CursorContext } from "../../contexts/CursorContext";
+import { ExplorerContext } from "../../contexts/ExplorerContext";
 
 import {
     VolumeOffIcon,
     LowVolumeIcon,
     MidVolumeIcon,
     HighVolumeIcon,
-} from "../../Icons";
+} from "./Icons";
 
 const getIcon = (percentage) => {
     if (percentage === 0) return <VolumeOffIcon />;
@@ -39,9 +40,9 @@ const VolumeController = ({
     const volumeBeforeMute = useRef(defaultVolume);
     const [icon, setIcon] = useState(() => getIcon(defaultVolume));
 
-    const { focusCursor, unfocusCursor, colorsInverted } =
-        useContext(CursorContext);
-    const { setVolume } = useContext(MusicContext);
+    const { focusCursor, unfocusCursor } = useContext(CursorContext);
+    const { colorsInverted } = useContext(ExplorerContext);
+    const { setVolume } = useContext(PreviewContext);
 
     // Cubic curve so the slider feels linear to the ear
     const getGain = (percentage) => Math.pow(percentage, 3) * maxVolume;

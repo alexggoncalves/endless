@@ -5,19 +5,15 @@ const initialValue = null;
 
 const defaultPlaylistId = "2ksVm2FT5zhQFl8jmXRIzL?si=e5d21c6c1ed944fd";
 
-const apiUrl = "http://localhost:3000";
-
 export const MusicContext = createContext(initialValue);
 
 export function MusicProvider({ children }) {
+    const [apiUrl, setApiUrl] = useState("http://localhost:3000");
     const [accessToken, setAccessToken] = useState(null);
     const [loading, setLoading] = useState(true);
     const [expiresAt, setExpiresAt] = useState(null);
     const [currentPlaylist, setCurrentPlaylist] = useState(null);
     const [songs, setSongs] = useState(null);
-    const [autoPlay, setAutoPlay] = useState(true);
-    const [volume, setVolume] = useState(0.5);
-    const pendingPreviews = useRef({});
 
     useEffect(() => {
         fetch(`${apiUrl}/get-token`, { method: "POST" })
@@ -102,48 +98,6 @@ export function MusicProvider({ children }) {
         setSongs(newSongs);
     };
 
-    // Fetch a song's preview url by song or artists
-    const fetchPreviewUrl = async (song, artist) => {
-        if (!accessToken) return;
-
-        if (!song || !artist) return;
-
-        const params = new URLSearchParams({
-            song: song,
-            artist: artist,
-        });
-
-        try {
-            const response = await fetch(
-                `${apiUrl}/song-preview?${params.toString()}`,
-                {
-                    method: "GET",
-                },
-            );
-            const data = await response.json();
-            return data || null;
-        } catch (e) {
-            console.error("Failed to fetch preview URLs:", e);
-            return null;
-        }
-    };
-
-    const setPreviewUrl = (songID) => {
-        const song = songs[songID];
-        if (song.previewUrl !== undefined) return Promise.resolve();
-
-        return (pendingPreviews.current[songID] ??= fetchPreviewUrl(
-            song.name,
-            song.artists[0]?.name,
-        )
-            .then((res) => {
-                song.previewUrl = res?.results?.[0]?.previewUrls?.[0] ?? null;
-            })
-            .finally(() => {
-                delete pendingPreviews.current[songID];
-            }));
-    };
-
     const getSongById = async (songId) => {
         if (!accessToken) return;
 
@@ -162,18 +116,13 @@ export function MusicProvider({ children }) {
         <MusicContext.Provider
             value={{
                 songs,
-                // getPlaylistInfo,
+                currentPlaylist,
+                accessToken,
+                apiUrl,
+                loading,
                 setInitialPlaylist,
                 getSongById,
-                accessToken,
-                loading,
                 setLoading,
-                autoPlay,
-                setAutoPlay,
-                setPreviewUrl,
-                setVolume,
-                volume,
-                currentPlaylist,
                 findPlaylist,
                 setPlaylist,
             }}

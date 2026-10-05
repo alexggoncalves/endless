@@ -9,9 +9,9 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { MathUtils } from "three";
 import { CursorContext } from "./CursorContext";
 
-export const ExplorerControlsContext = createContext(null);
+export const CameraContext = createContext(null);
 
-export function ExplorerControlsProvider({
+export function CameraProvider({
     children,
     minZoom = 1,
     maxZoom = 2,
@@ -22,14 +22,15 @@ export function ExplorerControlsProvider({
     const { isMouseDown } = useContext(CursorContext);
     const camera = useThree((s) => s.camera);
     const events = useThree((s) => s.events);
+    const plane = useRef();
 
     const target = useRef({ x: 0, y: 0 });
     const targetZoom = useRef(MathUtils.clamp(camera.zoom, minZoom, maxZoom));
+    const lastCameraState = useRef({ x: 0, y: 0, zoom: 0 });
+
     const dragging = useRef(false);
     const last = useRef({ x: 0, y: 0 });
-    const plane = useRef();
     const isPointerOverCanvas = useRef(false);
-    const lastCameraState = useRef({ x: 0, y: 0, zoom: 0 });
 
     // Track whether the pointer is over the canvas (and not over HTML UI on top of it)
     useEffect(() => {
@@ -120,9 +121,13 @@ export function ExplorerControlsProvider({
         );
     };
 
+
     return (
-        <ExplorerControlsContext.Provider
-            value={{ cameraPosition: camera.position, target }}
+        <CameraContext.Provider
+            value={{
+                cameraPosition: camera.position,
+                target,
+            }}
         >
             {children}
             <mesh
@@ -136,6 +141,6 @@ export function ExplorerControlsProvider({
                 <planeGeometry args={[100000, 100000]} />
                 <meshBasicMaterial color="#e3e3e3" />
             </mesh>
-        </ExplorerControlsContext.Provider>
+        </CameraContext.Provider>
     );
 }

@@ -1,11 +1,12 @@
 import { useContext } from "react";
 
 import { CursorContext } from "../../contexts/CursorContext";
-import { PlaylistSearchIcon } from "../../Icons";
+import { ExplorerContext } from "../../contexts/ExplorerContext";
+import { PlaylistSearchIcon } from "./Icons";
 
 const PlaylistSearchButton = ({ callback, isOpen }) => {
-    const { focusCursor, unfocusCursor, colorsInverted } =
-        useContext(CursorContext);
+    const { focusCursor, unfocusCursor } = useContext(CursorContext);
+    const { colorsInverted } = useContext(ExplorerContext);
 
     const handleMouseClick = () => {
         unfocusCursor();

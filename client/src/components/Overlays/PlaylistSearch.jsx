@@ -5,7 +5,7 @@ import { useContext, useState } from "react";
 import { MusicContext } from "../../contexts/MusicContext";
 import { CursorContext } from "../../contexts/CursorContext";
 import PlaylistReadyButton from "../UI/PlaylistReadyButton";
-import { SearchIcon, XIcon } from "../../Icons";
+import { SearchIcon, XIcon } from "../UI/Icons";
 
 const PlaylistSearch = ({ closeOverlay }) => {
     const [input, setInput] = useState("");
@@ -59,7 +59,7 @@ const PlaylistSearch = ({ closeOverlay }) => {
                 <input
                     value={input}
                     onChange={updateInput}
-                    placeholder="Enter playlist ID or link"
+                    placeholder="Enter playlist's ID"
                     type="text"
                 />
                 <div
